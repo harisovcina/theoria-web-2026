@@ -45,7 +45,8 @@ interface Project {
   id: string
   name: string
   client: string
-  year: number
+  startYear: number
+  endYear?: number | null
   heroImage: string
   comingSoon: boolean
   order: number
@@ -130,7 +131,7 @@ function SortableProjectItem({ project }: { project: Project }) {
               )}
             </div>
             <p className="text-sm text-muted-foreground">
-              {project.client} • {project.year}
+              {project.client} • {project.endYear ? `${project.startYear}–${project.endYear}` : project.startYear}
             </p>
           </div>
 
