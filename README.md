@@ -5,7 +5,7 @@ Modern portfolio website built with Next.js 16, featuring cinematic animations, 
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router, Turbopack)
-- **Database:** PostgreSQL (Vercel Postgres) with Prisma ORM
+- **Database:** SQLite (local) / PostgreSQL (production, Vercel Postgres) with Prisma ORM
 - **Storage:** Vercel Blob for images
 - **Auth:** NextAuth.js with Google OAuth
 - **Styling:** Tailwind CSS
@@ -38,23 +38,34 @@ Modern portfolio website built with Next.js 16, featuring cinematic animations, 
 
 ## Deployment to Vercel
 
-### 1. Create Vercel Project
+### 1. Update Prisma Schema for Production
+Before deploying, update `prisma/schema.prisma` to use PostgreSQL:
+
+```prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+```
+
+### 2. Create Vercel Project
 ```bash
 vercel
 ```
 
-### 2. Add Vercel Postgres
+### 3. Add Vercel Postgres
 1. Go to your Vercel project dashboard
 2. Navigate to **Storage** tab
 3. Click **Create Database** → **Postgres**
 4. Environment variables `DATABASE_URL` and `DIRECT_URL` are auto-added
 
-### 3. Enable Vercel Blob
+### 4. Enable Vercel Blob
 1. In **Storage** tab
 2. Click **Create Store** → **Blob**
 3. `BLOB_READ_WRITE_TOKEN` is auto-added
 
-### 4. Set Additional Environment Variables
+### 5. Set Additional Environment Variables
 Add these in Vercel project settings → Environment Variables:
 
 ```
@@ -65,12 +76,14 @@ AUTH_GOOGLE_SECRET=<your-google-oauth-secret>
 BYPASS_AUTH=false
 ```
 
-### 5. Run Database Migrations
+### 6. Deploy and Run Migrations
 After first deployment:
 ```bash
 vercel env pull .env.production
-npx prisma migrate deploy
+npx prisma db push
 ```
+
+**Note:** Switch back to `provider = "sqlite"` in `schema.prisma` for local development.
 
 ## Project Structure
 
