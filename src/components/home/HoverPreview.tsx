@@ -235,7 +235,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
             {/* Text Content - Hidden during case study */}
             <div
               ref={titleRef}
-              className={`flex flex-col gap-4 max-w-96 ${
+              className={`flex flex-col gap-4 max-w-md ${
                 project.layoutVariant === "B" ? "items-start text-left" :
                 project.layoutVariant === "C" ? "items-end text-right" :
                 project.layoutVariant === "F" ? "items-start" :
@@ -244,11 +244,11 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
               style={{ willChange: "clip-path" }}
             >
               <div>
-                <h2 className="text-4xl md:text-7xl font-light tracking-tight mb-2">
+                <h2 className="text-4xl md:text-8xl font-extralight tracking-tight mb-2">
                   {project.name}
                 </h2>
                 {project.summary && (
-                  <p className="text-sm md:text-base text-foreground mt-3">
+                  <p className="text-sm md:text-2xl font-light text-foreground mt-3">
                     {project.summary}
                   </p>
                 )}
