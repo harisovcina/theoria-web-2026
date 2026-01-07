@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ExpoScaleEase } from "gsap/EasePack"
 import { ProjectPills } from "./ProjectPills"
-import { MenuPill } from "./MenuPill"
+import { MenuDock } from "./MenuDock"
 import { HoverPreview } from "./HoverPreview"
 import { MenuExpanded } from "./MenuExpanded"
 import { CaseStudy } from "./CaseStudy"
@@ -56,11 +56,11 @@ export function HomePage({ projects }: HomePageProps) {
     // Centered horizontally, centered vertically
     gsap.set(maskShapeRef.current, {
       attr: {
-        width: 800,   // wide
-        height: 24,   // short
-        x: 100,       // centered (500 - 400/2 = 300)
-        y: 488,       // centered (500 - 24/2 = 488)
-        rx: 8         // small rounded corners
+        width: 600,   // wide
+        height: 12,   // short
+        x: 200,       // centered (500 - 600/2 = 300)
+        y: 494,       // centered (500 - 12/2 = 494)
+        rx: 12         // small rounded corners
       }
     })
 
@@ -81,15 +81,13 @@ export function HomePage({ projects }: HomePageProps) {
     // Step 1: Grow vertically to 80% viewport height (800 in our 1000 viewBox)
     tl.to(maskShapeRef.current, {
       attr: {
-        height: 800,
-        y: 100        // center it (500 - 800/2 = 100)
+        height: 400,
+        y: 300,        // center it (500 - 800/2 = 100)
+        rx: 0,         // small rounded corners
       },
       duration: 1,
       ease: "expoScale(0.5, 7, none)"
     }, "-=0.1")
-
-    // Step 2: Pause for 0.5s
-    tl.to({}, { duration: 0.5 })
 
     // Step 3: Expand to full screen in all directions
     tl.to(maskShapeRef.current, {
@@ -98,7 +96,7 @@ export function HomePage({ projects }: HomePageProps) {
         height: 10000,
         x: -4500,
         y: -4500,
-        rx: 0
+        rx: 4
       },
       duration: 1.5,
       ease: "expoScale(0.5, 7, expoScale.out)"
@@ -163,7 +161,10 @@ export function HomePage({ projects }: HomePageProps) {
       )}
 
       {/* Menu Expanded Layer */}
-      <MenuExpanded isExpanded={pageState === "menu"} />
+      <MenuExpanded
+        isExpanded={pageState === "menu"}
+        onClose={() => setPageState("default")}
+      />
 
       {/* Default State Content */}
       <div
@@ -202,37 +203,24 @@ export function HomePage({ projects }: HomePageProps) {
       {/* Project Pills - Left Side */}
       {projects.length > 0 && (
         <div className="fixed left-12 md:left-12 top-auto md:top-1/2 bottom-12 md:bottom-auto md:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
-          <div className="flex flex-col gap-4">
-            <ProjectPills
-              projects={projects}
-              onHover={setHoveredProject}
-              onClick={(project) => {
-                setSelectedProject(project)
-                setPageState("case-study")
-              }}
-            />
-
-            {/* Separator */}
-            <div className="h-px bg-border/30 mx-3" />
-
-            {/* Menu Pill */}
-            <MenuPill
-              onClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
-              isExpanded={pageState === "menu"}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Menu Pill Only (when no projects) */}
-      {projects.length === 0 && (
-        <div className="fixed left-12 md:left-12 top-auto md:top-1/2 bottom-12 md:bottom-auto md:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
-          <MenuPill
-            onClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
-            isExpanded={pageState === "menu"}
+          <ProjectPills
+            projects={projects}
+            onHover={setHoveredProject}
+            onClick={(project) => {
+              setSelectedProject(project)
+              setPageState("case-study")
+            }}
           />
         </div>
       )}
+
+      {/* Menu Dock - Bottom Center */}
+      <div className="opacity-0 animate-fade-in animation-delay-800">
+        <MenuDock
+          onMenuClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
+          isMenuOpen={pageState === "menu"}
+        />
+      </div>
     </main>
   )
 }
