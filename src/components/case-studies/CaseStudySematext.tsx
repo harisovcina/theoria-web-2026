@@ -61,12 +61,11 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
         yPercent: 30,
         ease: "none",
         scrollTrigger: {
-            scroller: scroller,
+          scroller: scroller,
           trigger: heroRef.current,
           start: "top top",
           end: "bottom top",
           scrub: 1,
-          scroller: scroller,
         },
       })
     }
@@ -127,7 +126,7 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
     }
 
     // Steps - alternating animations
-    const animateStep = (ref: React.RefObject<HTMLDivElement>, fromLeft: boolean) => {
+    const animateStep = (ref: React.RefObject<HTMLDivElement | null>, fromLeft: boolean) => {
       if (!ref.current) return
       const image = ref.current.querySelector(".step-image")
       const text = ref.current.querySelector(".step-text")
