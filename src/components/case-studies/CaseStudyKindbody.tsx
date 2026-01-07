@@ -145,7 +145,7 @@ export function CaseStudyKindbody({ project }: CaseStudyContentProps) {
     }
 
     // Process steps - alternating animations
-    const animateProcessStep = (ref: React.RefObject<HTMLDivElement>, fromLeft: boolean) => {
+    const animateProcessStep = (ref: React.RefObject<HTMLDivElement | null>, fromLeft: boolean) => {
       if (!ref.current) return
       const image = ref.current.querySelector(".step-image")
       const text = ref.current.querySelector(".step-text")
