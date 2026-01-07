@@ -11,12 +11,14 @@
 
 import { ExampleCaseStudy } from "./ExampleCaseStudy"
 import { CaseStudySematext } from "./CaseStudySematext"
+import { CaseStudyKindbody } from "./CaseStudyKindbody"
 
 
 // Map of slug -> component
 export const caseStudyComponents: Record<string, React.ComponentType<any>> = {
   "example": ExampleCaseStudy,
   "sematext": CaseStudySematext,
+  "kindbody": CaseStudyKindbody,
   // Add your custom case studies here:
   // "acme-corp": AcmeCorpCaseStudy,
   // "tech-startup": TechStartupCaseStudy,
