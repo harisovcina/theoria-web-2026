@@ -40,16 +40,16 @@ interface CaseStudyContentProps {
  */
 export function CaseStudyKindbody({ project }: CaseStudyContentProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const heroRef = useRef<HTMLElement>(null)
-  const companyRef = useRef<HTMLElement>(null)
-  const roleImageRef = useRef<HTMLElement>(null)
-  const challengeRef = useRef<HTMLElement>(null)
-  const challengeImageRef = useRef<HTMLElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const companyRef = useRef<HTMLDivElement>(null)
+  const roleImageRef = useRef<HTMLDivElement>(null)
+  const challengeRef = useRef<HTMLDivElement>(null)
+  const challengeImageRef = useRef<HTMLDivElement>(null)
   const processStep1Ref = useRef<HTMLDivElement>(null)
   const processStep2Ref = useRef<HTMLDivElement>(null)
   const processStep3Ref = useRef<HTMLDivElement>(null)
-  const labImageRef = useRef<HTMLElement>(null)
-  const takeawayRef = useRef<HTMLElement>(null)
+  const labImageRef = useRef<HTMLDivElement>(null)
+  const takeawayRef = useRef<HTMLDivElement>(null)
 
   useGSAP(() => {
     if (!containerRef.current) return
