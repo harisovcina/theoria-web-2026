@@ -121,7 +121,7 @@ export function HomePage({ projects }: HomePageProps) {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/background-video.mp4" type="video/mp4" />
+          <source src="/background-video.webm" type="video/webm" />
         </video>
         {/* Video Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/20" />
@@ -190,7 +190,7 @@ export function HomePage({ projects }: HomePageProps) {
           <h1 className="text-5xl md:text-7xl lg:text-8xl text-foreground font-light leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
             We turn complex products into simple interfaces
           </h1>
-          <p className="text-lg md:text-xl text-foreground/60 font-light opacity-0 animate-fade-in-up animation-delay-400">
+          <p className="text-lg md:text-xl text-foreground font-light opacity-0 animate-fade-in-up animation-delay-400">
             Product design studio based in Sarajevo
           </p>
         </div>
