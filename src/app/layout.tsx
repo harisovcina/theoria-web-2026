@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
+      <body className="font-sans">
         {children}
         <Toaster />
       </body>
