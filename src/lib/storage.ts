@@ -1,34 +1,4 @@
-import { createClient } from "@supabase/supabase-js"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-// Lazy initialization of Supabase client
-let supabaseAdminInstance: ReturnType<typeof createClient> | null = null
-
-function getSupabaseAdmin() {
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error("Supabase configuration missing. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.")
-  }
-
-  if (!supabaseAdminInstance) {
-    supabaseAdminInstance = createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    })
-  }
-
-  return supabaseAdminInstance
-}
-
-// Create Supabase client with service role for admin operations
-export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient>, {
-  get(target, prop) {
-    return getSupabaseAdmin()[prop as keyof ReturnType<typeof createClient>]
-  }
-})
+import { put, del } from "@vercel/blob"
 
 export interface UploadResult {
   url: string
@@ -36,9 +6,9 @@ export interface UploadResult {
 }
 
 /**
- * Upload a file to Supabase Storage
+ * Upload a file to Vercel Blob Storage
  * @param file - File buffer or base64 string
- * @param bucket - Storage bucket name (e.g., "projects", "team")
+ * @param bucket - Storage bucket/folder name (e.g., "projects", "team") - used as pathname prefix
  * @param path - File path within bucket
  * @returns Public URL and path
  */
@@ -58,37 +28,28 @@ export async function uploadToSupabase(
       fileBuffer = file
     }
 
-    // Upload to Supabase Storage
-    const { data, error } = await supabaseAdmin.storage
-      .from(bucket)
-      .upload(path, fileBuffer, {
-        contentType: "image/*",
-        upsert: true,
-      })
+    // Upload to Vercel Blob
+    // Combine bucket and path for full pathname
+    const fullPath = `${bucket}/${path}`
 
-    if (error) {
-      console.error("Supabase upload error:", error)
-      throw new Error(`Upload failed: ${error.message}`)
-    }
-
-    // Get public URL
-    const { data: urlData } = supabaseAdmin.storage
-      .from(bucket)
-      .getPublicUrl(data.path)
+    const blob = await put(fullPath, fileBuffer, {
+      access: "public",
+      addRandomSuffix: false, // We already have unique names from upload route
+    })
 
     return {
-      url: urlData.publicUrl,
-      path: data.path,
+      url: blob.url,
+      path: fullPath,
     }
   } catch (error) {
-    console.error("Upload error:", error)
-    throw new Error("Failed to upload file to Supabase Storage")
+    console.error("Vercel Blob upload error:", error)
+    throw new Error("Failed to upload file to Vercel Blob Storage")
   }
 }
 
 /**
- * Delete a file from Supabase Storage
- * @param bucket - Storage bucket name
+ * Delete a file from Vercel Blob Storage
+ * @param bucket - Storage bucket name (not used in Vercel Blob, kept for API compatibility)
  * @param path - File path to delete
  */
 export async function deleteFromSupabase(
@@ -96,25 +57,31 @@ export async function deleteFromSupabase(
   path: string
 ): Promise<void> {
   try {
-    const { error } = await supabaseAdmin.storage.from(bucket).remove([path])
+    // In Vercel Blob, we need the full URL to delete
+    // If path is already a full URL, use it; otherwise construct it
+    const urlToDelete = path.startsWith("http") ? path : `${bucket}/${path}`
 
-    if (error) {
-      console.error("Supabase delete error:", error)
-      throw new Error(`Delete failed: ${error.message}`)
-    }
+    await del(urlToDelete)
   } catch (error) {
-    console.error("Delete error:", error)
-    throw new Error("Failed to delete file from Supabase Storage")
+    console.error("Vercel Blob delete error:", error)
+    throw new Error("Failed to delete file from Vercel Blob Storage")
   }
 }
 
 /**
- * Get public URL for a file in Supabase Storage
+ * Get public URL for a file in Vercel Blob Storage
+ * Note: Vercel Blob returns URLs directly, so this is mainly for API compatibility
  * @param bucket - Storage bucket name
  * @param path - File path
  * @returns Public URL
  */
 export function getPublicUrl(bucket: string, path: string): string {
-  const { data } = supabaseAdmin.storage.from(bucket).getPublicUrl(path)
-  return data.publicUrl
+  // If the path is already a full URL, return it
+  if (path.startsWith("http")) {
+    return path
+  }
+
+  // Otherwise, this would need to be constructed based on your Vercel Blob URL pattern
+  // In practice, you should store the full URL from the upload response
+  return path
 }
