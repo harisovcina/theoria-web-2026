@@ -38,6 +38,7 @@ export async function PUT(
         deviceType: body.deviceType,
         layoutVariant: body.layoutVariant,
         caseStudy: body.caseStudy || null,
+        caseStudySlug: body.caseStudySlug || null,
         comingSoon: body.comingSoon ?? true,
       },
     })

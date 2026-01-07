@@ -35,6 +35,7 @@ const projectSchema = z.object({
   deviceType: z.enum(["laptop", "mobile"]),
   layoutVariant: z.enum(["A", "B", "C", "D", "E", "F"]),
   caseStudy: z.string().optional(),
+  caseStudySlug: z.string().optional(),
   comingSoon: z.boolean(),
 })
 
@@ -81,6 +82,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       deviceType: project?.deviceType || "laptop",
       layoutVariant: project?.layoutVariant || "A",
       caseStudy: project?.caseStudy || "",
+      caseStudySlug: project?.caseStudySlug || "",
       comingSoon: project?.comingSoon ?? true,
     },
   })
@@ -103,6 +105,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
         startYear: parseInt(data.startYear),
         endYear: data.endYear ? parseInt(data.endYear) : null,
         caseStudy: data.caseStudy || null,
+        caseStudySlug: data.caseStudySlug || null,
       }
 
       const url =
@@ -297,7 +300,19 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
           </div>
 
           <div>
-            <Label htmlFor="caseStudy">Case Study (Markdown)</Label>
+            <Label htmlFor="caseStudySlug">Custom Case Study Slug (Optional)</Label>
+            <Input
+              id="caseStudySlug"
+              {...register("caseStudySlug")}
+              placeholder="e.g., acme-corp, tech-startup"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Use this to enable a custom component-based case study layout. Leave empty to use markdown or coming soon.
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="caseStudy">Case Study (Markdown - Legacy)</Label>
             <Textarea
               id="caseStudy"
               {...register("caseStudy")}
@@ -306,7 +321,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
               className="font-mono text-sm"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Leave empty if project is coming soon
+              Only used if no custom component exists. Leave empty if project is coming soon.
             </p>
           </div>
 

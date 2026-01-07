@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { XIcon } from "lucide-react"
 import { marked } from "marked"
+import { caseStudyComponents } from "@/components/case-studies"
 
 interface Project {
   id: string
@@ -20,6 +21,7 @@ interface Project {
   layoutVariant: string
   comingSoon: boolean
   caseStudy?: string | null
+  caseStudySlug?: string | null
   services?: string
   industry?: string
 }
@@ -63,9 +65,13 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
     gsap.set(deviceInner, { x: startX })
 
-    // Calculate target dimensions
-    const targetWidth = window.innerWidth * 1.5
-    const targetHeight = window.innerHeight * 0.7
+    // Calculate target dimensions - full width with proper aspect ratio
+    const targetWidth = window.innerWidth
+    // Calculate height to maintain aspect ratio of the initial dimensions
+    const initialWidth = project.deviceType === "laptop" ? 600 : 280
+    const initialHeight = project.deviceType === "laptop" ? 400 : 580
+    const aspectRatio = initialHeight / initialWidth
+    const targetHeight = targetWidth * aspectRatio
 
     // Animation timeline
     const timeline = gsap.timeline()
@@ -166,7 +172,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
   }
 
   const renderContent = () => {
-    if (project.comingSoon || !project.caseStudy) {
+    if (project.comingSoon) {
       return (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-4">
@@ -177,14 +183,31 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       )
     }
 
-    // Parse markdown case study content
-    const htmlContent = marked(project.caseStudy || "")
+    // Check if there's a custom component for this case study
+    if (project.caseStudySlug && caseStudyComponents[project.caseStudySlug]) {
+      const CustomCaseStudy = caseStudyComponents[project.caseStudySlug]
+      return <CustomCaseStudy project={project} />
+    }
 
+    // Fallback to markdown content if no custom component
+    if (project.caseStudy) {
+      const htmlContent = marked(project.caseStudy)
+      return (
+        <div
+          className="prose prose-lg dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
+      )
+    }
+
+    // No content available
     return (
-      <div
-        className="prose prose-lg dark:prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
-      />
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <h3 className="text-2xl font-light text-foreground/60">Coming Soon</h3>
+          <p className="text-foreground/40">This case study is currently being prepared.</p>
+        </div>
+      </div>
     )
   }
 
@@ -206,61 +229,68 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         <XIcon className="w-6 h-6" />
       </button>
 
-      {/* Header Section - Revealed after device moves down */}
-      <div
-        ref={headerRef}
-        className="fixed top-16 left-0 right-0 z-10 px-8 md:px-16 text-center"
-      >
-        <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4">
-          {project.name}
-        </h1>
-        <div className="flex items-center justify-center gap-6 text-foreground/60 text-lg">
-          <span>{project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}</span>
-          {services.length > 0 && (
-            <>
-              <span>•</span>
-              <span>{services.join(", ")}</span>
-            </>
-          )}
-          {industries.length > 0 && (
-            <>
-              <span>•</span>
-              <span>{industries.join(", ")}</span>
-            </>
-          )}
-        </div>
-      </div>
+      {/* Scrollable wrapper that contains everything */}
+      <div className="absolute inset-0 overflow-y-auto z-30">
+        <div className="relative min-h-screen">
+          {/* Header Section - Revealed after device moves down */}
+          <div
+            ref={headerRef}
+            className="absolute top-16 left-0 right-0 z-10 px-8 md:px-16 text-center pointer-events-none"
+          >
+            <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4">
+              {project.name}
+            </h1>
+            <div className="flex items-center justify-center gap-6 text-foreground/60 text-lg">
+              <span>{project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}</span>
+              {services.length > 0 && (
+                <>
+                  <span>•</span>
+                  <span>{services.join(", ")}</span>
+                </>
+              )}
+              {industries.length > 0 && (
+                <>
+                  <span>•</span>
+                  <span>{industries.join(", ")}</span>
+                </>
+              )}
+            </div>
+          </div>
 
-      {/* Device Mockup - Expands immediately from hover position */}
-      <div
-        ref={deviceRef}
-        className="fixed inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden"
-      >
-        <div
-          className="device-inner relative"
-          style={{
-            width: project.deviceType === "laptop" ? "600px" : "280px",
-            height: project.deviceType === "laptop" ? "400px" : "580px",
-          }}
-        >
-          <Image
-            src={project.deviceMockup}
-            alt={`${project.name} mockup`}
-            fill
-            className="object-contain drop-shadow-2xl"
-            priority
-          />
-        </div>
-      </div>
+          {/* Device Mockup - Expands immediately from hover position */}
+          <div
+            ref={deviceRef}
+            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+            style={{ height: "100vh" }}
+          >
+            <div
+              className="device-inner relative"
+              style={{
+                width: project.deviceType === "laptop" ? "600px" : "280px",
+                height: project.deviceType === "laptop" ? "400px" : "580px",
+              }}
+            >
+              <Image
+                src={project.deviceMockup}
+                alt={`${project.name} mockup`}
+                fill
+                className="object-cover drop-shadow-2xl"
+                priority
+              />
+            </div>
+          </div>
 
-      {/* Scrollable Content - Revealed at the end */}
-      <div
-        ref={contentRef}
-        className="absolute inset-0 overflow-y-auto pt-[100vh] z-20"
-      >
-        <div className="relative bg-background py-16 px-8 md:px-16 min-h-screen">
-          <div className="max-w-4xl mx-auto">
-            {renderContent()}
+          {/* Spacer to push content down */}
+          <div style={{ height: "100vh" }} />
+
+          {/* Case Study Content */}
+          <div
+            ref={contentRef}
+            className="relative bg-background py-16 px-8 md:px-16 min-h-screen z-40"
+          >
+            <div className="max-w-4xl mx-auto">
+              {renderContent()}
+            </div>
           </div>
         </div>
       </div>
