@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { XIcon } from "lucide-react"
 import { marked } from "marked"
+import { caseStudyComponents } from "../case-studies"
 
 interface Project {
   id: string
@@ -20,6 +21,7 @@ interface Project {
   layoutVariant: string
   comingSoon: boolean
   caseStudy?: string | null
+  caseStudySlug?: string | null
   services?: string
   industry?: string
 }
@@ -71,6 +73,10 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     const aspectRatio = initialHeight / initialWidth
     const targetHeight = targetWidth * aspectRatio
 
+    // Responsive y-shift: smaller on mobile, larger on desktop
+    const isMobile = window.innerWidth < 768
+    const yShift = isMobile ? 150 : 500
+
     // Animation timeline
     const timeline = gsap.timeline()
 
@@ -93,7 +99,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       .to({}, { duration: 1 })
       // 4. Content shifts down, revealing title and meta
       .to(deviceRef.current, {
-        y: 500,
+        y: yShift,
         duration: 1,
         ease: "power2.inOut",
       })
@@ -170,22 +176,30 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
   }
 
   const renderContent = () => {
-    if (project.comingSoon || !project.caseStudy) {
+    // Priority 1: Custom component via slug
+    if (project.caseStudySlug && caseStudyComponents[project.caseStudySlug]) {
+      const CustomComponent = caseStudyComponents[project.caseStudySlug]
+      return <CustomComponent project={project} />
+    }
+
+    // Priority 2: Markdown content
+    if (project.caseStudy && !project.comingSoon) {
       return (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <h3 className="text-2xl font-light text-foreground/60">Coming Soon</h3>
-            <p className="text-foreground/40">This case study is currently being prepared.</p>
-          </div>
-        </div>
+        <div
+          className="prose prose-invert prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: marked(project.caseStudy) }}
+        />
       )
     }
 
+    // Priority 3: Coming soon state
     return (
-      <div
-        className="prose prose-invert prose-lg max-w-none"
-        dangerouslySetInnerHTML={{ __html: marked(project.caseStudy) }}
-      />
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <h3 className="text-2xl font-light text-foreground/60">Coming Soon</h3>
+          <p className="text-foreground/40">This case study is currently being prepared.</p>
+        </div>
+      </div>
     )
   }
 
@@ -299,9 +313,9 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           {/* Case Study Content */}
           <div
             ref={contentRef}
-            className="relative bg-background py-16 px-8 md:px-16 min-h-screen z-40"
+            className="relative bg-background py-16 px-8 md:px-16 lg:px-24 min-h-screen z-40"
           >
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-9xl mx-auto">
               {renderContent()}
             </div>
           </div>

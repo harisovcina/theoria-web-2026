@@ -1,6 +1,9 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
 import { ProjectPills } from "./ProjectPills"
 import { MenuPill } from "./MenuPill"
 import { HoverPreview } from "./HoverPreview"
@@ -35,10 +38,87 @@ export function HomePage({ projects }: HomePageProps) {
   const [pageState, setPageState] = useState<PageState>("default")
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [showLoader, setShowLoader] = useState(true)
+  const [loadingPercent, setLoadingPercent] = useState(0)
   const hoverPreviewRef = useRef<{ getDevicePosition: () => DOMRect | null }>(null)
+  const maskOverlayRef = useRef<HTMLDivElement>(null)
+  const logoShapeRef = useRef<SVGGElement>(null)
+
+  useGSAP(() => {
+    if (!maskOverlayRef.current || !logoShapeRef.current) return
+
+    const tl = gsap.timeline()
+
+    // Loading counter
+    tl.to({}, {
+      duration: 1.5,
+      onUpdate: function() {
+        setLoadingPercent(Math.round(this.progress() * 100))
+      }
+    })
+
+    // Fade out loader
+    tl.to({}, {
+      duration: 0.3,
+      onComplete: () => setShowLoader(false)
+    })
+
+    // Scale up the logo HOLE to reveal content
+    tl.to(logoShapeRef.current, {
+      scale: 1000,
+      duration: 1.2,
+      ease: "power3.inOut",
+      transformOrigin: "center center"
+    }, "-=0.1")
+
+    // Fade out the mask overlay
+    tl.to(maskOverlayRef.current, {
+      opacity: 0,
+      duration: 0.2,
+      ease: "power2.out"
+    }, "-=0.2")
+
+  }, [])
 
   return (
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Loading Screen */}
+      {showLoader && (
+        <div className="fixed inset-0 bg-background flex items-center justify-center z-[1001]">
+          <span className="font-mono text-sm tracking-widest uppercase text-foreground/80">
+            LOADING <span>{loadingPercent}</span>%
+          </span>
+        </div>
+      )}
+
+      {/* SVG Mask Overlay */}
+      <div
+        ref={maskOverlayRef}
+        className="fixed inset-0 z-[1000] pointer-events-none"
+      >
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 1000 1000"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <mask id="logo-reveal-mask">
+              {/* WHITE = overlay visible (covers content) */}
+              <rect width="100%" height="100%" fill="white"/>
+
+              {/* BLACK = overlay hidden (content shows through) */}
+              {/* Simple circle as a HOLE that will scale up */}
+              <g ref={logoShapeRef}>
+                <circle cx="500" cy="500" r="40" fill="black"/>
+              </g>
+            </mask>
+          </defs>
+
+          {/* Dark overlay - masked so logo cutout reveals content */}
+          <rect width="100%" height="100%" fill="#0C0E15" mask="url(#logo-reveal-mask)"/>
+        </svg>
+      </div>
       {/* Case Study Layer */}
       {pageState === "case-study" && (
         <CaseStudy
@@ -56,14 +136,23 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Default State Content */}
       <div
-        className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
+        className="fixed inset-0 flex items-start md:items-center justify-start md:justify-center pointer-events-none transition-opacity duration-300 pt-12 md:pt-0 pl-12 md:pl-0"
         style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5 }}
       >
-        <div className="text-center space-y-8 px-8 max-w-4xl">
-          <h1 className="text-7xl md:text-9xl font-light tracking-tighter lowercase opacity-0 animate-fade-in-up">
-            theoria
-          </h1>
-          <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto font-light opacity-0 animate-fade-in-up animation-delay-200">
+        <div className="text-left md:text-center space-y-6 md:space-y-8 max-w-4xl pr-12 md:pr-0">
+          {/* Logo */}
+          <div className="opacity-0 animate-fade-in-up">
+            <Image
+              src="/logo.svg"
+              alt="Theoria"
+              width={400}
+              height={100}
+              className="w-64 md:w-96 h-auto mx-0 md:mx-auto"
+              priority
+            />
+          </div>
+
+          <p className="text-xl md:text-2xl text-foreground/70 max-w-sm md:max-w-2xl font-light opacity-0 animate-fade-in-up animation-delay-200">
             We turn complex products into simple interfaces.
           </p>
           <p className="text-sm md:text-base text-foreground/50 font-light opacity-0 animate-fade-in-up animation-delay-400">
@@ -81,7 +170,7 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Project Pills - Left Side */}
       {projects.length > 0 && (
-        <div className="fixed left-8 md:left-12 top-1/2 -translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
+        <div className="fixed left-12 md:left-12 top-auto md:top-1/2 bottom-12 md:bottom-auto md:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
           <div className="flex flex-col gap-4">
             <ProjectPills
               projects={projects}
@@ -106,7 +195,7 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Menu Pill Only (when no projects) */}
       {projects.length === 0 && (
-        <div className="fixed left-8 md:left-12 top-1/2 -translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
+        <div className="fixed left-12 md:left-12 top-auto md:top-1/2 bottom-12 md:bottom-auto md:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
           <MenuPill
             onClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
             isExpanded={pageState === "menu"}
