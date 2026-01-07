@@ -318,6 +318,13 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
             <div className="max-w-9xl mx-auto">
               {renderContent()}
             </div>
+
+            {/* Image Copyright Credit */}
+            <div className="absolute bottom-8 right-8 md:right-16 lg:right-24 z-50">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
+                IMAGE © {project.client}
+              </p>
+            </div>
           </div>
         </div>
       </div>

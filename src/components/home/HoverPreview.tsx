@@ -195,6 +195,13 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
             priority
           />
           <div className="absolute inset-0 bg-background-5" />
+
+          {/* Image Copyright Credit */}
+          <div className="absolute bottom-8 right-8 z-50">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
+              IMAGE © {project.client}
+            </p>
+          </div>
         </div>
       )}
 

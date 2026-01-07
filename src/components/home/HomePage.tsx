@@ -4,11 +4,14 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
+import { ExpoScaleEase } from "gsap/EasePack"
 import { ProjectPills } from "./ProjectPills"
 import { MenuPill } from "./MenuPill"
 import { HoverPreview } from "./HoverPreview"
 import { MenuExpanded } from "./MenuExpanded"
 import { CaseStudy } from "./CaseStudy"
+
+gsap.registerPlugin(ExpoScaleEase)
 
 interface Project {
   id: string
@@ -41,17 +44,29 @@ export function HomePage({ projects }: HomePageProps) {
   const [showLoader, setShowLoader] = useState(true)
   const [loadingPercent, setLoadingPercent] = useState(0)
   const hoverPreviewRef = useRef<{ getDevicePosition: () => DOMRect | null }>(null)
-  const maskOverlayRef = useRef<HTMLDivElement>(null)
-  const logoShapeRef = useRef<SVGGElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const maskShapeRef = useRef<SVGRectElement>(null)
 
   useGSAP(() => {
-    if (!maskOverlayRef.current || !logoShapeRef.current) return
+    if (!overlayRef.current || !maskShapeRef.current) return
 
     const tl = gsap.timeline()
 
+    // Set initial state - very wide, short rounded rectangle (pill shape)
+    // Centered horizontally, centered vertically
+    gsap.set(maskShapeRef.current, {
+      attr: {
+        width: 800,   // wide
+        height: 24,   // short
+        x: 100,       // centered (500 - 400/2 = 300)
+        y: 488,       // centered (500 - 24/2 = 488)
+        rx: 8         // small rounded corners
+      }
+    })
+
     // Loading counter
     tl.to({}, {
-      duration: 1.5,
+      duration: 1,
       onUpdate: function() {
         setLoadingPercent(Math.round(this.progress() * 100))
       }
@@ -63,20 +78,38 @@ export function HomePage({ projects }: HomePageProps) {
       onComplete: () => setShowLoader(false)
     })
 
-    // Scale up the logo HOLE to reveal content
-    tl.to(logoShapeRef.current, {
-      scale: 1000,
-      duration: 1.2,
-      ease: "power3.inOut",
-      transformOrigin: "center center"
+    // Step 1: Grow vertically to 80% viewport height (800 in our 1000 viewBox)
+    tl.to(maskShapeRef.current, {
+      attr: {
+        height: 800,
+        y: 100        // center it (500 - 800/2 = 100)
+      },
+      duration: 1,
+      ease: "expoScale(0.5, 7, none)"
     }, "-=0.1")
 
-    // Fade out the mask overlay
-    tl.to(maskOverlayRef.current, {
+    // Step 2: Pause for 0.5s
+    tl.to({}, { duration: 0.5 })
+
+    // Step 3: Expand to full screen in all directions
+    tl.to(maskShapeRef.current, {
+      attr: {
+        width: 10000,
+        height: 10000,
+        x: -4500,
+        y: -4500,
+        rx: 0
+      },
+      duration: 1.5,
+      ease: "expoScale(0.5, 7, expoScale.out)"
+    })
+
+    // Fade out the overlay
+    tl.to(overlayRef.current, {
       opacity: 0,
-      duration: 0.2,
-      ease: "power2.out"
-    }, "-=0.2")
+      duration: 0.3,
+      ease: "expoScale(0.5,7,none)",
+    }, "-=0.3")
 
   }, [])
 
@@ -84,39 +117,37 @@ export function HomePage({ projects }: HomePageProps) {
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden">
       {/* Loading Screen */}
       {showLoader && (
-        <div className="fixed inset-0 bg-background flex items-center justify-center z-[1001]">
-          <span className="font-mono text-sm tracking-widest uppercase text-foreground/80">
+        <div className="fixed inset-0 bg-[#F0FFFE] flex items-center justify-center z-[1001]">
+          <span className="font-mono text-sm tracking-widest uppercase text-black">
             LOADING <span>{loadingPercent}</span>%
           </span>
         </div>
       )}
 
-      {/* SVG Mask Overlay */}
+      {/* Reveal Overlay - SVG mask that expands */}
       <div
-        ref={maskOverlayRef}
+        ref={overlayRef}
         className="fixed inset-0 z-[1000] pointer-events-none"
       >
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 1000 1000"
-          preserveAspectRatio="xMidYMid slice"
-        >
+        <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <mask id="logo-reveal-mask">
-              {/* WHITE = overlay visible (covers content) */}
-              <rect width="100%" height="100%" fill="white"/>
-
-              {/* BLACK = overlay hidden (content shows through) */}
-              {/* Simple circle as a HOLE that will scale up */}
-              <g ref={logoShapeRef}>
-                <circle cx="500" cy="500" r="40" fill="black"/>
-              </g>
+            <mask id="expandingMask">
+              {/* White background = visible */}
+              <rect width="100%" height="100%" fill="white" />
+              {/* Black shape = cutout (hides overlay, shows content) */}
+              <rect
+                ref={maskShapeRef}
+                x="300"
+                y="488"
+                width="400"
+                height="24"
+                rx="8"
+                fill="black"
+              />
             </mask>
           </defs>
-
-          {/* Dark overlay - masked so logo cutout reveals content */}
-          <rect width="100%" height="100%" fill="#0C0E15" mask="url(#logo-reveal-mask)"/>
+          {/* Light teal overlay with mask applied - black area cuts through */}
+          <rect width="100%" height="100%" fill="#F0FFFE" mask="url(#expandingMask)" />
         </svg>
       </div>
       {/* Case Study Layer */}
