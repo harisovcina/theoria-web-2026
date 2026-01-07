@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FolderIcon, UsersIcon } from "lucide-react"
 import Link from "next/link"
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
   const session = await auth()
 
