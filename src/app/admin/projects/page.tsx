@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
 import { ProjectsList } from "@/components/admin/ProjectsList"
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default async function ProjectsPage() {
   const projects = await db.project.findMany({
     orderBy: { order: "asc" },

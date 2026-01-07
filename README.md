@@ -5,7 +5,7 @@ Modern portfolio website built with Next.js 16, featuring cinematic animations, 
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router, Turbopack)
-- **Database:** SQLite (local) / PostgreSQL (production, Vercel Postgres) with Prisma ORM
+- **Database:** PostgreSQL (Vercel Postgres) with Prisma ORM
 - **Storage:** Vercel Blob for images
 - **Auth:** NextAuth.js with Google OAuth
 - **Styling:** Tailwind CSS
@@ -22,50 +22,46 @@ Modern portfolio website built with Next.js 16, featuring cinematic animations, 
 2. **Setup environment:**
    ```bash
    cp .env.example .env.local
-   # Edit .env.local with your values
+   # Edit .env.local with your PostgreSQL connection string
+   # For local PostgreSQL: DATABASE_URL="postgresql://user:password@localhost:5432/theoria"
    ```
 
-3. **Setup database:**
+3. **Setup local PostgreSQL (using Docker):**
+   ```bash
+   docker run --name theoria-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=theoria -p 5432:5432 -d postgres
+   # Update .env.local with: DATABASE_URL="postgresql://postgres:postgres@localhost:5432/theoria"
+   ```
+
+4. **Setup database:**
    ```bash
    npx prisma generate
    npx prisma db push
    ```
 
-4. **Run dev server:**
+5. **Run dev server:**
    ```bash
    npm run dev
    ```
 
 ## Deployment to Vercel
 
-### 1. Update Prisma Schema for Production
-Before deploying, update `prisma/schema.prisma` to use PostgreSQL:
-
-```prisma
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-```
-
-### 2. Create Vercel Project
+### 1. Create Vercel Project
 ```bash
 vercel
 ```
 
-### 3. Add Vercel Postgres
+### 2. Add Vercel Postgres
 1. Go to your Vercel project dashboard
 2. Navigate to **Storage** tab
 3. Click **Create Database** → **Postgres**
 4. Environment variables `DATABASE_URL` and `DIRECT_URL` are auto-added
 
-### 4. Enable Vercel Blob
+### 3. Enable Vercel Blob
 1. In **Storage** tab
 2. Click **Create Store** → **Blob**
 3. `BLOB_READ_WRITE_TOKEN` is auto-added
 
-### 5. Set Additional Environment Variables
+### 4. Set Additional Environment Variables
 Add these in Vercel project settings → Environment Variables:
 
 ```
@@ -76,14 +72,12 @@ AUTH_GOOGLE_SECRET=<your-google-oauth-secret>
 BYPASS_AUTH=false
 ```
 
-### 6. Deploy and Run Migrations
+### 5. Deploy and Run Migrations
 After first deployment:
 ```bash
 vercel env pull .env.production
 npx prisma db push
 ```
-
-**Note:** Switch back to `provider = "sqlite"` in `schema.prisma` for local development.
 
 ## Project Structure
 
