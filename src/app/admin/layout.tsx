@@ -1,0 +1,31 @@
+import { auth, signOut } from "@/auth"
+import { redirect } from "next/navigation"
+import { Sidebar } from "@/components/admin/Sidebar"
+
+const AUTHORIZED_ADMINS = ["haris.ovcina@gmail.com"]
+const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
+
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  // Skip auth check if bypassed (for local development)
+  if (!BYPASS_AUTH_IN_DEV) {
+    const session = await auth()
+
+    // Double-check authorization (middleware should already handle this)
+    if (!session?.user?.email || !AUTHORIZED_ADMINS.includes(session.user.email)) {
+      redirect("/")
+    }
+  }
+
+  return (
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <main className="flex-1 p-8 bg-muted/30">
+        {children}
+      </main>
+    </div>
+  )
+}
