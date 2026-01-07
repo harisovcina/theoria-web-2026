@@ -12,12 +12,12 @@ interface MenuDockProps {
 
 export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
   return (
-    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+    <div className="fixed top-4 md:top-8 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-50 pointer-events-auto">
       <div className="relative">
         {/* Frosty Glass Container */}
         <div
           className={cn(
-            "relative px-6 py-3 rounded-full",
+            "relative px-4 md:px-6 py-2.5 md:py-3 rounded-full",
             "bg-background/40 backdrop-blur-xl",
             "border border-border/30",
             "shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]",
@@ -26,7 +26,7 @@ export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
             "before:absolute before:inset-0 before:rounded-full before:bg-noise before:opacity-[0.015] before:mix-blend-overlay before:pointer-events-none"
           )}
         >
-          <div className="flex items-center gap-8">
+          <div className="flex items-center justify-between md:justify-center md:gap-8">
             {/* Hamburger Button */}
             <button
               onClick={onMenuClick}
@@ -75,9 +75,9 @@ export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
               <Image
                 src="/logo.svg"
                 alt="Theoria"
-                width={90}
-                height={20}
-                className="h-4 w-auto opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                width={100}
+                height={22}
+                className="h-5 md:h-4 w-auto opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                 priority
               />
             </Link>

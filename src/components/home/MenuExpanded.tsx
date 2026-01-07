@@ -64,7 +64,14 @@ export function MenuExpanded({ isExpanded, onClose }: MenuExpandedProps) {
       ref={containerRef}
       className="fixed inset-0 z-20 flex items-center justify-center opacity-0 pointer-events-auto"
     >
-      <div className="absolute inset-0 bg-background/95 backdrop-blur-md" />
+      {/* Background with noise texture */}
+      <div className="absolute inset-0 bg-background/95 backdrop-blur-xl">
+        <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
 
       {/* Close Button - Top Right */}
       <button
@@ -76,18 +83,18 @@ export function MenuExpanded({ isExpanded, onClose }: MenuExpandedProps) {
         <X className="w-5 h-5 text-foreground" />
       </button>
 
-      <nav ref={linksRef} className="relative z-10 space-y-6 text-center">
+      <nav ref={linksRef} className="relative z-10 space-y-8 text-center">
         <Link
           href="/about"
-          className="block text-4xl md:text-6xl font-light tracking-tight opacity-0 translate-y-8 hover:text-foreground/70 transition-colors"
+          className="block text-sm md:text-base font-mono uppercase tracking-[0.3em] opacity-0 translate-y-8 hover:tracking-[0.4em] hover:text-foreground/70 transition-all duration-300"
         >
           About
         </Link>
         <Link
           href="/haris"
-          className="block text-4xl md:text-6xl font-light tracking-tight opacity-0 translate-y-8 hover:text-foreground/70 transition-colors"
+          className="block text-sm md:text-base font-mono uppercase tracking-[0.3em] opacity-0 translate-y-8 hover:tracking-[0.4em] hover:text-foreground/70 transition-all duration-300"
         >
-          Haris / Playground
+          Playground
         </Link>
       </nav>
     </div>
