@@ -11,7 +11,9 @@ interface Project {
   id: string
   name: string
   client: string
-  year: number
+  summary?: string | null
+  startYear: number
+  endYear?: number | null
   heroImage: string
   deviceMockup: string
   deviceType: string

@@ -11,7 +11,9 @@ interface Project {
   id: string
   name: string
   client: string
-  year: number
+  summary?: string | null
+  startYear: number
+  endYear?: number | null
   heroImage: string
   deviceMockup: string
   deviceType: string
@@ -62,7 +64,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     gsap.set(deviceInner, { x: startX })
 
     // Calculate target dimensions
-    const targetWidth = window.innerWidth * 0.85
+    const targetWidth = window.innerWidth * 1.5
     const targetHeight = window.innerHeight * 0.7
 
     // Animation timeline
@@ -175,10 +177,13 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       )
     }
 
+    // Parse markdown case study content
+    const htmlContent = marked(project.caseStudy || "")
+
     return (
       <div
-        className="prose prose-invert prose-lg max-w-none"
-        dangerouslySetInnerHTML={{ __html: marked(project.caseStudy) }}
+        className="prose prose-lg dark:prose-invert max-w-none"
+        dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
     )
   }
@@ -210,7 +215,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           {project.name}
         </h1>
         <div className="flex items-center justify-center gap-6 text-foreground/60 text-lg">
-          <span>{project.year}</span>
+          <span>{project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}</span>
           {services.length > 0 && (
             <>
               <span>•</span>
@@ -232,11 +237,11 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         className="fixed inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden"
       >
         <div
-          className={`device-inner relative ${
-            project.deviceType === "laptop"
-              ? "w-[600px] h-[400px]"
-              : "w-[280px] h-[580px]"
-          }`}
+          className="device-inner relative"
+          style={{
+            width: project.deviceType === "laptop" ? "600px" : "280px",
+            height: project.deviceType === "laptop" ? "400px" : "580px",
+          }}
         >
           <Image
             src={project.deviceMockup}
@@ -262,3 +267,4 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     </div>
   )
 }
+

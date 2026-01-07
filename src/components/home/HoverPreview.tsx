@@ -9,7 +9,10 @@ interface Project {
   id: string
   name: string
   client: string
-  year: number
+  summary?: string | null
+  startYear: number
+  endYear?: number | null
+  services?: string
   heroImage: string
   deviceMockup: string
   deviceType: string
@@ -224,24 +227,36 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
             {/* Text Content - Hidden during case study */}
             <div
               ref={titleRef}
-              className={`flex flex-col gap-4 ${
-                project.layoutVariant === "B" ? "items-start text-left max-w-6xl" :
-                project.layoutVariant === "C" ? "items-end text-right max-w-6xl" :
+              className={`flex flex-col gap-4 max-w-96 ${
+                project.layoutVariant === "B" ? "items-start text-left" :
+                project.layoutVariant === "C" ? "items-end text-right" :
                 project.layoutVariant === "F" ? "items-start" :
-                "items-center text-center"
+                "items-end text-end"
               }`}
               style={{ willChange: "clip-path" }}
             >
-              <h2 className="text-4xl md:text-6xl font-light tracking-tight mb-2">
-                {project.name}
-              </h2>
+              <div>
+                <h2 className="text-4xl md:text-7xl font-light tracking-tight mb-2">
+                  {project.name}
+                </h2>
+                {project.summary && (
+                  <p className="text-sm md:text-base text-foreground mt-3">
+                    {project.summary}
+                  </p>
+                )}
+              </div>
               <div
                 ref={metaRef}
-                className="text-foreground/60"
+                className="text-foreground space-y-1"
               >
                 <p className="text-lg">
-                  {project.client} • {project.year}
+                  {project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}
                 </p>
+                {project.services && (
+                  <p className="text-sm font-mono uppercase">
+                    {JSON.parse(project.services).join(" · ")}
+                  </p>
+                )}
               </div>
             </div>
           </div>

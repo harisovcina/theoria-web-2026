@@ -25,7 +25,9 @@ import { Loader2Icon } from "lucide-react"
 const projectSchema = z.object({
   name: z.string().min(1, "Name is required"),
   client: z.string().min(1, "Client is required"),
-  year: z.string().regex(/^\d{4}$/, "Year must be 4 digits"),
+  summary: z.string().optional(),
+  startYear: z.string().regex(/^\d{4}$/, "Start year must be 4 digits"),
+  endYear: z.string().optional(),
   services: z.string(),
   industry: z.string(),
   heroImage: z.string().min(1, "Hero image is required"),
@@ -69,7 +71,9 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
     defaultValues: {
       name: project?.name || "",
       client: project?.client || "",
-      year: project?.year?.toString() || new Date().getFullYear().toString(),
+      summary: project?.summary || "",
+      startYear: project?.startYear?.toString() || new Date().getFullYear().toString(),
+      endYear: project?.endYear?.toString() || "",
       services: parseJsonField(project?.services),
       industry: parseJsonField(project?.industry),
       heroImage: project?.heroImage || "",
@@ -95,7 +99,9 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
         ...data,
         services: data.services.split(",").map((s) => s.trim()).filter(Boolean),
         industry: data.industry.split(",").map((i) => i.trim()).filter(Boolean),
-        year: parseInt(data.year),
+        summary: data.summary || null,
+        startYear: parseInt(data.startYear),
+        endYear: data.endYear ? parseInt(data.endYear) : null,
         caseStudy: data.caseStudy || null,
       }
 
@@ -145,32 +151,62 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
             )}
           </div>
 
+          <div>
+            <Label htmlFor="client">Client</Label>
+            <Input
+              id="client"
+              {...register("client")}
+              placeholder="e.g., Acme Corp"
+            />
+            {errors.client && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.client.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="summary">Project Summary</Label>
+            <Textarea
+              id="summary"
+              {...register("summary")}
+              placeholder="Short description shown on hover..."
+              rows={3}
+            />
+            {errors.summary && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.summary.message}
+              </p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="client">Client</Label>
+              <Label htmlFor="startYear">Start Year</Label>
               <Input
-                id="client"
-                {...register("client")}
-                placeholder="e.g., Acme Corp"
+                id="startYear"
+                {...register("startYear")}
+                placeholder="2024"
+                maxLength={4}
               />
-              {errors.client && (
+              {errors.startYear && (
                 <p className="text-sm text-destructive mt-1">
-                  {errors.client.message}
+                  {errors.startYear.message}
                 </p>
               )}
             </div>
 
             <div>
-              <Label htmlFor="year">Year</Label>
+              <Label htmlFor="endYear">End Year (optional, leave empty if ongoing)</Label>
               <Input
-                id="year"
-                {...register("year")}
-                placeholder="2024"
+                id="endYear"
+                {...register("endYear")}
+                placeholder="2025"
                 maxLength={4}
               />
-              {errors.year && (
+              {errors.endYear && (
                 <p className="text-sm text-destructive mt-1">
-                  {errors.year.message}
+                  {errors.endYear.message}
                 </p>
               )}
             </div>

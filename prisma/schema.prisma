@@ -66,7 +66,9 @@ model Project {
   id            String   @id @default(cuid())
   name          String
   client        String
-  year          Int
+  summary       String?  // Short project description for hover preview
+  startYear     Int
+  endYear       Int?     // null if ongoing
   services      String   // JSON or comma-separated
   industry      String   // JSON or comma-separated
   heroImage     String
