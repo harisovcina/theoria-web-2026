@@ -1,12 +1,16 @@
 "use client"
 
+import { useRef } from "react"
 import { cn } from "@/lib/utils"
 
 interface Project {
   id: string
   name: string
   client: string
-  year: number
+  summary?: string | null
+  startYear: number
+  endYear?: number | null
+  services?: string
   heroImage: string
   deviceMockup: string
   deviceType: string
@@ -21,6 +25,26 @@ interface ProjectPillsProps {
 }
 
 export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) {
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const handleMouseEnter = (project: Project) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current)
+      hoverTimeoutRef.current = null
+    }
+    onHover(project)
+  }
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current)
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      onHover(null)
+      hoverTimeoutRef.current = null
+    }, 200) // 200ms delay before showing default state
+  }
+
   return (
     <div className="flex flex-col gap-2.5">
       {projects.map((project) => (
@@ -36,8 +60,8 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
             "active:scale-[0.98]",
             project.comingSoon && "opacity-40 hover:opacity-50"
           )}
-          onMouseEnter={() => onHover(project)}
-          onMouseLeave={() => onHover(null)}
+          onMouseEnter={() => handleMouseEnter(project)}
+          onMouseLeave={handleMouseLeave}
           onClick={() => onClick(project)}
         >
           <div className="flex items-center gap-2">

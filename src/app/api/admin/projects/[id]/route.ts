@@ -28,7 +28,9 @@ export async function PUT(
       data: {
         name: body.name,
         client: body.client,
-        year: parseInt(body.year),
+        summary: body.summary || null,
+        startYear: parseInt(body.startYear),
+        endYear: body.endYear ? parseInt(body.endYear) : null,
         services: JSON.stringify(body.services || []),
         industry: JSON.stringify(body.industry || []),
         heroImage: body.heroImage,
