@@ -201,10 +201,10 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       <button
         ref={closeButtonRef}
         onClick={handleClose}
-        className="fixed top-8 right-8 z-50 p-3 rounded-full bg-foreground/10 hover:bg-foreground/20 transition-colors"
+        className="fixed top-5 right-5 sm:top-8 sm:right-8 z-50 p-3 sm:p-4 rounded-full bg-foreground/10 hover:bg-foreground hover:text-background transition-all duration-300 backdrop-blur-sm"
         aria-label="Close case study"
       >
-        <XIcon className="w-6 h-6" />
+        <XIcon className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>
 
       {/* Scrollable container - everything scrolls together */}
@@ -213,43 +213,43 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           {/* Header Section - Revealed after device moves down */}
           <div
             ref={headerRef}
-            className="absolute top-16 left-0 right-0 z-10 px-8 md:px-16 pointer-events-none"
+            className="absolute top-8 sm:top-12 md:top-16 left-0 right-0 z-10 px-5 sm:px-8 md:px-16 pointer-events-none"
           >
             <div className="max-w-7xl mx-auto">
               {/* Large project name on the left */}
-              <h1 className="text-7xl md:text-9xl font-light tracking-tighter leading-none mb-12">
+              <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-normal tracking-tighter leading-[1.05] mb-8 sm:mb-10 md:mb-12">
                 {project.name}
               </h1>
 
               {/* Metadata grid below */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left mb-24">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-left mb-16 sm:mb-20 md:mb-24">
                 {/* Client */}
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                  <div className="text-[10px] sm:text-xs uppercase tracking-widest text-foreground/40 mb-2 font-bold">
                     Client
                   </div>
-                  <div className="text-lg font-light text-foreground">
+                  <div className="text-sm sm:text-base md:text-lg font-medium text-foreground">
                     {project.client}
                   </div>
                 </div>
 
                 {/* Year */}
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                  <div className="text-[10px] sm:text-xs uppercase tracking-widest text-foreground/40 mb-2 font-bold">
                     Year
                   </div>
-                  <div className="text-lg font-light text-foreground">
+                  <div className="text-sm sm:text-base md:text-lg font-medium text-foreground">
                     {project.endYear ? `${project.startYear}–${project.endYear}` : project.startYear}
                   </div>
                 </div>
 
                 {/* Services */}
                 {services.length > 0 && (
-                  <div>
-                    <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                  <div className="col-span-2 md:col-span-1">
+                    <div className="text-[10px] sm:text-xs uppercase tracking-widest text-foreground/40 mb-2 font-bold">
                       Services
                     </div>
-                    <div className="text-lg font-light text-foreground">
+                    <div className="text-sm sm:text-base md:text-lg font-medium text-foreground">
                       {services.join(", ")}
                     </div>
                   </div>
@@ -257,11 +257,11 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
                 {/* Industry */}
                 {industries.length > 0 && (
-                  <div>
-                    <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                  <div className="col-span-2 md:col-span-1">
+                    <div className="text-[10px] sm:text-xs uppercase tracking-widest text-foreground/40 mb-2 font-bold">
                       Industry
                     </div>
-                    <div className="text-lg font-light text-foreground">
+                    <div className="text-sm sm:text-base md:text-lg font-medium text-foreground">
                       {industries.join(", ")}
                     </div>
                   </div>

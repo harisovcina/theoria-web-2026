@@ -47,30 +47,35 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
   }
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-3">
       {projects.map((project) => (
         <button
           key={project.id}
           className={cn(
-            "group relative px-5 py-2.5 rounded-full border border-border/40",
-            "bg-background/60 backdrop-blur-md",
-            "transition-all duration-200 ease-out",
+            "group relative px-6 py-4 rounded-2xl border-2 border-foreground/10",
+            "bg-foreground/5 backdrop-blur-sm",
+            "transition-all duration-300 ease-out",
             "hover:bg-foreground hover:text-background hover:border-foreground",
-            "hover:shadow-md hover:scale-[1.02]",
+            "hover:shadow-lg hover:shadow-foreground/10",
             "text-left pointer-events-auto",
             "active:scale-[0.98]",
-            project.comingSoon && "opacity-40 hover:opacity-50"
+            project.comingSoon && "opacity-50 hover:opacity-70"
           )}
           onMouseEnter={() => handleMouseEnter(project)}
           onMouseLeave={handleMouseLeave}
           onClick={() => onClick(project)}
         >
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-normal whitespace-nowrap">
-              {project.name}
-            </span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-1">
+              <span className="text-base sm:text-lg font-medium tracking-tight">
+                {project.name}
+              </span>
+              <span className="text-xs text-foreground/50 group-hover:text-background/70 uppercase tracking-widest font-medium">
+                {project.client}
+              </span>
+            </div>
             {project.comingSoon && (
-              <span className="text-[10px] opacity-70 uppercase tracking-wider">
+              <span className="text-xs opacity-60 uppercase tracking-widest font-bold bg-foreground/10 group-hover:bg-background/20 px-3 py-1 rounded-full w-fit">
                 Soon
               </span>
             )}

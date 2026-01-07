@@ -228,7 +228,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
             {/* Text Content - Hidden during case study */}
             <div
               ref={titleRef}
-              className={`flex flex-col gap-4 max-w-96 ${
+              className={`flex flex-col gap-4 max-w-full md:max-w-md ${
                 project.layoutVariant === "B" ? "items-start text-left" :
                 project.layoutVariant === "C" ? "items-end text-right" :
                 project.layoutVariant === "F" ? "items-start" :
@@ -237,25 +237,25 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
               style={{ willChange: "clip-path" }}
             >
               <div>
-                <h2 className="text-4xl md:text-7xl font-light tracking-tight mb-2">
+                <h2 className="text-3xl sm:text-5xl md:text-7xl font-normal tracking-tighter mb-3 leading-[1.1]">
                   {project.name}
                 </h2>
                 {project.summary && (
-                  <p className="text-sm md:text-base text-foreground mt-3">
+                  <p className="text-sm sm:text-base text-foreground/90 mt-3 leading-relaxed">
                     {project.summary}
                   </p>
                 )}
               </div>
               <div
                 ref={metaRef}
-                className="text-foreground space-y-1"
+                className="text-foreground space-y-2"
               >
-                <p className="text-lg">
-                  {project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}
+                <p className="text-base sm:text-lg font-medium tracking-tight">
+                  {project.endYear ? `${project.startYear}–${project.endYear}` : project.startYear}
                 </p>
                 {project.services && (
-                  <p className="text-sm font-mono uppercase">
-                    {JSON.parse(project.services).join(" · ")}
+                  <p className="text-xs sm:text-sm uppercase tracking-widest font-semibold opacity-70">
+                    {JSON.parse(project.services).join(" • ")}
                   </p>
                 )}
               </div>

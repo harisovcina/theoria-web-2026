@@ -12,20 +12,20 @@ export function MenuPill({ onClick, isExpanded }: MenuPillProps) {
   return (
     <button
       className={cn(
-        "px-5 py-2.5 rounded-full border border-border/40",
-        "bg-background/60 backdrop-blur-md",
-        "transition-all duration-200 ease-out",
+        "px-6 py-4 rounded-2xl border-2 border-foreground/10",
+        "bg-foreground/5 backdrop-blur-sm",
+        "transition-all duration-300 ease-out",
         "hover:bg-foreground hover:text-background hover:border-foreground",
-        "hover:shadow-md hover:scale-[1.02]",
+        "hover:shadow-lg hover:shadow-foreground/10",
         "pointer-events-auto",
         "active:scale-[0.98]",
-        isExpanded && "bg-foreground text-background border-foreground"
+        isExpanded && "bg-foreground text-background border-foreground shadow-lg shadow-foreground/10"
       )}
       onClick={onClick}
     >
-      <div className="flex items-center gap-2">
-        <MenuIcon className="w-4 h-4" />
-        <span className="text-sm font-normal">Menu</span>
+      <div className="flex items-center gap-3">
+        <MenuIcon className="w-5 h-5" />
+        <span className="text-base sm:text-lg font-medium tracking-tight">Menu</span>
       </div>
     </button>
   )
