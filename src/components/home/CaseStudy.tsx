@@ -6,7 +6,6 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { XIcon } from "lucide-react"
 import { marked } from "marked"
-import { caseStudyComponents } from "@/components/case-studies"
 
 interface Project {
   id: string
@@ -21,7 +20,6 @@ interface Project {
   layoutVariant: string
   comingSoon: boolean
   caseStudy?: string | null
-  caseStudySlug?: string | null
   services?: string
   industry?: string
 }
@@ -95,7 +93,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       .to({}, { duration: 1 })
       // 4. Content shifts down, revealing title and meta
       .to(deviceRef.current, {
-        y: 300,
+        y: 500,
         duration: 1,
         ease: "power2.inOut",
       })
@@ -172,7 +170,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
   }
 
   const renderContent = () => {
-    if (project.comingSoon) {
+    if (project.comingSoon || !project.caseStudy) {
       return (
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center space-y-4">
@@ -183,31 +181,11 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       )
     }
 
-    // Check if there's a custom component for this case study
-    if (project.caseStudySlug && caseStudyComponents[project.caseStudySlug]) {
-      const CustomCaseStudy = caseStudyComponents[project.caseStudySlug]
-      return <CustomCaseStudy project={project} />
-    }
-
-    // Fallback to markdown content if no custom component
-    if (project.caseStudy) {
-      const htmlContent = marked(project.caseStudy)
-      return (
-        <div
-          className="prose prose-lg dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
-        />
-      )
-    }
-
-    // No content available
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4">
-          <h3 className="text-2xl font-light text-foreground/60">Coming Soon</h3>
-          <p className="text-foreground/40">This case study is currently being prepared.</p>
-        </div>
-      </div>
+      <div
+        className="prose prose-invert prose-lg max-w-none"
+        dangerouslySetInnerHTML={{ __html: marked(project.caseStudy) }}
+      />
     )
   }
 
@@ -219,7 +197,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         className="absolute inset-0 bg-background"
       />
 
-      {/* Close Button */}
+      {/* Close Button - Always fixed */}
       <button
         ref={closeButtonRef}
         onClick={handleClose}
@@ -229,31 +207,66 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         <XIcon className="w-6 h-6" />
       </button>
 
-      {/* Scrollable wrapper that contains everything */}
+      {/* Scrollable container - everything scrolls together */}
       <div className="absolute inset-0 overflow-y-auto z-30">
         <div className="relative min-h-screen">
           {/* Header Section - Revealed after device moves down */}
           <div
             ref={headerRef}
-            className="absolute top-16 left-0 right-0 z-10 px-8 md:px-16 text-center pointer-events-none"
+            className="absolute top-16 left-0 right-0 z-10 px-8 md:px-16 pointer-events-none"
           >
-            <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4">
-              {project.name}
-            </h1>
-            <div className="flex items-center justify-center gap-6 text-foreground/60 text-lg">
-              <span>{project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}</span>
-              {services.length > 0 && (
-                <>
-                  <span>•</span>
-                  <span>{services.join(", ")}</span>
-                </>
-              )}
-              {industries.length > 0 && (
-                <>
-                  <span>•</span>
-                  <span>{industries.join(", ")}</span>
-                </>
-              )}
+            <div className="max-w-7xl mx-auto">
+              {/* Large project name on the left */}
+              <h1 className="text-7xl md:text-9xl font-light tracking-tighter leading-none mb-12">
+                {project.name}
+              </h1>
+
+              {/* Metadata grid below */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left mb-24">
+                {/* Client */}
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                    Client
+                  </div>
+                  <div className="text-lg font-light text-foreground">
+                    {project.client}
+                  </div>
+                </div>
+
+                {/* Year */}
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                    Year
+                  </div>
+                  <div className="text-lg font-light text-foreground">
+                    {project.endYear ? `${project.startYear}–${project.endYear}` : project.startYear}
+                  </div>
+                </div>
+
+                {/* Services */}
+                {services.length > 0 && (
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                      Services
+                    </div>
+                    <div className="text-lg font-light text-foreground">
+                      {services.join(", ")}
+                    </div>
+                  </div>
+                )}
+
+                {/* Industry */}
+                {industries.length > 0 && (
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
+                      Industry
+                    </div>
+                    <div className="text-lg font-light text-foreground">
+                      {industries.join(", ")}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -264,11 +277,11 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
             style={{ height: "100vh" }}
           >
             <div
-              className="device-inner relative"
-              style={{
-                width: project.deviceType === "laptop" ? "600px" : "280px",
-                height: project.deviceType === "laptop" ? "400px" : "580px",
-              }}
+              className={`device-inner relative ${
+                project.deviceType === "laptop"
+                  ? "w-[600px] h-[400px]"
+                  : "w-[280px] h-[580px]"
+              }`}
             >
               <Image
                 src={project.deviceMockup}
@@ -297,4 +310,3 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     </div>
   )
 }
-
