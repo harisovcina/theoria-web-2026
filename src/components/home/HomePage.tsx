@@ -1,7 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import Image from "next/image"
+import { useState, useRef } from "react"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ExpoScaleEase } from "gsap/EasePack"
@@ -113,6 +112,21 @@ export function HomePage({ projects }: HomePageProps) {
 
   return (
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Background Video */}
+      <div className="fixed inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/background-video.mp4" type="video/mp4" />
+        </video>
+        {/* Video Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/20" />
+      </div>
+
       {/* Loading Screen */}
       {showLoader && (
         <div className="fixed inset-0 bg-[#F0FFFE] flex items-center justify-center z-[1001]">
@@ -168,27 +182,16 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Default State Content */}
       <div
-        className="fixed inset-0 flex items-start md:items-center justify-start md:justify-center pointer-events-none transition-opacity duration-300 pt-12 md:pt-0 pl-12 md:pl-0"
+        className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
         style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5 }}
       >
-        <div className="text-left md:text-center space-y-6 md:space-y-8 max-w-4xl pr-12 md:pr-0">
-          {/* Logo */}
-          <div className="opacity-0 animate-fade-in-up">
-            <Image
-              src="/logo.svg"
-              alt="Theoria"
-              width={400}
-              height={100}
-              className="w-64 md:w-96 h-auto mx-0 md:mx-auto"
-              priority
-            />
-          </div>
-
-          <p className="text-xl md:text-2xl text-foreground/70 max-w-sm md:max-w-2xl font-light opacity-0 animate-fade-in-up animation-delay-200">
-            We turn complex products into simple interfaces.
-          </p>
-          <p className="text-sm md:text-base text-foreground/50 font-light opacity-0 animate-fade-in-up animation-delay-400">
-            Product design studio, Sarajevo.
+        <div className="text-center space-y-8 max-w-5xl px-8">
+          {/* Main Tagline - Much Larger */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl text-foreground font-light leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
+            We turn complex products into simple interfaces
+          </h1>
+          <p className="text-lg md:text-xl text-foreground/60 font-light opacity-0 animate-fade-in-up animation-delay-400">
+            Product design studio based in Sarajevo
           </p>
         </div>
       </div>
