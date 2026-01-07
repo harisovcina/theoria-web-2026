@@ -17,6 +17,7 @@ interface Project {
   deviceMockup: string
   deviceType: string
   layoutVariant: string
+  caseStudySlug?: string | null
 }
 
 interface HoverPreviewProps {

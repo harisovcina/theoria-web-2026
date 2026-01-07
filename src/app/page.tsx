@@ -17,6 +17,7 @@ export default async function Home() {
       layoutVariant: true,
       comingSoon: true,
       caseStudy: true,
+      caseStudySlug: true,
       services: true,
       industry: true,
     },

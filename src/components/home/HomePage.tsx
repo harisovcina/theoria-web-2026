@@ -20,6 +20,7 @@ interface Project {
   layoutVariant: string
   comingSoon: boolean
   caseStudy?: string | null
+  caseStudySlug?: string | null
   services?: string
   industry?: string
 }

@@ -16,6 +16,7 @@ interface Project {
   deviceType: string
   layoutVariant: string
   comingSoon: boolean
+  caseStudySlug?: string | null
 }
 
 interface ProjectPillsProps {
