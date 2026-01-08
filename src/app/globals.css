@@ -89,12 +89,24 @@
   .animation-delay-200 {
     animation-delay: 200ms;
   }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
   .animation-delay-400 {
     animation-delay: 400ms;
   }
   .animation-delay-600 {
     animation-delay: 600ms;
   }
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+}
+
+/* Backdrop blur - outside @layer to ensure it's always included */
+.backdrop-blur-custom {
+  -webkit-backdrop-filter: blur(64px) !important;
+  backdrop-filter: blur(64px) !important;
 }
 
 /* Custom animations for homepage */

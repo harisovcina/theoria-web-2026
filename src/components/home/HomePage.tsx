@@ -175,15 +175,15 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Default State Content */}
       <div
-        className="fixed inset-0 flex items-start py-40 justify-center pointer-events-none transition-opacity duration-300"
-        style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5 }}
+        className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
+        style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5, paddingTop: "30vh", alignItems: "flex-start" }}
       >
-        <div className="text-start space-y-8 max-w-5xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl px-8">
+        <div className="text-start space-y-4 md:space-y-6 lg:space-y-8 max-w-2xl md:max-w-3xl lg:max-w-3xl xl:max-w-4xl px-8">
           {/* Main Tagline*/}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
+          <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
             We turn complex products into simple interfaces
           </h1>
-          <p className="text-sm text-foreground/80 font-light uppercase font-mono tracking-widest opacity-0 animate-fade-in-up animation-delay-400">
+          <p className="text-xs sm:text-sm md:text-sm text-foreground/80 font-light uppercase font-mono tracking-widest opacity-0 animate-fade-in-up animation-delay-400">
             Product design studio based in Sarajevo
           </p>
         </div>
@@ -191,16 +191,14 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Project Pills - Left Side */}
       {projects.length > 0 && (
-        <div className="fixed left-4 md:left-8 lg:left-8 xl:left-12 top-auto xl:top-1/2 bottom-24 xl:bottom-auto xl:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
-          <ProjectPills
-            projects={projects}
-            onHover={setHoveredProject}
-            onClick={(project) => {
-              setSelectedProject(project)
-              setPageState("case-study")
-            }}
-          />
-        </div>
+        <ProjectPills
+          projects={projects}
+          onHover={setHoveredProject}
+          onClick={(project) => {
+            setSelectedProject(project)
+            setPageState("case-study")
+          }}
+        />
       )}
 
       {/* Hover Preview Layer - Keep visible but hide device during case study */}
@@ -211,17 +209,15 @@ export function HomePage({ projects }: HomePageProps) {
       />
 
       {/* Menu Dock - Top Center */}
-      <div className="opacity-0 animate-fade-in animation-delay-800 relative z-[1000]">
-        <MenuDock
-          onMenuClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
-          isMenuOpen={pageState === "menu"}
-          isCaseStudy={pageState === "case-study"}
-          onBackClick={() => {
-            setSelectedProject(null)
-            setPageState("default")
-          }}
-        />
-      </div>
+      <MenuDock
+        onMenuClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
+        isMenuOpen={pageState === "menu"}
+        isCaseStudy={pageState === "case-study"}
+        onBackClick={() => {
+          setSelectedProject(null)
+          setPageState("default")
+        }}
+      />
     </main>
   )
 }

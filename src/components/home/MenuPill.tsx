@@ -13,7 +13,7 @@ export function MenuPill({ onClick, isExpanded }: MenuPillProps) {
     <button
       className={cn(
         "px-5 py-2.5 rounded-full border border-border/40",
-        "bg-background/60 backdrop-blur-md",
+        "bg-background/60 backdrop-blur-custom",
         "transition-all duration-200 ease-out",
         "hover:bg-foreground hover:text-background hover:border-foreground",
         "hover:shadow-md hover:scale-[1.02]",
