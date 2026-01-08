@@ -7,7 +7,6 @@ import { ExpoScaleEase } from "gsap/EasePack"
 import { ProjectPills } from "./ProjectPills"
 import { MenuDock } from "./MenuDock"
 import { HoverPreview } from "./HoverPreview"
-import { MenuExpanded } from "./MenuExpanded"
 import { CaseStudy } from "./CaseStudy"
 
 gsap.registerPlugin(ExpoScaleEase)
@@ -174,20 +173,14 @@ export function HomePage({ projects }: HomePageProps) {
         />
       )}
 
-      {/* Menu Expanded Layer */}
-      <MenuExpanded
-        isExpanded={pageState === "menu"}
-        onClose={() => setPageState("default")}
-      />
-
       {/* Default State Content */}
       <div
-        className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
+        className="fixed inset-0 flex items-start py-40 justify-center pointer-events-none transition-opacity duration-300"
         style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5 }}
       >
-        <div className="text-start space-y-8 max-w-5xl md:max-w-2xl lg:max-w-5xl px-8">
+        <div className="text-start space-y-8 max-w-5xl md:max-w-2xl lg:max-w-4xl xl:max-w-5xl px-8">
           {/* Main Tagline*/}
-          <h1 className="text-4xl md:text-6xl lg:text-8xl text-foreground font-extralight leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
             We turn complex products into simple interfaces
           </h1>
           <p className="text-sm text-foreground/80 font-light uppercase font-mono tracking-widest opacity-0 animate-fade-in-up animation-delay-400">
@@ -198,7 +191,7 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Project Pills - Left Side */}
       {projects.length > 0 && (
-        <div className="fixed left-4 md:left-12 top-auto lg:top-1/2 bottom-32 lg:bottom-auto lg:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
+        <div className="fixed left-4 md:left-8 lg:left-8 xl:left-12 top-auto xl:top-1/2 bottom-24 xl:bottom-auto xl:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
           <ProjectPills
             projects={projects}
             onHover={setHoveredProject}
@@ -222,6 +215,11 @@ export function HomePage({ projects }: HomePageProps) {
         <MenuDock
           onMenuClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
           isMenuOpen={pageState === "menu"}
+          isCaseStudy={pageState === "case-study"}
+          onBackClick={() => {
+            setSelectedProject(null)
+            setPageState("default")
+          }}
         />
       </div>
     </main>

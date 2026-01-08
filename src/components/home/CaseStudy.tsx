@@ -4,7 +4,6 @@ import { useRef } from "react"
 import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
-import { XIcon } from "lucide-react"
 import { marked } from "marked"
 import { caseStudyComponents } from "../case-studies"
 
@@ -38,7 +37,6 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
   const deviceRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useGSAP(() => {
     if (!project) return
@@ -47,7 +45,6 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     gsap.set(overlayRef.current, { opacity: 0 })
     gsap.set(headerRef.current, { y: -50, opacity: 0 })
     gsap.set(contentRef.current, { y: 100, opacity: 0 })
-    gsap.set(closeButtonRef.current, { opacity: 0 })
 
     const container = deviceRef.current
     const deviceInner = container?.querySelector('.device-inner')
@@ -109,16 +106,12 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         duration: 0.8,
         ease: "power2.out",
       }, "-=0.6")
-      // 5. Fade in case study content and close button
+      // 5. Fade in case study content
       .to(contentRef.current, {
         y: 0,
         opacity: 1,
         duration: 0.6,
         ease: "power2.out",
-      }, "-=0.3")
-      .to(closeButtonRef.current, {
-        opacity: 1,
-        duration: 0.3,
       }, "-=0.3")
   }, [project])
 
@@ -128,7 +121,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     })
 
     timeline
-      .to([headerRef.current, deviceRef.current, contentRef.current, closeButtonRef.current], {
+      .to([headerRef.current, deviceRef.current, contentRef.current], {
         opacity: 0,
         duration: 0.3,
         ease: "power2.in",
@@ -211,16 +204,6 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         className="absolute inset-0 bg-background"
       />
 
-      {/* Close Button - Always fixed, left side */}
-      <button
-        ref={closeButtonRef}
-        onClick={handleClose}
-        className="fixed top-4 md:top-8 left-8 z-[1001] px-4 py-2 rounded-full bg-foreground/10 hover:bg-foreground hover:text-background transition-colors font-mono text-xs uppercase tracking-widest"
-        aria-label="Close case study"
-      >
-        Back
-      </button>
-
       {/* Scrollable container - everything scrolls together */}
       <div className="absolute inset-0 overflow-y-auto z-30">
         <div className="relative min-h-screen">
@@ -231,7 +214,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           >
             <div className="max-w-7xl mx-auto">
               {/* Large project name */}
-              <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extralight tracking-tight leading-none mb-6 md:mb-8">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extralight tracking-tight leading-none mb-6 md:mb-8">
                 {project.name}
               </h1>
 
@@ -299,14 +282,14 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           {/* Case Study Content */}
           <div
             ref={contentRef}
-            className="relative bg-background py-16 px-8 md:px-16 lg:px-24 min-h-screen z-40"
+            className="relative bg-background py-16 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
           >
             <div className="max-w-9xl mx-auto">
               {renderContent()}
             </div>
 
             {/* Image Copyright Credit */}
-            <div className="absolute bottom-8 right-8 md:right-16 lg:right-24 z-50">
+            <div className="absolute bottom-8 right-8 md:right-16 lg:right-20 xl:right-24 z-50">
               <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
                 IMAGE © {project.client}
               </p>
