@@ -50,7 +50,15 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
   }
 
   return (
-    <div className="fixed left-4 md:left-8 lg:left-8 xl:left-12 bottom-24 xl:top-[50vh] xl:bottom-auto z-10 flex flex-col gap-2 items-start">
+    <div className={cn(
+      "fixed z-10 pointer-events-none",
+      // Mobile: 2-column grid at bottom
+      "left-4 right-4 bottom-16 grid grid-cols-2 gap-1 w-fit",
+      // Tablet: 2-column grid at bottom-left
+      "md:left-8 md:right-auto md:bottom-24 md:grid-cols-2 md:gap-2 md:w-fit",
+      // Desktop: vertical stack (1 column), centered vertically on left
+      "xl:left-12 xl:top-[50vh] xl:bottom-auto xl:flex xl:flex-col"
+    )}>
       {projects.map((project) => (
         <button
           key={project.id}
@@ -71,7 +79,7 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
             {project.name}
           </span>
           {project.comingSoon && (
-            <span className="text-[8px] opacity-70 uppercase tracking-wider">
+            <span className="text-[8px] opacity-70 text-violet-500 uppercase tracking-wider">
               Soon
             </span>
           )}
