@@ -14,8 +14,13 @@ export default async function AdminLayout({
   if (!BYPASS_AUTH_IN_DEV) {
     const session = await auth()
 
-    // Double-check authorization (middleware should already handle this)
-    if (!session?.user?.email || !AUTHORIZED_ADMINS.includes(session.user.email)) {
+    // If not signed in at all, redirect to sign in page
+    if (!session?.user?.email) {
+      redirect("/api/auth/signin?callbackUrl=/admin")
+    }
+
+    // If signed in but not authorized, redirect to homepage
+    if (!AUTHORIZED_ADMINS.includes(session.user.email)) {
       redirect("/")
     }
   }
