@@ -18,6 +18,7 @@ interface Project {
   deviceType: string
   layoutVariant: string
   caseStudySlug?: string | null
+  website?: string | null
 }
 
 interface HoverPreviewProps {

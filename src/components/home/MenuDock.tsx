@@ -22,6 +22,7 @@ interface Project {
   layoutVariant: string
   comingSoon: boolean
   caseStudySlug?: string | null
+  website?: string | null
 }
 
 interface MenuDockProps {

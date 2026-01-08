@@ -30,6 +30,7 @@ const projectSchema = z.object({
   endYear: z.string().optional(),
   services: z.string(),
   industry: z.string(),
+  website: z.string().optional(),
   heroImage: z.string().min(1, "Hero image is required"),
   deviceMockup: z.string().min(1, "Device mockup is required"),
   deviceType: z.enum(["laptop", "mobile"]),
@@ -77,6 +78,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       endYear: project?.endYear?.toString() || "",
       services: parseJsonField(project?.services),
       industry: parseJsonField(project?.industry),
+      website: project?.website || "",
       heroImage: project?.heroImage || "",
       deviceMockup: project?.deviceMockup || "",
       deviceType: project?.deviceType || "laptop",
@@ -104,6 +106,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
         summary: data.summary || null,
         startYear: parseInt(data.startYear),
         endYear: data.endYear ? parseInt(data.endYear) : null,
+        website: data.website || null,
         caseStudy: data.caseStudy || null,
         caseStudySlug: data.caseStudySlug || null,
       }
@@ -231,6 +234,18 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
               {...register("industry")}
               placeholder="e.g., FinTech, SaaS"
             />
+          </div>
+
+          <div>
+            <Label htmlFor="website">Website (optional)</Label>
+            <Input
+              id="website"
+              {...register("website")}
+              placeholder="e.g., example.com or https://example.com"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Project website URL - will be displayed as &quot;See Live&quot; in case study
+            </p>
           </div>
         </div>
       </Card>

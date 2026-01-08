@@ -27,6 +27,7 @@ interface Project {
   caseStudySlug?: string | null
   services?: string
   industry?: string
+  website?: string | null
 }
 
 interface HomePageProps {

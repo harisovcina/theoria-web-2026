@@ -23,6 +23,7 @@ export default async function Home() {
       caseStudySlug: true,
       services: true,
       industry: true,
+      website: true,
     },
   })
 

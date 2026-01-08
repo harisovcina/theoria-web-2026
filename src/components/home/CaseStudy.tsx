@@ -23,6 +23,7 @@ interface Project {
   caseStudySlug?: string | null
   services?: string
   industry?: string
+  website?: string | null
 }
 
 interface CaseStudyProps {
@@ -81,7 +82,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       // 1. Fade in dark background
       .to(overlayRef.current, {
         opacity: 1,
-        duration: 0.4,
+        duration: 0.3,
         ease: "power2.out",
       }, 0)
       // 2. Move to center AND expand simultaneously from TIME 0!
@@ -89,15 +90,15 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         x: 0,
         width: targetWidth,
         height: targetHeight,
-        duration: 0.8,
+        duration: 0.5,
         ease: "power3.out",
       }, 0)
       // 3. ~1 second pause (let it breathe)
-      .to({}, { duration: 1 })
+      .to({}, { duration: 0.3 })
       // 4. Content shifts down, revealing title and meta
       .to(deviceRef.current, {
         y: yShift,
-        duration: 1,
+        duration: 0.8,
         ease: "power2.inOut",
       })
       .to(headerRef.current, {
@@ -220,11 +221,20 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
               {/* Compact metadata - single line on desktop, stacked on mobile */}
               <div className="flex flex-wrap gap-x-12 gap-y-6 text-sm md:text-base">
-                {/* Client */}
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Client</span>
-                  <span className="font-light text-foreground">{project.client}</span>
-                </div>
+                {/* Website */}
+                {project.website && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">See Live</span>
+                    <a
+                      href={project.website.startsWith('http') ? project.website : `https://${project.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-light text-foreground/80 hover:text-foreground transition-colors duration-200 pointer-events-auto"
+                    >
+                      @{project.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                    </a>
+                  </div>
+                )}
 
                 {/* Year */}
                 <div className="flex flex-col gap-1">
@@ -234,19 +244,19 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
                   </span>
                 </div>
 
-                {/* Services */}
-                {services.length > 0 && (
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Services</span>
-                    <span className="font-light text-foreground/80">{services.join(", ")}</span>
-                  </div>
-                )}
-
                 {/* Industry */}
                 {industries.length > 0 && (
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Industry</span>
                     <span className="font-light text-foreground/80">{industries.join(", ")}</span>
+                  </div>
+                )}
+
+                {/* Services */}
+                {services.length > 0 && (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Services</span>
+                    <span className="font-light text-foreground/80">{services.join(", ")}</span>
                   </div>
                 )}
               </div>
