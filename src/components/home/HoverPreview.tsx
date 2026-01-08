@@ -197,7 +197,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
           <div className="absolute inset-0 bg-background-5" />
 
           {/* Image Copyright Credit */}
-          <div className="absolute bottom-8 right-8 z-50">
+          <div className="absolute bottom-8 right-8 md:right-12 lg:right-16 xl:right-16 z-50">
             <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
               IMAGE © {project.client}
             </p>
@@ -207,8 +207,8 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
 
       {/* Content Layer - Device and text with clip-path animations */}
       {project && (
-        <div className="absolute inset-0 flex items-center justify-center pl-32 md:pl-48">
-          <div className={`flex max-w-9xl w-full p-12 md:p-24 ${getLayoutClasses()}`}>
+        <div className="absolute inset-0 flex items-center justify-center pl-32 md:pl-40 lg:pl-44 xl:pl-48">
+          <div className={`flex max-w-9xl w-full p-12 md:p-16 lg:p-20 xl:p-24 ${getLayoutClasses()}`}>
             {/* Device Mockup */}
             {!hideDevice && (
               <div
@@ -235,7 +235,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
             {/* Text Content - Hidden during case study */}
             <div
               ref={titleRef}
-              className={`flex flex-col gap-4 max-w-md ${
+              className={`flex flex-col gap-4 max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ${
                 project.layoutVariant === "B" ? "items-start text-left" :
                 project.layoutVariant === "C" ? "items-end text-right" :
                 project.layoutVariant === "F" ? "items-start" :
@@ -244,11 +244,11 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
               style={{ willChange: "clip-path" }}
             >
               <div>
-                <h2 className="text-4xl md:text-8xl font-extralight tracking-tight mb-2">
+                <h2 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-extralight tracking-tight mb-2">
                   {project.name}
                 </h2>
                 {project.summary && (
-                  <p className="text-sm md:text-xl font-extralight text-foreground mt-3">
+                  <p className="text-sm md:text-lg lg:text-xl xl:text-xl font-extralight text-foreground mt-3">
                     {project.summary}
                   </p>
                 )}
@@ -257,11 +257,11 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
                 ref={metaRef}
                 className="text-foreground space-y-1"
               >
-                <p className="text-base font-mono">
+                <p className="text-sm md:text-base lg:text-base xl:text-base font-mono">
                   {project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}
                 </p>
                 {project.services && (
-                  <p className="text-xs font-mono uppercase">
+                  <p className="text-[10px] md:text-xs lg:text-xs xl:text-xs font-mono uppercase">
                     {JSON.parse(project.services).join(" · ")}
                   </p>
                 )}
