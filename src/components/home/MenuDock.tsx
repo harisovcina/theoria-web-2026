@@ -8,16 +8,36 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { cn } from "@/lib/utils"
 
+interface Project {
+  id: string
+  name: string
+  client: string
+  summary?: string | null
+  startYear: number
+  endYear?: number | null
+  services?: string
+  heroImage: string
+  deviceMockup: string
+  deviceType: string
+  layoutVariant: string
+  comingSoon: boolean
+  caseStudySlug?: string | null
+}
+
 interface MenuDockProps {
   onMenuClick: () => void
   isMenuOpen: boolean
   isCaseStudy?: boolean
   onBackClick?: () => void
+  projects?: Project[]
+  onProjectHover?: (project: Project | null) => void
+  onProjectClick?: (project: Project) => void
 }
 
-export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackClick }: MenuDockProps) {
+export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackClick, projects = [], onProjectHover, onProjectClick }: MenuDockProps) {
   const dockRef = useRef<HTMLDivElement>(null)
   const [shouldRenderMenu, setShouldRenderMenu] = useState(false)
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Manage menu mount/unmount with delay for exit animation
   useEffect(() => {
@@ -29,12 +49,43 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
     }
   }, [isMenuOpen, shouldRenderMenu])
 
+  // Cleanup hover timeout
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const handleProjectMouseEnter = (project: Project) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current)
+    }
+    onProjectHover?.(project)
+  }
+
+  const handleProjectMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      onProjectHover?.(null)
+    }, 200)
+  }
+
   useGSAP(() => {
     if (!dockRef.current) return
 
     if (isCaseStudy) {
-      // Expand to full width
-      const targetWidth = window.innerWidth - 128
+      // Expand to full width with responsive margins
+      // Mobile (<768px): 80px total
+      // Tablet (768-1280px): 200px total
+      // Desktop (>1280px): 800px total
+      let margin = 80
+      if (window.innerWidth >= 1280) {
+        margin = 800
+      } else if (window.innerWidth >= 768) {
+        margin = 200
+      }
+      const targetWidth = window.innerWidth - margin
       gsap.to(dockRef.current, {
         width: targetWidth,
         duration: 0.8,
@@ -57,33 +108,48 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
         ref={dockRef}
         className={cn(
           "fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-[999] opacity-0 animate-fade-in animation-delay-800",
-          "flex items-center justify-between gap-32 px-2 py-1 rounded-full",
+          "flex items-center justify-between gap-16 md:gap-32 lg:gap-64 px-2 py-1 rounded-full",
           "bg-background/5 backdrop-blur-custom",
           "border border-white/10",
           "shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]"
         )}
       >
-        {/* Left Button */}
-        <button
-          onClick={isCaseStudy ? onBackClick : onMenuClick}
-          className={cn(
-            "rounded-full flex items-center justify-center gap-2",
-            isCaseStudy ? "px-2 py-2 bg-foreground/10" : "w-10 h-10"
-          )}
-        >
-          {isCaseStudy ? (
-            <ChevronLeft className="w-4 h-4" />
-          ) : (
-            <div className="w-4 h-4 flex flex-col items-center justify-center gap-1">
-              <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "rotate-45 translate-y-[5.5px]")} />
-              <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "opacity-0")} />
-              <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "-rotate-45 -translate-y-[5.5px]")} />
-            </div>
-          )}
-        </button>
+        {/* Left Side - Buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={isCaseStudy ? onBackClick : onMenuClick}
+            className={cn(
+              "rounded-full flex items-center justify-center gap-2",
+              isCaseStudy ? "px-2 py-2 bg-foreground/10" : "w-10 h-10"
+            )}
+          >
+            {isCaseStudy ? (
+              <ChevronLeft className="w-4 h-4" />
+            ) : (
+              <div className="w-4 h-4 flex flex-col items-center justify-center gap-1">
+                <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "rotate-45 translate-y-[5.5px]")} />
+                <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "opacity-0")} />
+                <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "-rotate-45 -translate-y-[5.5px]")} />
+              </div>
+            )}
+          </button>
 
-        {/* Logo */}
-        <Link href="/">
+          {isCaseStudy && (
+            <button
+              onClick={onMenuClick}
+              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-foreground/5 transition-colors duration-200"
+            >
+              <div className="w-4 h-4 flex flex-col items-center justify-center gap-1">
+                <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "rotate-45 translate-y-[5.5px]")} />
+                <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "opacity-0")} />
+                <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "-rotate-45 -translate-y-[5.5px]")} />
+              </div>
+            </button>
+          )}
+        </div>
+
+        {/* Logo - Absolutely Centered */}
+        <Link href="/" className="absolute left-1/2 -translate-x-1/2">
           <Image
             src="/logo.svg"
             alt="theoria"
@@ -96,7 +162,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
 
         {/* Right Spacer */}
         <div className="w-10 h-10 flex items-center justify-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
         </div>
       </div>
 
@@ -114,30 +180,72 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-foreground/5 rounded-full blur-[120px] opacity-0 animate-fade-in animation-delay-200 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-foreground/5 rounded-full blur-[100px] opacity-0 animate-fade-in animation-delay-300 pointer-events-none" />
 
-          {/* Navigation Links */}
-          <nav
-            className="relative z-10 flex flex-col items-center gap-12"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {[
-              { href: "/about", label: "About", number: "01" },
-              { href: "/haris", label: "Playground", number: "02" }
-            ].map(({ href, label, number }) => (
-              <Link
-                key={href}
-                href={href}
-                className="group relative opacity-0 animate-fade-in-up animation-delay-400"
-              >
-                <span className="absolute -left-16 top-1/2 -translate-y-1/2 font-mono text-xs text-foreground/30 group-hover:text-foreground/50 transition-colors duration-300">
-                  {number}
+          {/* Content Wrapper */}
+          <div className="relative z-10 flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+            {/* Navigation Links */}
+            <nav className="flex flex-col items-center gap-12">
+              {[
+                { href: "/about", label: "About", number: "01" },
+                { href: "/haris", label: "Playground", number: "02" }
+              ].map(({ href, label, number }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="group relative opacity-0 animate-fade-in-up animation-delay-400"
+                >
+                  <span className="absolute -left-16 top-1/2 -translate-y-1/2 font-mono text-xs text-foreground/30 group-hover:text-foreground/50 transition-colors duration-300">
+                    {number}
+                  </span>
+                  <h2 className="text-base uppercase font-mono tracking-widest leading-none transition-all duration-500 ease-out group-hover:tracking-[8]">
+                    {label}
+                  </h2>
+                  <div className="absolute inset-0 -z-10 bg-foreground/0 group-hover:bg-foreground/10 blur-xl transition-all duration-500 rounded-full scale-0 group-hover:scale-150" />
+                </Link>
+              ))}
+            </nav>
+
+            {/* Case Studies Pills - Separate Container */}
+            {projects.length > 0 && (
+              <div className="flex flex-col items-center gap-4 mt-24 opacity-0 animate-fade-in-up animation-delay-600">
+                {/* Divider */}
+                <div className="w-12 h-[1px] bg-foreground/10" />
+
+                {/* Label */}
+                <span className="font-mono mt-8 text-[11px] uppercase tracking-widest text-foreground/30">
+                  Case Studies
                 </span>
-                <h2 className="text-base uppercase font-mono tracking-widest leading-none transition-all duration-500 ease-out group-hover:tracking-[8]">
-                  {label}
-                </h2>
-                <div className="absolute inset-0 -z-10 bg-foreground/0 group-hover:bg-foreground/10 blur-xl transition-all duration-500 rounded-full scale-0 group-hover:scale-150" />
-              </Link>
-            ))}
-          </nav>
+
+                {/* Pills Row */}
+                <div className="flex flex-col md:flex-row items-center gap-2">
+                  {projects.map((project) => (
+                    <button
+                      key={project.id}
+                      className={cn(
+                        "group flex items-center gap-2 w-fit px-5 py-2.5 rounded-full",
+                        "bg-background/10 backdrop-blur-custom border border-foreground/5",
+                        "transition-[background-color,color,border-color,box-shadow,opacity] duration-200 ease-out",
+                        "hover:bg-foreground hover:text-background hover:border-foreground hover:shadow-md",
+                        "text-left pointer-events-auto",
+                        project.comingSoon && "opacity-40 hover:opacity-50"
+                      )}
+                      onMouseEnter={() => handleProjectMouseEnter(project)}
+                      onMouseLeave={handleProjectMouseLeave}
+                      onClick={() => onProjectClick?.(project)}
+                    >
+                      <span className="text-xs font-normal font-mono uppercase tracking-widest whitespace-nowrap">
+                        {project.name}
+                      </span>
+                      {project.comingSoon && (
+                        <span className="text-[8px] opacity-70 uppercase tracking-wider">
+                          Soon
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Close Hint */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-widest text-foreground/30 opacity-0 animate-fade-in animation-delay-600">
