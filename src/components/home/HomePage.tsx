@@ -187,7 +187,7 @@ export function HomePage({ projects }: HomePageProps) {
       >
         <div className="text-center space-y-8 max-w-5xl px-8">
           {/* Main Tagline - Much Larger */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl text-foreground font-light leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl text-foreground font-thin leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
             We turn complex products into simple interfaces
           </h1>
           <p className="text-lg md:text-xl text-foreground font-light opacity-0 animate-fade-in-up animation-delay-400">
