@@ -47,13 +47,13 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
   }
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-2 items-start">
       {projects.map((project) => (
         <button
           key={project.id}
           className={cn(
-            "group relative px-5 py-2.5 rounded-full border border-border/40",
-            "bg-background/60 backdrop-blur-md",
+            "group relative w-fit px-5 py-2.5 rounded-full border border-foreground/5",
+            "bg-background/10 backdrop-blur-lg",
             "transition-all duration-200 ease-out",
             "hover:bg-foreground hover:text-background hover:border-foreground",
             "hover:shadow-md hover:scale-[1.02]",
@@ -66,11 +66,11 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
           onClick={() => onClick(project)}
         >
           <div className="flex items-center gap-2">
-            <span className="text-sm font-normal whitespace-nowrap">
+            <span className="text-xs font-normal font-mono uppercase tracking-widest whitespace-nowrap">
               {project.name}
             </span>
             {project.comingSoon && (
-              <span className="text-[10px] opacity-70 uppercase tracking-wider">
+              <span className="text-[8px] opacity-70 uppercase tracking-wider">
                 Soon
               </span>
             )}

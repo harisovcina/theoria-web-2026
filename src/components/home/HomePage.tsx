@@ -185,27 +185,20 @@ export function HomePage({ projects }: HomePageProps) {
         className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
         style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5 }}
       >
-        <div className="text-center space-y-8 max-w-5xl px-8">
-          {/* Main Tagline - Much Larger */}
-          <h1 className="text-6xl md:text-7xl lg:text-8xl text-foreground font-thin leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
+        <div className="text-start space-y-8 max-w-5xl md:max-w-2xl lg:max-w-5xl px-8">
+          {/* Main Tagline*/}
+          <h1 className="text-4xl md:text-6xl lg:text-8xl text-foreground font-extralight leading-tight tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
             We turn complex products into simple interfaces
           </h1>
-          <p className="text-lg md:text-xl text-foreground font-light opacity-0 animate-fade-in-up animation-delay-400">
+          <p className="text-sm text-foreground/80 font-light uppercase font-mono tracking-widest opacity-0 animate-fade-in-up animation-delay-400">
             Product design studio based in Sarajevo
           </p>
         </div>
       </div>
 
-      {/* Hover Preview Layer - Keep visible but hide device during case study */}
-      <HoverPreview
-        ref={hoverPreviewRef}
-        project={pageState === "case-study" ? selectedProject : hoveredProject}
-        hideDevice={pageState === "case-study"}
-      />
-
       {/* Project Pills - Left Side */}
       {projects.length > 0 && (
-        <div className="fixed left-12 md:left-12 top-auto md:top-1/2 bottom-12 md:bottom-auto md:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
+        <div className="fixed left-4 md:left-12 top-auto lg:top-1/2 bottom-32 lg:bottom-auto lg:-translate-y-1/2 z-10 opacity-0 animate-fade-in animation-delay-600">
           <ProjectPills
             projects={projects}
             onHover={setHoveredProject}
@@ -217,8 +210,15 @@ export function HomePage({ projects }: HomePageProps) {
         </div>
       )}
 
-      {/* Menu Dock - Bottom Center */}
-      <div className="opacity-0 animate-fade-in animation-delay-800">
+      {/* Hover Preview Layer - Keep visible but hide device during case study */}
+      <HoverPreview
+        ref={hoverPreviewRef}
+        project={pageState === "case-study" ? selectedProject : hoveredProject}
+        hideDevice={pageState === "case-study"}
+      />
+
+      {/* Menu Dock - Top Center */}
+      <div className="opacity-0 animate-fade-in animation-delay-800 relative z-[1000]">
         <MenuDock
           onMenuClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
           isMenuOpen={pageState === "menu"}

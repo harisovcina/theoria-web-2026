@@ -211,14 +211,14 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         className="absolute inset-0 bg-background"
       />
 
-      {/* Close Button - Always fixed */}
+      {/* Close Button - Always fixed, left side */}
       <button
         ref={closeButtonRef}
         onClick={handleClose}
-        className="fixed top-8 right-8 z-50 p-3 rounded-full bg-foreground/10 hover:bg-foreground/20 transition-colors"
+        className="fixed top-4 md:top-8 left-8 z-[1001] px-4 py-2 rounded-full bg-foreground/10 hover:bg-foreground hover:text-background transition-colors font-mono text-xs uppercase tracking-widest"
         aria-label="Close case study"
       >
-        <XIcon className="w-6 h-6" />
+        Back
       </button>
 
       {/* Scrollable container - everything scrolls together */}
@@ -227,57 +227,43 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           {/* Header Section - Revealed after device moves down */}
           <div
             ref={headerRef}
-            className="absolute top-16 left-0 right-0 z-10 px-8 md:px-16 pointer-events-none"
+            className="absolute top-24 md:top-32 left-0 right-0 z-10 px-4 md:px-16 pointer-events-none"
           >
             <div className="max-w-7xl mx-auto">
-              {/* Large project name on the left */}
-              <h1 className="text-7xl md:text-9xl font-light tracking-tighter leading-none mb-12">
+              {/* Large project name */}
+              <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extralight tracking-tight leading-none mb-6 md:mb-8">
                 {project.name}
               </h1>
 
-              {/* Metadata grid below */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left mb-24">
+              {/* Compact metadata - single line on desktop, stacked on mobile */}
+              <div className="flex flex-wrap gap-x-12 gap-y-6 text-sm md:text-base">
                 {/* Client */}
-                <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
-                    Client
-                  </div>
-                  <div className="text-lg font-light text-foreground">
-                    {project.client}
-                  </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Client</span>
+                  <span className="font-light text-foreground">{project.client}</span>
                 </div>
 
                 {/* Year */}
-                <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
-                    Year
-                  </div>
-                  <div className="text-lg font-light text-foreground">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Year</span>
+                  <span className="font-light text-foreground tabular-nums">
                     {project.endYear ? `${project.startYear}–${project.endYear}` : project.startYear}
-                  </div>
+                  </span>
                 </div>
 
                 {/* Services */}
                 {services.length > 0 && (
-                  <div>
-                    <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
-                      Services
-                    </div>
-                    <div className="text-lg font-light text-foreground">
-                      {services.join(", ")}
-                    </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Services</span>
+                    <span className="font-light text-foreground/80">{services.join(", ")}</span>
                   </div>
                 )}
 
                 {/* Industry */}
                 {industries.length > 0 && (
-                  <div>
-                    <div className="text-xs uppercase tracking-wider text-foreground/40 mb-2 font-medium">
-                      Industry
-                    </div>
-                    <div className="text-lg font-light text-foreground">
-                      {industries.join(", ")}
-                    </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Industry</span>
+                    <span className="font-light text-foreground/80">{industries.join(", ")}</span>
                   </div>
                 )}
               </div>
