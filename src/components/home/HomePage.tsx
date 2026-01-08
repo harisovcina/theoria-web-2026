@@ -217,6 +217,12 @@ export function HomePage({ projects }: HomePageProps) {
           setSelectedProject(null)
           setPageState("default")
         }}
+        projects={projects}
+        onProjectHover={setHoveredProject}
+        onProjectClick={(project) => {
+          setSelectedProject(project)
+          setPageState("case-study")
+        }}
       />
     </main>
   )
