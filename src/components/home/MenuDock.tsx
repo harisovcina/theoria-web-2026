@@ -36,6 +36,7 @@ interface MenuDockProps {
 
 export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackClick, projects = [], onProjectHover, onProjectClick }: MenuDockProps) {
   const dockRef = useRef<HTMLDivElement>(null)
+  const dotRef = useRef<HTMLDivElement>(null)
   const [shouldRenderMenu, setShouldRenderMenu] = useState(false)
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -101,6 +102,20 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
     }
   }, [isCaseStudy])
 
+  // Pulsating dot animation
+  useGSAP(() => {
+    if (!dotRef.current) return
+
+    gsap.to(dotRef.current, {
+      scale: 1.4,
+      opacity: 1,
+      duration: 0.8,
+      ease: "power1.inOut",
+      repeat: -1,
+      yoyo: true,
+    })
+  }, [])
+
   return (
     <>
       {/* Dock */}
@@ -108,7 +123,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
         ref={dockRef}
         className={cn(
           "fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-[999] opacity-0 animate-fade-in animation-delay-800",
-          "flex items-center justify-between gap-16 md:gap-32 lg:gap-64 px-2 py-1 rounded-full",
+          "flex items-center justify-between gap-32 md:gap-48 lg:gap-72 px-2 py-1 rounded-full",
           "bg-background/5 backdrop-blur-custom",
           "border border-white/10",
           "shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]"
@@ -162,7 +177,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
 
         {/* Right Spacer */}
         <div className="w-10 h-10 flex items-center justify-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          <div ref={dotRef} className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
         </div>
       </div>
 
@@ -236,7 +251,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
                         {project.name}
                       </span>
                       {project.comingSoon && (
-                        <span className="text-[8px] opacity-70 uppercase tracking-wider">
+                        <span className="text-[8px] text-violet-500 uppercase tracking-wider">
                           Soon
                         </span>
                       )}
