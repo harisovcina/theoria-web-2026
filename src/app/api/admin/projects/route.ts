@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
         endYear: body.endYear ? parseInt(body.endYear) : null,
         services: JSON.stringify(body.services || []),
         industry: JSON.stringify(body.industry || []),
+        website: body.website || null,
         heroImage: body.heroImage,
         deviceMockup: body.deviceMockup,
         deviceType: body.deviceType,

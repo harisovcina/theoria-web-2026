@@ -72,6 +72,7 @@ model Project {
   endYear       Int?     // null if ongoing
   services      String   // JSON or comma-separated
   industry      String   // JSON or comma-separated
+  website       String?  // Project website URL
   heroImage     String
   deviceMockup  String
   deviceType    String   // "laptop" | "mobile"
