@@ -248,7 +248,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
                   {project.name}
                 </h2>
                 {project.summary && (
-                  <p className="text-sm md:text-2xl font-light text-foreground mt-3">
+                  <p className="text-sm md:text-xl font-extralight text-foreground mt-3">
                     {project.summary}
                   </p>
                 )}
@@ -257,11 +257,11 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
                 ref={metaRef}
                 className="text-foreground space-y-1"
               >
-                <p className="text-lg">
+                <p className="text-base font-mono">
                   {project.endYear ? `${project.startYear} - ${project.endYear}` : project.startYear}
                 </p>
                 {project.services && (
-                  <p className="text-sm font-mono uppercase">
+                  <p className="text-xs font-mono uppercase">
                     {JSON.parse(project.services).join(" · ")}
                   </p>
                 )}

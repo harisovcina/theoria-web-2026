@@ -12,14 +12,14 @@ interface MenuDockProps {
 
 export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
   return (
-    <div className="fixed top-4 md:top-8 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-50 pointer-events-auto">
+    <div className="fixed top-4 md:top-8 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-[999] pointer-events-auto">
       <div className="relative">
         {/* Frosty Glass Container */}
         <div
           className={cn(
-            "relative px-4 md:px-6 py-2.5 md:py-3 rounded-full",
-            "bg-background/40 backdrop-blur-xl",
-            "border border-border/30",
+            "relative px-1 md:px-2 py-1 md:py-2 rounded-full",
+            "bg-background/10 backdrop-blur-2xl",
+            "border border-foreground/10",
             "shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]",
             "transition-all duration-300 ease-out",
             "hover:shadow-[0_8px_40px_0_rgba(0,0,0,0.16)]",
@@ -39,19 +39,19 @@ export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
               )}
               aria-label="Toggle menu"
             >
-              <div className="relative w-5 h-5 flex flex-col items-center justify-center gap-1">
+              <div className="relative w-4 h-4 flex flex-col items-center justify-center gap-1">
                 {/* Top Line */}
                 <span
                   className={cn(
-                    "w-5 h-[1.5px] bg-foreground rounded-full transition-all duration-300 ease-out",
+                    "w-4 h-[1.5px] bg-foreground rounded-full transition-all duration-300 ease-out",
                     "group-hover:bg-foreground",
-                    isMenuOpen && "rotate-45 translate-y-[5px]"
+                    isMenuOpen && "rotate-45 translate-y-[5.5px]"
                   )}
                 />
                 {/* Middle Line */}
                 <span
                   className={cn(
-                    "w-5 h-[1.5px] bg-foreground rounded-full transition-all duration-300 ease-out",
+                    "w-4 h-[1.5px] bg-foreground rounded-full transition-all duration-300 ease-out",
                     "group-hover:bg-foreground",
                     isMenuOpen && "opacity-0"
                   )}
@@ -59,9 +59,9 @@ export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
                 {/* Bottom Line */}
                 <span
                   className={cn(
-                    "w-5 h-[1.5px] bg-foreground rounded-full transition-all duration-300 ease-out",
+                    "w-4 h-[1.5px] bg-foreground rounded-full transition-all duration-300 ease-out",
                     "group-hover:bg-foreground",
-                    isMenuOpen && "-rotate-45 -translate-y-[5px]"
+                    isMenuOpen && "-rotate-45 -translate-y-[5.5px]"
                   )}
                 />
               </div>
@@ -74,7 +74,7 @@ export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
             >
               <Image
                 src="/logo.svg"
-                alt="Theoria"
+                alt="theoria"
                 width={100}
                 height={22}
                 className="h-5 md:h-4 w-auto opacity-90 group-hover:opacity-100 transition-opacity duration-300"
@@ -89,12 +89,6 @@ export function MenuDock({ onMenuClick, isMenuOpen }: MenuDockProps) {
           </div>
         </div>
 
-        {/* Noise Texture Overlay */}
-        <style jsx global>{`
-          .bg-noise {
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          }
-        `}</style>
       </div>
     </div>
   )
