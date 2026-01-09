@@ -5,32 +5,11 @@ import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { CaseStudyProps } from '@/types'
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
-}
-
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  comingSoon: boolean
-  caseStudy?: string | null
-  caseStudySlug?: string | null
-  services?: string
-  industry?: string
-}
-
-interface CaseStudyContentProps {
-  project: Project
 }
 
 /**
@@ -38,7 +17,7 @@ interface CaseStudyContentProps {
  * Visual editorial approach with medical imagery and immersive scroll animations
  * Healthcare aesthetic with warm, human touches
  */
-export function CaseStudyKindbody({ project }: CaseStudyContentProps) {
+export function CaseStudyKindbody({ project }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
   const companyRef = useRef<HTMLDivElement>(null)

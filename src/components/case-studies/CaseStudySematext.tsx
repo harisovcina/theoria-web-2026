@@ -5,39 +5,18 @@ import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { CaseStudyProps } from '@/types'
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  comingSoon: boolean
-  caseStudy?: string | null
-  caseStudySlug?: string | null
-  services?: string
-  industry?: string
-}
-
-interface CaseStudyContentProps {
-  project: Project
-}
-
 /**
  * Sematext Onboarding Redesign Case Study
  * Visual-first editorial approach with immersive imagery and scroll animations
  */
-export function CaseStudySematext({ project }: CaseStudyContentProps) {
+export function CaseStudySematext({ project }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLElement>(null)
   const problemStatsRef = useRef<HTMLElement>(null)
@@ -267,8 +246,8 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
       {/* Hero Visual - Full Width Device Mockup with Parallax */}
       <section ref={heroRef} className="relative w-full h-[60vh] md:h-[70vh] -mx-4 md:-mx-8 overflow-hidden bg-foreground/5">
         <Image
-          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80"
-          alt="Analytics dashboard interface"
+          src="/img/sematext/study-screen1.png"
+          alt="Sematext dashboard interface"
           fill
           className="object-cover will-change-transform"
           priority
@@ -307,7 +286,7 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
             <div className="text-xs uppercase tracking-widest text-foreground/40">Before</div>
             <div className="relative aspect-[4/3] bg-foreground/5 rounded-lg overflow-hidden border border-foreground/10">
               <Image
-                src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1200&q=80"
+                src="/img/sematext/study-flow.png"
                 alt="Complex overwhelming interface"
                 fill
                 className="object-cover opacity-60"
@@ -323,8 +302,8 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
             <div className="text-xs uppercase tracking-widest text-foreground/40">After</div>
             <div className="relative aspect-[4/3] bg-foreground/5 rounded-lg overflow-hidden border border-foreground/10">
               <Image
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80"
-                alt="Clean organized interface"
+                src="/img/sematext/study-ds.png"
+                alt="Clean organized design system"
                 fill
                 className="object-cover"
               />
@@ -353,7 +332,7 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
             </div>
             <div className="step-image md:col-span-8 relative aspect-video bg-foreground/5 rounded-lg overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1200&q=80"
+                src="/img/sematext/study-flow.png"
                 alt="Simple step-by-step interface"
                 fill
                 className="object-cover"
@@ -365,7 +344,7 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
           <div ref={step2Ref} className="grid md:grid-cols-12 gap-8 items-center">
             <div className="step-image md:col-span-8 md:order-1 relative aspect-video bg-foreground/5 rounded-lg overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"
+                src="/img/sematext/study-flow-2.png"
                 alt="Interactive demo dashboard"
                 fill
                 className="object-cover"
@@ -387,7 +366,7 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
             </div>
             <div className="step-image md:col-span-8 relative aspect-video bg-foreground/5 rounded-lg overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&q=80"
+                src="/img/sematext/study-flow-3.png"
                 alt="Helpful tooltips and guidance"
                 fill
                 className="object-cover"
@@ -400,8 +379,8 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
       {/* Full-Width Visual Showcase with Parallax */}
       <section ref={impactRef} className="relative w-full h-[80vh] -mx-4 md:-mx-8 overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80"
-          alt="Success metrics visualization"
+          src="/img/sematext/study-onboarding.png"
+          alt="Sematext onboarding success"
           fill
           className="object-cover will-change-transform"
         />
@@ -437,24 +416,24 @@ export function CaseStudySematext({ project }: CaseStudyContentProps) {
       <section ref={galleryRef} className="grid md:grid-cols-3 gap-4 md:gap-6">
         <div className="gallery-item relative aspect-square bg-foreground/5 rounded-lg overflow-hidden">
           <Image
-            src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80"
-            alt="Collaborative design process"
+            src="/img/sematext/study-screen1.png"
+            alt="Final dashboard implementation"
             fill
             className="object-cover hover:scale-105 transition-transform duration-500"
           />
         </div>
         <div className="gallery-item relative aspect-square bg-foreground/5 rounded-lg overflow-hidden">
           <Image
-            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80"
-            alt="User testing session"
+            src="/img/sematext/study-ds.png"
+            alt="Design system components"
             fill
             className="object-cover hover:scale-105 transition-transform duration-500"
           />
         </div>
         <div className="gallery-item relative aspect-square bg-foreground/5 rounded-lg overflow-hidden">
           <Image
-            src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80"
-            alt="Final implementation"
+            src="/img/sematext/study-onboarding.png"
+            alt="Onboarding flow"
             fill
             className="object-cover hover:scale-105 transition-transform duration-500"
           />

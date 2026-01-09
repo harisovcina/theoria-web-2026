@@ -5,6 +5,9 @@ import { Toaster } from "sonner";
 export const metadata: Metadata = {
   title: "theoria — Product Design Studio",
   description: "We turn complex products into simple interfaces. Product design studio, Sarajevo.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

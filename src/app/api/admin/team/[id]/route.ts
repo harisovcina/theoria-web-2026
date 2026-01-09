@@ -1,10 +1,7 @@
-import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-
-const AUTHORIZED_ADMINS = ["haris.ovcina@gmail.com"]
-const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
+import { requireAdmin } from "@/middleware/auth"
 
 // PUT /api/admin/team/[id] - Update team member
 export async function PUT(
@@ -12,13 +9,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Check authentication (bypass in dev mode)
-    if (!BYPASS_AUTH_IN_DEV) {
-      const session = await auth()
-      if (!session?.user?.email || !AUTHORIZED_ADMINS.includes(session.user.email)) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      }
-    }
+    // Check authentication
+    const authError = await requireAdmin(req)
+    if (authError) return authError
 
     const { id } = await params
     const body = await req.json()
@@ -56,13 +49,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Check authentication (bypass in dev mode)
-    if (!BYPASS_AUTH_IN_DEV) {
-      const session = await auth()
-      if (!session?.user?.email || !AUTHORIZED_ADMINS.includes(session.user.email)) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      }
-    }
+    // Check authentication
+    const authError = await requireAdmin(req)
+    if (authError) return authError
 
     const { id } = await params
 

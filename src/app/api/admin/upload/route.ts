@@ -1,19 +1,12 @@
-import { auth } from "@/auth"
 import { uploadToSupabase } from "@/lib/storage"
 import { NextRequest, NextResponse } from "next/server"
-
-const AUTHORIZED_ADMINS = ["haris.ovcina@gmail.com"]
-const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
+import { requireAdmin } from "@/middleware/auth"
 
 export async function POST(req: NextRequest) {
   try {
-    // Check authentication (bypass in dev mode)
-    if (!BYPASS_AUTH_IN_DEV) {
-      const session = await auth()
-      if (!session?.user?.email || !AUTHORIZED_ADMINS.includes(session.user.email)) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      }
-    }
+    // Check authentication
+    const authError = await requireAdmin(req)
+    if (authError) return authError
 
     // Get form data
     const formData = await req.formData()

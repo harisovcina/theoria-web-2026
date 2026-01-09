@@ -25,7 +25,7 @@ export default async function AboutPage() {
       {/* About Section */}
       <section className="container max-w-6xl mx-auto px-8 pt-32 pb-16">
         <div className="max-w-3xl">
-          <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-8 opacity-0 animate-fade-in-up">
+          <h1 className="text-5xl md:text-7xl font-extralight tracking-tight mb-8 opacity-0 animate-fade-in-up">
             World-class UX from a city most people can't point to on a map.
           </h1>
           <p className="text-lg md:text-xl text-foreground/70 font-light leading-relaxed opacity-0 animate-fade-in-up animation-delay-200">

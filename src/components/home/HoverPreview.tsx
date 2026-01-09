@@ -4,22 +4,7 @@ import { useEffect, useRef, useImperativeHandle, forwardRef } from "react"
 import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
-
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  services?: string
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  caseStudySlug?: string | null
-  website?: string | null
-}
+import { Project } from '@/types'
 
 interface HoverPreviewProps {
   project: Project | null
@@ -200,7 +185,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
           {/* Image Copyright Credit */}
           <div className="absolute bottom-8 right-8 md:right-12 lg:right-16 xl:right-16 z-50">
             <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
-              IMAGE © {project.client}
+              IMAGE © UNSPLASH
             </p>
           </div>
         </div>

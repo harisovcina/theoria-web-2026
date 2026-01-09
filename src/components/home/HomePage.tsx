@@ -8,33 +8,14 @@ import { ProjectPills } from "./ProjectPills"
 import { MenuDock } from "./MenuDock"
 import { HoverPreview } from "./HoverPreview"
 import { CaseStudy } from "./CaseStudy"
+import { Project } from '@/types'
+import { PAGE_STATES, type PageState } from '@/lib/constants'
 
 gsap.registerPlugin(ExpoScaleEase)
-
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  comingSoon: boolean
-  caseStudy?: string | null
-  caseStudySlug?: string | null
-  services?: string
-  industry?: string
-  website?: string | null
-}
 
 interface HomePageProps {
   projects: Project[]
 }
-
-type PageState = "default" | "preview" | "case-study" | "menu"
 
 export function HomePage({ projects }: HomePageProps) {
   const [pageState, setPageState] = useState<PageState>("default")

@@ -6,24 +6,18 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { marked } from "marked"
 import { caseStudyComponents } from "../case-studies"
+import { Project } from '@/types'
+import { parseJsonField } from '@/lib/json-utils'
 
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  comingSoon: boolean
-  caseStudy?: string | null
-  caseStudySlug?: string | null
-  services?: string
-  industry?: string
-  website?: string | null
+// Configure marked for synchronous operation
+marked.use({ async: false })
+
+// Helper function to handle marked's sync parsing
+// TypeScript types don't reflect the async: false config, so we use type assertion
+const parseMarkdownSync = (markdown: string): string => {
+  const result = marked.parse(markdown)
+  // With async: false configured, this returns a string synchronously
+  return result as any as string
 }
 
 interface CaseStudyProps {
@@ -136,17 +130,6 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
   if (!project) return null
 
-  // Parse services and industry from JSON strings
-  const parseJsonField = (field: string | undefined) => {
-    if (!field) return []
-    try {
-      const parsed = JSON.parse(field)
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return field.split(",").map(s => s.trim()).filter(Boolean)
-    }
-  }
-
   const services = parseJsonField(project.services)
   const industries = parseJsonField(project.industry)
 
@@ -181,7 +164,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       return (
         <div
           className="prose prose-invert prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: marked(project.caseStudy) }}
+          dangerouslySetInnerHTML={{ __html: parseMarkdownSync(project.caseStudy) }}
         />
       )
     }
@@ -213,7 +196,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
             ref={headerRef}
             className="absolute top-24 md:top-32 left-0 right-0 z-10 px-4 md:px-16 pointer-events-none"
           >
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {/* Large project name */}
               <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extralight tracking-tight leading-none mb-6 md:mb-8">
                 {project.name}
@@ -294,7 +277,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
             ref={contentRef}
             className="relative bg-background py-16 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
           >
-            <div className="max-w-9xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {renderContent()}
             </div>
 

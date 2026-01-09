@@ -1,28 +1,8 @@
 "use client"
 
 import Image from "next/image"
-
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  comingSoon: boolean
-  caseStudy?: string | null
-  caseStudySlug?: string | null
-  services?: string
-  industry?: string
-}
-
-interface CaseStudyContentProps {
-  project: Project
-}
+import { CaseStudyProps } from '@/types'
+import { parseJsonField } from '@/lib/json-utils'
 
 /**
  * Example custom case study component
@@ -34,18 +14,7 @@ interface CaseStudyContentProps {
  * 3. Set the caseStudySlug in the admin panel to match the filename (e.g., "acme-corp")
  * 4. Add your custom content, layouts, animations, etc.
  */
-export function ExampleCaseStudy({ project }: CaseStudyContentProps) {
-  // Parse services and industry from JSON strings
-  const parseJsonField = (field: string | undefined) => {
-    if (!field) return []
-    try {
-      const parsed = JSON.parse(field)
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return field.split(",").map(s => s.trim()).filter(Boolean)
-    }
-  }
-
+export function ExampleCaseStudy({ project }: CaseStudyProps) {
   const services = parseJsonField(project.services)
   const industries = parseJsonField(project.industry)
 
