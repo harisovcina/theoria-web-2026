@@ -21,6 +21,8 @@ import {
 import { Card } from "@/components/ui/card"
 import { ImageUpload } from "./ImageUpload"
 import { Loader2Icon } from "lucide-react"
+import { parseJsonFieldAsString } from '@/lib/json-utils'
+import { LAYOUT_VARIANT_DESCRIPTIONS, LAYOUT_VARIANTS, DEVICE_TYPES, IMAGE_FOLDERS, ASPECT_RATIOS } from '@/lib/constants'
 
 const projectSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -51,17 +53,6 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Parse services and industry from JSON strings
-  const parseJsonField = (field: string | undefined) => {
-    if (!field) return ""
-    try {
-      const parsed = JSON.parse(field)
-      return Array.isArray(parsed) ? parsed.join(", ") : ""
-    } catch {
-      return field
-    }
-  }
-
   const {
     register,
     handleSubmit,
@@ -76,8 +67,8 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       summary: project?.summary || "",
       startYear: project?.startYear?.toString() || new Date().getFullYear().toString(),
       endYear: project?.endYear?.toString() || "",
-      services: parseJsonField(project?.services),
-      industry: parseJsonField(project?.industry),
+      services: parseJsonFieldAsString(project?.services),
+      industry: parseJsonFieldAsString(project?.industry),
       website: project?.website || "",
       heroImage: project?.heroImage || "",
       deviceMockup: project?.deviceMockup || "",
@@ -257,16 +248,16 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
             label="Hero Image"
             value={heroImage}
             onChange={(url) => setValue("heroImage", url)}
-            folder="theoria/projects/heroes"
-            aspectRatio="16/9"
+            folder={IMAGE_FOLDERS.PROJECT_HEROES}
+            aspectRatio={ASPECT_RATIOS.HERO}
           />
 
           <ImageUpload
             label="Device Mockup"
             value={deviceMockup}
             onChange={(url) => setValue("deviceMockup", url)}
-            folder="theoria/projects/mockups"
-            aspectRatio={deviceType === "laptop" ? "16/10" : "9/19.5"}
+            folder={IMAGE_FOLDERS.PROJECT_MOCKUPS}
+            aspectRatio={deviceType === DEVICE_TYPES.LAPTOP ? ASPECT_RATIOS.LAPTOP : ASPECT_RATIOS.MOBILE}
           />
 
           <div>
@@ -281,8 +272,8 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="laptop">Laptop</SelectItem>
-                <SelectItem value="mobile">Mobile</SelectItem>
+                <SelectItem value={DEVICE_TYPES.LAPTOP}>Laptop</SelectItem>
+                <SelectItem value={DEVICE_TYPES.MOBILE}>Mobile</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -304,12 +295,12 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="A">A - Centered (title above, device below)</SelectItem>
-                <SelectItem value="B">B - Left text, right device</SelectItem>
-                <SelectItem value="C">C - Left device, right text</SelectItem>
-                <SelectItem value="D">D - Top text, wide device bottom</SelectItem>
-                <SelectItem value="E">E - Top device, bottom text</SelectItem>
-                <SelectItem value="F">F - Editorial offset</SelectItem>
+                <SelectItem value={LAYOUT_VARIANTS.A}>{LAYOUT_VARIANTS.A} - {LAYOUT_VARIANT_DESCRIPTIONS[LAYOUT_VARIANTS.A]}</SelectItem>
+                <SelectItem value={LAYOUT_VARIANTS.B}>{LAYOUT_VARIANTS.B} - {LAYOUT_VARIANT_DESCRIPTIONS[LAYOUT_VARIANTS.B]}</SelectItem>
+                <SelectItem value={LAYOUT_VARIANTS.C}>{LAYOUT_VARIANTS.C} - {LAYOUT_VARIANT_DESCRIPTIONS[LAYOUT_VARIANTS.C]}</SelectItem>
+                <SelectItem value={LAYOUT_VARIANTS.D}>{LAYOUT_VARIANTS.D} - {LAYOUT_VARIANT_DESCRIPTIONS[LAYOUT_VARIANTS.D]}</SelectItem>
+                <SelectItem value={LAYOUT_VARIANTS.E}>{LAYOUT_VARIANTS.E} - {LAYOUT_VARIANT_DESCRIPTIONS[LAYOUT_VARIANTS.E]}</SelectItem>
+                <SelectItem value={LAYOUT_VARIANTS.F}>{LAYOUT_VARIANTS.F} - {LAYOUT_VARIANT_DESCRIPTIONS[LAYOUT_VARIANTS.F]}</SelectItem>
               </SelectContent>
             </Select>
           </div>

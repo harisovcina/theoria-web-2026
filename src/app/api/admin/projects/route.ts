@@ -1,21 +1,14 @@
-import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { NextRequest, NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
-
-const AUTHORIZED_ADMINS = ["haris.ovcina@gmail.com"]
-const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
+import { requireAdmin } from "@/middleware/auth"
 
 // POST /api/admin/projects - Create project
 export async function POST(req: NextRequest) {
   try {
-    // Check authentication (bypass in dev mode)
-    if (!BYPASS_AUTH_IN_DEV) {
-      const session = await auth()
-      if (!session?.user?.email || !AUTHORIZED_ADMINS.includes(session.user.email)) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-      }
-    }
+    // Check authentication
+    const authError = await requireAdmin(req)
+    if (authError) return authError
 
     const body = await req.json()
 

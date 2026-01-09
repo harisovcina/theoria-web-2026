@@ -2,23 +2,7 @@
 
 import { useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
-
-interface Project {
-  id: string
-  name: string
-  client: string
-  summary?: string | null
-  startYear: number
-  endYear?: number | null
-  services?: string
-  heroImage: string
-  deviceMockup: string
-  deviceType: string
-  layoutVariant: string
-  comingSoon: boolean
-  caseStudySlug?: string | null
-  website?: string | null
-}
+import { Project } from '@/types'
 
 interface ProjectPillsProps {
   projects: Project[]
