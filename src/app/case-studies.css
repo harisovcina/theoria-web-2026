@@ -1,0 +1,336 @@
+/**
+ * Case Study Component Design System
+ * Consistent styling for all case study components
+ * Use these classes to ensure uniformity across case studies
+ */
+
+/* ====================================
+   SECTIONS & LAYOUT
+   ==================================== */
+
+.cs-section {
+  @apply py-32 px-6 md:px-12;
+}
+
+/* ====================================
+   TYPOGRAPHY
+   ==================================== */
+
+/* Hero Headline - Massive display text */
+.cs-hero-headline {
+  @apply text-[clamp(2.5rem,8vw,6rem)] font-extralight leading-none tracking-tight;
+  letter-spacing: -0.04em;
+}
+
+/* Section Headline - Large section titles */
+.cs-section-headline {
+  @apply text-[clamp(3rem,8vw,6rem)] font-extralight leading-[0.95] tracking-tight;
+  letter-spacing: -0.03em;
+}
+
+/* Section Headline Centered */
+.cs-section-headline-center {
+  @apply text-[clamp(2.5rem,7vw,5rem)] font-extralight leading-[1.1] tracking-tight;
+  letter-spacing: -0.03em;
+}
+
+/* Intro Text - Large opening paragraph */
+.cs-intro-text {
+  @apply text-[clamp(1.5rem,3.5vw,2.5rem)] font-extralight leading-[1.3] text-foreground/80;
+}
+
+/* Subheadline - Medium emphasis text */
+.cs-subheadline {
+  @apply text-xl md:text-2xl font-extralight leading-relaxed text-foreground/80;
+}
+
+/* Body Text - Regular paragraph text */
+.cs-body-text {
+  @apply text-base md:text-lg text-foreground/80 font-light leading-relaxed max-w-[600px];
+}
+
+/* Closing Text - End section text */
+.cs-closing-text {
+  @apply text-lg md:text-xl text-foreground/80 font-light leading-relaxed max-w-2xl mx-auto;
+}
+
+/* ====================================
+   LABELS & BADGES
+   ==================================== */
+
+/* Eyebrow - Small uppercase label */
+.cs-eyebrow {
+  @apply text-xs uppercase tracking-[0.25em] text-foreground;
+}
+
+/* Eyebrow with accent color */
+.cs-eyebrow-accent {
+  @apply text-xs uppercase tracking-[0.25em];
+}
+
+/* Eyebrow with error color */
+.cs-eyebrow-error {
+  @apply text-xs uppercase tracking-[0.25em];
+}
+
+/* Badge - Pill-shaped tag */
+.cs-badge {
+  @apply px-3 py-1 text-[11px] uppercase tracking-[0.2em] font-mono border rounded-full text-center;
+}
+
+/* Badge with accent color */
+.cs-badge-accent {
+  /* Colors applied per case study */
+}
+
+/* Tag - Small inline label */
+.cs-tag {
+  @apply text-[10px] uppercase tracking-[0.15em] text-foreground/80 font-mono;
+}
+
+/* Tags Container */
+.cs-tags {
+  @apply flex flex-wrap gap-2 opacity-60;
+}
+
+/* Section Number - Numbered section label */
+.cs-section-number {
+  @apply text-[11px] uppercase tracking-[0.3em] font-mono;
+}
+
+/* Section Number with accent */
+.cs-section-number-accent {
+  /* Colors applied per case study */
+}
+
+/* Section Number Vertical */
+.cs-section-number-vertical {
+  @apply text-[11px] uppercase tracking-[0.3em] font-mono [writing-mode:vertical-lr] rotate-180;
+}
+
+/* ====================================
+   METADATA
+   ==================================== */
+
+/* Meta Group - Label + value pair */
+.cs-meta-group {
+  @apply space-y-3;
+}
+
+/* Meta Value */
+.cs-meta-value {
+  @apply text-xl font-light;
+}
+
+/* ====================================
+   STATS & NUMBERS
+   ==================================== */
+
+/* Stats Grid */
+.cs-stats-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 pt-12 border-t border-white/5;
+}
+
+/* Stat Container */
+.cs-stat {
+  @apply space-y-4;
+}
+
+/* Stat Number - Large animated number */
+.cs-stat-number {
+  @apply text-[clamp(4rem,10vw,7rem)] font-extralight leading-none;
+}
+
+/* Stat Number with accent */
+.cs-stat-number-accent {
+  /* Colors applied per case study */
+}
+
+/* Stat Text - Non-numeric stat */
+.cs-stat-text {
+  @apply text-[clamp(2rem,5vw,3.5rem)] font-extralight leading-none text-foreground/80;
+}
+
+/* Stat Label - Description under stat */
+.cs-stat-label {
+  @apply text-[11px] uppercase tracking-[0.25em] text-foreground/80;
+}
+
+/* ====================================
+   IMAGES
+   ==================================== */
+
+/* Image Container */
+.cs-image-container {
+  @apply aspect-video bg-[#0a0a0a] border border-white/5 overflow-hidden relative;
+}
+
+/* Wide Image */
+.cs-image-wide {
+  @apply aspect-[16/9] md:aspect-[21/9] bg-[#0a0a0a] border border-white/5 overflow-hidden relative;
+}
+
+/* Section Image - For in-section images */
+.cs-section-image {
+  /* Inherited from .cs-image-container */
+}
+
+/* Gallery Item */
+.cs-gallery-item {
+  /* Animated, inherits from parent grid */
+}
+
+/* ====================================
+   CONTENT BLOCKS
+   ==================================== */
+
+/* Problem Block */
+.cs-problem-block {
+  @apply space-y-6;
+}
+
+/* Solution Block */
+.cs-solution-block {
+  @apply space-y-6;
+}
+
+/* ====================================
+   QUOTES
+   ==================================== */
+
+/* Quote Container */
+.cs-quote {
+  @apply relative;
+}
+
+/* Quote Mark */
+.cs-quote-mark {
+  @apply absolute -left-4 md:-left-8 top-0 text-[clamp(4rem,10vw,8rem)] font-extralight leading-none;
+}
+
+/* Quote Text */
+.cs-quote-text {
+  @apply text-xl md:text-2xl font-light leading-relaxed text-foreground/80 italic relative z-10;
+}
+
+/* Quote Citation */
+.cs-quote-cite {
+  @apply block mt-8 text-xs font-mono text-foreground/80 not-italic uppercase tracking-[0.2em];
+}
+
+/* ====================================
+   DIVIDERS
+   ==================================== */
+
+/* Horizontal Divider with accent */
+.cs-divider-accent {
+  @apply w-16 h-[2px];
+}
+
+/* Vertical Divider with accent */
+.cs-divider-vertical {
+  @apply w-px h-24 mx-auto;
+}
+
+/* ====================================
+   PROCESS STEPS
+   ==================================== */
+
+/* Step Image */
+.cs-step-image {
+  @apply relative aspect-video bg-[#0a0a0a] border border-white/5 overflow-hidden;
+}
+
+/* Step Text Container */
+.cs-step-text {
+  @apply space-y-6;
+}
+
+/* Text Reveal - For staggered text animations */
+.cs-text-reveal {
+  /* Animated via GSAP */
+}
+
+/* ====================================
+   ANIMATION TARGETS
+   ==================================== */
+
+/* Animated Word - For SplitText animations */
+.cs-animate-word {
+  /* Animated via GSAP */
+}
+
+/* Strikethrough Word */
+.cs-strikethrough-word {
+  /* Animated via GSAP */
+}
+
+/* ====================================
+   ACCENT COLOR VARIANTS
+
+   These are applied per case study:
+   - Sematext: sky-400 (light blue)
+   - Kindbody: amber-300 (pale yellow)
+   ==================================== */
+
+/* Sematext - Light Blue Accent */
+.cs-sematext .cs-badge-accent {
+  @apply text-sky-400/60 border-sky-400/20;
+}
+
+.cs-sematext .cs-eyebrow-accent {
+  @apply text-sky-400/50;
+}
+
+.cs-sematext .cs-eyebrow-error {
+  @apply text-pink-600;
+}
+
+.cs-sematext .cs-section-number-accent {
+  @apply text-sky-400/50;
+}
+
+.cs-sematext .cs-stat-number-accent {
+  @apply text-sky-400/80;
+}
+
+.cs-sematext .cs-divider-accent {
+  @apply bg-sky-400/30;
+}
+
+.cs-sematext .cs-divider-vertical {
+  @apply bg-sky-400/20;
+}
+
+.cs-sematext .cs-quote-mark {
+  @apply text-sky-400/10;
+}
+
+/* Kindbody - Pale Yellow Accent */
+.cs-kindbody .cs-badge-accent {
+  @apply text-amber-300/60 border-amber-300/20;
+}
+
+.cs-kindbody .cs-eyebrow-accent {
+  @apply text-amber-300/50;
+}
+
+.cs-kindbody .cs-section-number-accent {
+  @apply text-amber-300/50;
+}
+
+.cs-kindbody .cs-stat-number-accent {
+  @apply text-amber-300/80;
+}
+
+.cs-kindbody .cs-divider-accent {
+  @apply bg-amber-300/30;
+}
+
+.cs-kindbody .cs-divider-vertical {
+  @apply bg-amber-300/20;
+}
+
+.cs-kindbody .cs-quote-mark {
+  @apply text-amber-300/10;
+}

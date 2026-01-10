@@ -1,3 +1,6 @@
+/* Case Study Component Design System */
+@import './case-studies.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -57,26 +57,43 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
     }, 200)
   }
 
+  // Responsive dock expansion using GSAP matchMedia (mobile-first approach)
   useGSAP(() => {
     if (!dockRef.current) return
 
     if (isCaseStudy) {
-      // Expand to full width with responsive margins
-      // Mobile (<768px): 80px total
-      // Tablet (768-1280px): 200px total
-      // Desktop (>1280px): 800px total
-      let margin = 80
-      if (window.innerWidth >= 1280) {
-        margin = 800
-      } else if (window.innerWidth >= 768) {
-        margin = 200
-      }
-      const targetWidth = window.innerWidth - margin
-      gsap.to(dockRef.current, {
-        width: targetWidth,
-        duration: 0.8,
-        ease: "power3.inOut",
+      // Use GSAP's matchMedia for responsive animations
+      const mm = gsap.matchMedia()
+
+      mm.add({
+        // Mobile: 80px margins
+        "(max-width: 767px)": () => {
+          gsap.to(dockRef.current, {
+            width: () => window.innerWidth - 80,
+            duration: 0.8,
+            ease: "power3.inOut",
+          })
+        },
+        // Tablet: 200px margins
+        "(min-width: 768px) and (max-width: 1279px)": () => {
+          gsap.to(dockRef.current, {
+            width: () => window.innerWidth - 200,
+            duration: 0.8,
+            ease: "power3.inOut",
+          })
+        },
+        // Desktop: 800px margins
+        "(min-width: 1280px)": () => {
+          gsap.to(dockRef.current, {
+            width: () => window.innerWidth - 800,
+            duration: 0.8,
+            ease: "power3.inOut",
+          })
+        },
       })
+
+      // Cleanup function
+      return () => mm.revert()
     } else {
       // Collapse back to original size
       gsap.to(dockRef.current, {
@@ -118,8 +135,11 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
         <div className="flex items-center gap-2">
           <button
             onClick={isCaseStudy ? onBackClick : onMenuClick}
+            aria-label={isCaseStudy ? "Back to projects" : "Toggle menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="main-menu"
             className={cn(
-              "rounded-full flex items-center justify-center gap-2",
+              "rounded-full flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
               isCaseStudy ? "px-2 py-2 bg-foreground/10" : "w-10 h-10"
             )}
           >
@@ -137,7 +157,10 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
           {isCaseStudy && (
             <button
               onClick={onMenuClick}
-              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-foreground/5 transition-colors duration-200"
+              aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+              aria-controls="main-menu"
+              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-foreground/5 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
             >
               <div className="w-4 h-4 flex flex-col items-center justify-center gap-1">
                 <span className={cn("w-4 h-[1.5px] bg-foreground rounded-full", isMenuOpen && "rotate-45 translate-y-[5.5px]")} />
@@ -169,6 +192,9 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
       {/* Expanded Menu */}
       {shouldRenderMenu && !isCaseStudy && (
         <div
+          id="main-menu"
+          role="navigation"
+          aria-label="Main navigation menu"
           className={cn(
             "fixed inset-0 z-[900] flex items-center justify-center overflow-hidden bg-black/50 backdrop-blur-custom",
             "transition-all duration-500 ease-out",

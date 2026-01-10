@@ -4,20 +4,26 @@ import { useRef } from "react"
 import Image from "next/image"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
+import { ScrollToPlugin } from "gsap/ScrollToPlugin"
 import { marked } from "marked"
 import { caseStudyComponents } from "../case-studies"
 import { Project } from '@/types'
 import { parseJsonField } from '@/lib/json-utils'
 
+// Register GSAP plugins
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollToPlugin)
+}
+
 // Configure marked for synchronous operation
 marked.use({ async: false })
 
 // Helper function to handle marked's sync parsing
-// TypeScript types don't reflect the async: false config, so we use type assertion
+// TypeScript types don't reflect the async: false config, so we use single assertion
 const parseMarkdownSync = (markdown: string): string => {
   const result = marked.parse(markdown)
   // With async: false configured, this returns a string synchronously
-  return result as any as string
+  return result as string
 }
 
 interface CaseStudyProps {
@@ -26,20 +32,44 @@ interface CaseStudyProps {
   onClose: () => void
 }
 
+// TODO: Major refactor needed - this component has too many refs (6 refs!)
+// TODO: Following GSAP best practices, we should use gsap.context() with CSS selectors
+// TODO: Keep only containerRef and scrollContainerRef (needed for scroll control)
+// TODO: Replace overlayRef, deviceRef, headerRef, contentRef with class-based selectors
+// TODO: Benefits: cleaner code, better performance, automatic cleanup, easier maintenance
+
 export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const deviceRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  // TODO: Refactor to use GSAP context pattern for better scoping and cleanup
+  // TODO: Replace all individual refs (overlayRef, headerRef, contentRef, etc.) with CSS class selectors
+  // TODO: Use single containerRef with gsap.context() to scope all animations
+  // TODO: Pattern should be:
+  //   const ctx = gsap.context(() => {
+  //     gsap.from('.case-study-overlay', { opacity: 0 })
+  //     gsap.from('.case-study-header', { y: -500, opacity: 0 })
+  //     gsap.from('.case-study-content', { y: 0, opacity: 0 })
+  //   }, containerRef)
+  //   return () => ctx.revert()
+  // TODO: This eliminates the need for 6+ individual refs and makes cleanup automatic
 
   useGSAP(() => {
     if (!project) return
 
+    // Disable scrolling during animation
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.style.overflow = 'hidden'
+    }
+
     // Initial setup
     gsap.set(overlayRef.current, { opacity: 0 })
-    gsap.set(headerRef.current, { y: -50, opacity: 0 })
-    gsap.set(contentRef.current, { y: 100, opacity: 0 })
+    gsap.set(headerRef.current, { y: -500, opacity: 0 })
+    gsap.set(contentRef.current, { y: 0, opacity: 0 })
 
     const container = deviceRef.current
     const deviceInner = container?.querySelector('.device-inner')
@@ -65,9 +95,20 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     const aspectRatio = initialHeight / initialWidth
     const targetHeight = targetWidth * aspectRatio
 
-    // Responsive y-shift: smaller on mobile, larger on desktop
-    const isMobile = window.innerWidth < 768
-    const yShift = isMobile ? 150 : 500
+    // Responsive y-shift: dynamically calculated based on screen size
+    const screenWidth = window.innerWidth
+    let yShift: number
+
+    if (screenWidth < 768) {
+      // Mobile
+      yShift = 96
+    } else if (screenWidth >= 768 && screenWidth < 1020) {
+      // Medium (tablets)
+      yShift = 160
+    } else {
+      // Desktop
+      yShift = 480
+    }
 
     // Animation timeline
     const timeline = gsap.timeline()
@@ -108,8 +149,30 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         duration: 0.6,
         ease: "power2.out",
       }, "-=0.3")
+      // 6. Scroll to case study content after 0.8s delay
+      .to({}, { duration: 0.8 })
+
+    // Add scroll animation if refs are available
+    if (scrollContainerRef.current && contentRef.current) {
+      timeline.to(scrollContainerRef.current, {
+        scrollTo: {
+          y: contentRef.current,
+          offsetY: 0
+        },
+        duration: 1,
+        ease: "power2.inOut",
+        onComplete: () => {
+          // Re-enable scrolling after animation completes
+          if (scrollContainerRef.current) {
+            scrollContainerRef.current.style.overflow = 'auto'
+          }
+        }
+      })
+    }
   }, [project])
 
+  // TODO: Refactor handleClose to use gsap.context() pattern
+  // TODO: Replace refs with CSS selectors: '.case-study-header', '.case-study-device', etc.
   const handleClose = () => {
     const timeline = gsap.timeline({
       onComplete: onClose,
@@ -181,7 +244,13 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
   }
 
   return (
-    <div ref={containerRef} className="fixed inset-0 z-50">
+    <main
+      ref={containerRef}
+      className="fixed inset-0 z-50"
+      role="dialog"
+      aria-label={`${project.name} Case Study`}
+      aria-modal="true"
+    >
       {/* Dark Background Overlay */}
       <div
         ref={overlayRef}
@@ -189,21 +258,21 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       />
 
       {/* Scrollable container - everything scrolls together */}
-      <div className="absolute inset-0 overflow-y-auto z-30">
+      <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto overflow-x-hidden z-30">
         <div className="relative min-h-screen">
           {/* Header Section - Revealed after device moves down */}
           <div
             ref={headerRef}
-            className="absolute top-24 md:top-32 left-0 right-0 z-10 px-4 md:px-16 pointer-events-none"
+            className="absolute mt-24 md:mt-32 left-0 right-0 z-10 px-8 md:px-16 pointer-events-none"
           >
             <div className="max-w-5xl mx-auto">
               {/* Large project name */}
-              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extralight tracking-tight leading-none mb-6 md:mb-8">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extralight tracking-tight leading-none mb-4 md:mb-8">
                 {project.name}
               </h1>
 
               {/* Compact metadata - single line on desktop, stacked on mobile */}
-              <div className="flex flex-wrap gap-x-12 gap-y-6 text-sm md:text-base">
+              <div className="flex flex-wrap gap-x-12 gap-y-2 text-sm md:text-base">
                 {/* Website */}
                 {project.website && (
                   <div className="flex flex-col gap-1">
@@ -253,10 +322,10 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
             style={{ height: "100vh" }}
           >
             <div
-              className={`device-inner relative ${
+              className={`device-inner ${
                 project.deviceType === "laptop"
-                  ? "w-[600px] h-[400px]"
-                  : "w-[280px] h-[580px]"
+                  ? "w-[1200px] h-[900px]"
+                  : "w-[580px] h-[580px]"
               }`}
             >
               <Image
@@ -275,9 +344,9 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           {/* Case Study Content */}
           <div
             ref={contentRef}
-            className="relative bg-background py-16 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
+            className="relative bg-background py-1 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
           >
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-9xl mx-auto">
               {renderContent()}
             </div>
 
@@ -290,6 +359,6 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

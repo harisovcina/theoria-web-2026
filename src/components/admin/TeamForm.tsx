@@ -1,17 +1,17 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { ImageUpload } from "./ImageUpload"
 import { Loader2Icon } from "lucide-react"
+import { TeamMember } from '@/types'
+import { useAdminForm } from '@/hooks/useAdminForm'
 
 const teamMemberSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -26,13 +26,12 @@ const teamMemberSchema = z.object({
 type TeamFormData = z.infer<typeof teamMemberSchema>
 
 interface TeamFormProps {
-  teamMember?: any
+  teamMember?: TeamMember
   mode: "create" | "edit"
 }
 
 export function TeamForm({ teamMember, mode }: TeamFormProps) {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
@@ -56,43 +55,19 @@ export function TeamForm({ teamMember, mode }: TeamFormProps) {
   const babyPhoto = watch("babyPhoto")
   const adultPhoto = watch("adultPhoto")
 
-  const onSubmit = async (data: TeamFormData) => {
-    try {
-      setIsSubmitting(true)
-
-      const payload = {
-        ...data,
-        email: data.email || null,
-        linkedin: data.linkedin || null,
-        cvLink: data.cvLink || null,
-      }
-
-      const url =
-        mode === "create"
-          ? "/api/admin/team"
-          : `/api/admin/team/${teamMember.id}`
-      const method = mode === "create" ? "POST" : "PUT"
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) throw new Error("Failed to save team member")
-
-      toast.success(
-        mode === "create" ? "Team member created" : "Team member updated"
-      )
-      router.push("/admin/team")
-      router.refresh()
-    } catch (error) {
-      console.error("Submit error:", error)
-      toast.error("Failed to save team member")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+  const { isSubmitting, onSubmit } = useAdminForm<TeamFormData>({
+    endpoint: '/api/admin/team',
+    itemId: teamMember?.id,
+    mode,
+    transformData: (data) => ({
+      ...data,
+      email: data.email || null,
+      linkedin: data.linkedin || null,
+      cvLink: data.cvLink || null,
+    }),
+    redirectTo: '/admin/team',
+    successMessage: mode === "create" ? "Team member created" : "Team member updated",
+  })
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

@@ -1,11 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -23,6 +21,8 @@ import { ImageUpload } from "./ImageUpload"
 import { Loader2Icon } from "lucide-react"
 import { parseJsonFieldAsString } from '@/lib/json-utils'
 import { LAYOUT_VARIANT_DESCRIPTIONS, LAYOUT_VARIANTS, DEVICE_TYPES, IMAGE_FOLDERS, ASPECT_RATIOS } from '@/lib/constants'
+import { Project } from '@/types'
+import { useAdminForm } from '@/hooks/useAdminForm'
 
 const projectSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -45,13 +45,12 @@ const projectSchema = z.object({
 type ProjectFormData = z.infer<typeof projectSchema>
 
 interface ProjectFormProps {
-  project?: any
+  project?: Project
   mode: "create" | "edit"
 }
 
 export function ProjectForm({ project, mode }: ProjectFormProps) {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
@@ -72,8 +71,8 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       website: project?.website || "",
       heroImage: project?.heroImage || "",
       deviceMockup: project?.deviceMockup || "",
-      deviceType: project?.deviceType || "laptop",
-      layoutVariant: project?.layoutVariant || "A",
+      deviceType: (project?.deviceType || "laptop") as "laptop" | "mobile",
+      layoutVariant: (project?.layoutVariant || "A") as "A" | "B" | "C" | "D" | "E" | "F",
       caseStudy: project?.caseStudy || "",
       caseStudySlug: project?.caseStudySlug || "",
       comingSoon: project?.comingSoon ?? true,
@@ -86,48 +85,24 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
   const layoutVariant = watch("layoutVariant")
   const comingSoon = watch("comingSoon")
 
-  const onSubmit = async (data: ProjectFormData) => {
-    try {
-      setIsSubmitting(true)
-
-      const payload = {
-        ...data,
-        services: data.services.split(",").map((s) => s.trim()).filter(Boolean),
-        industry: data.industry.split(",").map((i) => i.trim()).filter(Boolean),
-        summary: data.summary || null,
-        startYear: parseInt(data.startYear),
-        endYear: data.endYear ? parseInt(data.endYear) : null,
-        website: data.website || null,
-        caseStudy: data.caseStudy || null,
-        caseStudySlug: data.caseStudySlug || null,
-      }
-
-      const url =
-        mode === "create"
-          ? "/api/admin/projects"
-          : `/api/admin/projects/${project.id}`
-      const method = mode === "create" ? "POST" : "PUT"
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) throw new Error("Failed to save project")
-
-      toast.success(
-        mode === "create" ? "Project created" : "Project updated"
-      )
-      router.push("/admin/projects")
-      router.refresh()
-    } catch (error) {
-      console.error("Submit error:", error)
-      toast.error("Failed to save project")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+  const { isSubmitting, onSubmit } = useAdminForm<ProjectFormData>({
+    endpoint: '/api/admin/projects',
+    itemId: project?.id,
+    mode,
+    transformData: (data) => ({
+      ...data,
+      services: data.services.split(",").map((s) => s.trim()).filter(Boolean),
+      industry: data.industry.split(",").map((i) => i.trim()).filter(Boolean),
+      summary: data.summary || null,
+      startYear: parseInt(data.startYear),
+      endYear: data.endYear ? parseInt(data.endYear) : null,
+      website: data.website || null,
+      caseStudy: data.caseStudy || null,
+      caseStudySlug: data.caseStudySlug || null,
+    }),
+    redirectTo: '/admin/projects',
+    successMessage: mode === "create" ? "Project created" : "Project updated",
+  })
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

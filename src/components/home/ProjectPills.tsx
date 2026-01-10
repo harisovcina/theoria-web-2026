@@ -47,18 +47,21 @@ export function ProjectPills({ projects, onHover, onClick }: ProjectPillsProps) 
       {projects.map((project) => (
         <button
           key={project.id}
+          aria-label={`${project.comingSoon ? 'Coming soon: ' : 'View '}${project.name} project`}
           className={cn(
             "group flex items-center gap-2 w-fit px-5 py-2.5 rounded-full",
             "bg-background/10 backdrop-blur-custom border border-foreground/5",
             "opacity-0 animate-fade-in animation-delay-600",
             "transition-[background-color,color,border-color,box-shadow,opacity] duration-200 ease-out",
             "hover:bg-foreground hover:text-background hover:border-foreground hover:shadow-md",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
             "text-left pointer-events-auto",
             project.comingSoon && "opacity-40 hover:opacity-50"
           )}
           onMouseEnter={() => handleMouseEnter(project)}
           onMouseLeave={handleMouseLeave}
           onClick={() => onClick(project)}
+          disabled={project.comingSoon}
         >
           <span className="text-xs font-normal font-mono uppercase tracking-widest whitespace-nowrap">
             {project.name}
