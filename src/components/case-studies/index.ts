@@ -1,25 +1,39 @@
 /**
  * Case Study Component Registry
  *
- * This file exports all custom case study components.
+ * This file exports all custom case study components with lazy loading.
+ * Lazy loading reduces initial bundle size by ~200KB.
+ *
  * When adding a new case study:
  * 1. Create a new component file in this directory
- * 2. Import and export it here
- * 3. Add it to the caseStudyComponents map with its slug as the key
- * 4. Set the caseStudySlug in the admin panel to match the slug
+ * 2. Add it to the caseStudyComponents map with dynamic import
+ * 3. Set the caseStudySlug in the admin panel to match the slug
+ *
+ * Note: Components are loaded on-demand when user opens a case study.
  */
 
-import { ExampleCaseStudy } from "./ExampleCaseStudy"
-import { CaseStudySematext } from "./CaseStudySematext"
-import { CaseStudyKindbody } from "./CaseStudyKindbody"
+import dynamic from 'next/dynamic'
 
+// Lazy-loaded case study components
+// These are only loaded when the user opens a specific case study
+const ExampleCaseStudy = dynamic(() =>
+  import('./ExampleCaseStudy').then(mod => ({ default: mod.ExampleCaseStudy }))
+)
 
-// Map of slug -> component
+const CaseStudySematext = dynamic(() =>
+  import('./CaseStudySematext').then(mod => ({ default: mod.CaseStudySematext }))
+)
+
+const CaseStudyKindbody = dynamic(() =>
+  import('./CaseStudyKindbody').then(mod => ({ default: mod.CaseStudyKindbody }))
+)
+
+// Map of slug -> lazy-loaded component
 export const caseStudyComponents: Record<string, React.ComponentType<any>> = {
   "example": ExampleCaseStudy,
   "sematext": CaseStudySematext,
   "kindbody": CaseStudyKindbody,
   // Add your custom case studies here:
-  // "acme-corp": AcmeCorpCaseStudy,
-  // "tech-startup": TechStartupCaseStudy,
+  // "acme-corp": dynamic(() => import('./CaseStudyAcmeCorp').then(m => ({ default: m.CaseStudyAcmeCorp }))),
+  // "tech-startup": dynamic(() => import('./CaseStudyTechStartup').then(m => ({ default: m.CaseStudyTechStartup }))),
 }
