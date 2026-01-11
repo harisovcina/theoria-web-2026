@@ -353,6 +353,37 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
     )
   }, { scope: containerRef })
 
+  // Stats: Animated numbers (without percentage for Kindbody)
+  useGSAP(() => {
+    if (!statsRef.current) return
+
+    const scroller = statsRef.current.closest('.overflow-y-auto') as HTMLElement
+    const statNumbers = statsRef.current.querySelectorAll('.cs-stat-number')
+
+    if (!statNumbers.length) return
+
+    statNumbers.forEach((stat) => {
+      const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
+      const obj = { value: 0 }
+
+      gsap.to(obj, {
+        value: target,
+        duration: 2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: statsRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        },
+        onUpdate: () => {
+          // Format with commas for large numbers (1,800)
+          const formatted = Math.round(obj.value).toLocaleString()
+          stat.textContent = formatted
+        }
+      })
+    })
+  }, { scope: containerRef })
+
   return (
     <div ref={containerRef} className="cs-kindbody min-h-screen relative">
 
