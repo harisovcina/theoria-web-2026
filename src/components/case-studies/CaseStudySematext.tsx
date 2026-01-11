@@ -38,6 +38,9 @@ if (typeof window !== 'undefined') {
 // TODO: This would eliminate 16 refs and make the code much cleaner and more maintainable
 
 export function CaseStudySematext({ project }: CaseStudyProps) {
+  // Parse case study images from database (Vercel Blob URLs)
+  const images = project.caseStudyImages ? JSON.parse(project.caseStudyImages) : []
+
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollerRef = useRef<HTMLElement>(null)
   const heroHeadlineRef = useRef<HTMLHeadingElement>(null)
@@ -490,7 +493,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           {/* Right column - Image */}
           <div ref={section1ImageRef} className="h-100vh relative">
             <Image
-              src="/img/sematext/designsystem_x2.png"
+              src={images[0] || "/img/sematext/designsystem_x2.png"}
               alt="Design system components"
               fill
               className="object-cover"
@@ -555,7 +558,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             {/* Error state - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/sematext/onboarding-before.png"
+                src={images[1] || "/img/sematext/onboarding-before.png"}
                 alt="Before - Complex interface"
                 fill
                 className="object-cover"
@@ -573,7 +576,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             {/* Clean state - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/sematext/onboarding-after.png"
+                src={images[2] || "/img/sematext/onboarding-after.png"}
                 alt="After - Clean interface"
                 fill
                 className="object-cover"
@@ -632,7 +635,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
           <div ref={parallaxImageRef} className="cs-image-wide mt-16">
             <Image
-              src="/img/sematext/onboarding-after.png"
+              src={images[3] || "/img/sematext/onboarding-after.png"}
               alt="New onboarding flow"
               width={1600}
               height={900}
@@ -698,7 +701,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             {/* Error state - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/sematext/app-creation-before.png"
+                src={images[4] || "/img/sematext/app-creation-before.png"}
                 alt="Before - Fragmented flow"
                 fill
                 className="object-cover"
@@ -716,7 +719,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             {/* Clean state - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/sematext/app-creation-after1.png"
+                src={images[5] || "/img/sematext/app-creation-after1.png"}
                 alt="After - Fluid flow"
                 fill
                 className="object-cover"
@@ -797,16 +800,16 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-12 gap-6 md:gap-8">
             <div className="cs-gallery-item md:col-span-7 aspect-[4/3] cs-image-container">
-              <Image src="/img/sematext/study-screen1.png" alt="Dashboard view" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[6] || "/img/sematext/study-screen1.png"} alt="Dashboard view" width={800} height={450} className="w-full h-full object-cover" />
             </div>
             <div className="cs-gallery-item md:col-span-5 aspect-[4/3] cs-image-container">
-              <Image src="/img/sematext/study-flow-2.png" alt="Flow screen" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[7] || "/img/sematext/study-flow-2.png"} alt="Flow screen" width={800} height={450} className="w-full h-full object-cover" />
             </div>
             <div className="cs-gallery-item md:col-span-5 aspect-[4/3] cs-image-container">
-              <Image src="/img/sematext/study-flow-3.png" alt="Flow detail" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[8] || "/img/sematext/study-flow-3.png"} alt="Flow detail" width={800} height={450} className="w-full h-full object-cover" />
             </div>
             <div className="cs-gallery-item md:col-span-7 aspect-[4/3] cs-image-container">
-              <Image src="/img/sematext/study-ds.png" alt="Design system" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[9] || "/img/sematext/study-ds.png"} alt="Design system" width={800} height={450} className="w-full h-full object-cover" />
             </div>
           </div>
         </div>
