@@ -5,6 +5,15 @@ import Image from "next/image"
 import { CaseStudyProps } from '@/types'
 import { useFadeIn, useParallax, useSplitTextReveal, useFadeInStagger, useScaleIn, useSlideIn } from '@/hooks/useCaseStudyAnimations'
 import { ANIMATION } from '@/lib/animations'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
+import { Check, X } from 'lucide-react'
+
+// Register ScrambleText plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrambleTextPlugin)
+}
 
 /**
  * Kindbody Case Study
@@ -42,6 +51,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
   const heroNumberRef = useRef<HTMLDivElement>(null)
   const companyRef = useRef<HTMLElement>(null)
   const roleRef = useRef<HTMLElement>(null)
+  const roleScrambleRef = useRef<HTMLSpanElement>(null)
   const roleImageRef = useRef<HTMLDivElement>(null)
   const challengeHeadlineRef = useRef<HTMLHeadingElement>(null)
   const challengeRef = useRef<HTMLElement>(null)
@@ -55,6 +65,10 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
   const processStep3TextRef = useRef<HTMLDivElement>(null)
   const impactQuoteRef = useRef<HTMLElement>(null)
   const labImageRef = useRef<HTMLDivElement>(null)
+  const problemBlockRef = useRef<HTMLDivElement>(null)
+  const solutionBlockRef = useRef<HTMLDivElement>(null)
+  const beforeAfterImagesRef = useRef<HTMLDivElement>(null)
+  const statsRef = useRef<HTMLDivElement>(null)
   const takeawayRef = useRef<HTMLElement>(null)
   const closingRef = useRef<HTMLElement>(null)
 
@@ -102,22 +116,38 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
     start: ANIMATION.scroll.start75,
   })
 
-  // Role: Staggered content reveal
-  useFadeInStagger(roleRef, scrollerRef, {
-    selector: '.role-item',
-    y: 30,
-    duration: ANIMATION.duration.medium,
-    stagger: ANIMATION.stagger.medium,
-    ease: ANIMATION.ease.outMedium,
+  // Role: Image parallax
+  useParallax(roleImageRef, scrollerRef, {
+    y: -50,
+    scale: 1.08,
+    selector: 'img',
+    start: ANIMATION.scroll.startBottom,
+    end: ANIMATION.scroll.endTop,
   })
 
-  // Role: Image slide from left
-  useSlideIn(roleImageRef, scrollerRef, {
-    direction: 'left',
-    distance: 60,
-    duration: ANIMATION.duration.verySlow,
-    ease: ANIMATION.ease.outMedium,
-  })
+  // Role: ScrambleText animation on "trust"
+  useGSAP(() => {
+    if (!roleScrambleRef.current) return
+
+    const element = roleScrambleRef.current
+    const scroller = element.closest('.overflow-y-auto') as HTMLElement
+
+    gsap.to(element, {
+      duration: 1.6,
+      ease: "power2.inOut",
+      scrambleText: {
+        text: "trust.",
+        chars: "lowerCase",
+        revealDelay: 0.5,
+        tweenLength: false,
+      },
+      scrollTrigger: {
+        trigger: roleRef.current,
+        start: "top 75%",
+        scroller: scroller || undefined,
+      }
+    })
+  }, { scope: containerRef })
 
   // Challenge: Word-by-word reveal
   useSplitTextReveal(challengeHeadlineRef, scrollerRef, {
@@ -234,6 +264,95 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
     duration: ANIMATION.duration.medium,
   })
 
+  // Problem checklist: Animated items appear one by one
+  useGSAP(() => {
+    if (!problemBlockRef.current) return
+
+    const scroller = problemBlockRef.current.closest('.overflow-y-auto') as HTMLElement
+    const checklistItems = problemBlockRef.current.querySelectorAll('.checklist-item')
+
+    if (!checklistItems.length) return
+
+    gsap.fromTo(checklistItems,
+      {
+        y: 20,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.15,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          trigger: problemBlockRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Solution checklist: Animated items appear one by one
+  useGSAP(() => {
+    if (!solutionBlockRef.current) return
+
+    const scroller = solutionBlockRef.current.closest('.overflow-y-auto') as HTMLElement
+    const solutionItems = solutionBlockRef.current.querySelectorAll('.solution-item')
+
+    if (!solutionItems.length) return
+
+    gsap.fromTo(solutionItems,
+      {
+        y: 20,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.15,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          trigger: solutionBlockRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Before/After Images: Scale and fade in with stagger
+  useGSAP(() => {
+    if (!beforeAfterImagesRef.current) return
+
+    const scroller = beforeAfterImagesRef.current.closest('.overflow-y-auto') as HTMLElement
+    const images = beforeAfterImagesRef.current.querySelectorAll('.ba-image')
+
+    if (!images.length) return
+
+    gsap.fromTo(images,
+      {
+        scale: 0.96,
+        opacity: 0,
+        y: 40,
+      },
+      {
+        scale: 1,
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: beforeAfterImagesRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
   return (
     <div ref={containerRef} className="cs-kindbody min-h-screen relative">
 
@@ -242,10 +361,10 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         {/* Soft background number */}
         <div
           ref={heroNumberRef}
-          className="absolute top-0 right-0 text-[clamp(15rem,35vw,30rem)] font-extralight leading-none text-amber-300/[0.03] select-none pointer-events-none"
+          className="absolute top-0 right-0 text-[clamp(15rem,35vw,30rem)] font-extralight leading-none text-amber-300/[0.06] select-none pointer-events-none"
           style={{ letterSpacing: '-0.05em' }}
         >
-          ⛤✦
+          ✦
         </div>
 
         <div className="max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-8 md:gap-12 items-center">
@@ -321,46 +440,44 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* My Role */}
-      <section ref={roleRef} className="cs-section">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-7 space-y-12">
-              <div className="role-item space-y-6">
-                <div className="cs-section-number cs-section-number-accent">
-                  01 / Role
-                </div>
-                <h2 className="cs-section-headline">
-                  My<br/>Role
-                </h2>
+      {/* Section 1: Building Trust */}
+      <section ref={roleRef} className="cs-section relative h-screen">
+        <div className="h-full grid lg:grid-cols-2 gap-4">
+          {/* Left column - Text */}
+          <div className="flex flex-col justify-center space-y-12">
+            <div className="space-y-6">
+              <div className="cs-section-number cs-section-number-accent">
+                01 / Foundation
               </div>
-              <div className="role-item cs-body-text space-y-4">
-                <p>
-                  Lead Product Designer (2023–2025). Owned internal clinical tools — provider calendar, EMR, lab workflows — and patient-facing experiences like medication tracking, cycle updates, and fertility calculators.
-                </p>
-                <p>
-                  Worked directly with embryologists, nurses, and doctors to build tools they could trust with someone's future.
-                </p>
-              </div>
+              <h2 className="cs-section-headline">
+                Designing for <span ref={roleScrambleRef} className="cs-animate-word inline-block">xj%4#8s9gg2&!ty/</span>
+              </h2>
+            </div>
+            <div className="cs-body-text space-y-4">
+              <p>
+                Lead Product Designer (2023–2025). Owned internal clinical tools — provider calendar, EMR, lab workflows — and patient-facing experiences like medication tracking, cycle updates, and fertility calculators.
+              </p>
+              <p>
+                When you're building tools that help people create families, precision isn't optional. It's everything.
+              </p>
             </div>
           </div>
 
-          <div className="mt-12 md:-mt-32 md:ml-[40%]">
-            <div ref={roleImageRef} className="cs-image-container">
-              <Image
-                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
-                alt="Healthcare professional working on digital tools"
-                fill
-                className="object-cover"
-              />
-            </div>
+          {/* Right column - Image */}
+          <div ref={roleImageRef} className="h-100vh relative">
+            <Image
+              src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
+              alt="Healthcare professional working on digital tools"
+              fill
+              className="object-cover"
+            />
           </div>
         </div>
       </section>
 
       {/* The Challenge */}
       <section className="cs-section">
-        <div className="max-w-7xl mx-auto space-y-24">
+        <div className="max-w-5xl mx-auto space-y-24">
           <div className="grid md:grid-cols-12 gap-12">
             <div className="md:col-span-2">
               <div className="cs-section-number cs-section-number-accent">
@@ -369,28 +486,123 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
             <div className="md:col-span-10">
               <h2 ref={challengeHeadlineRef} className="cs-section-headline">
-                The stakes: <span className="cs-animate-word inline-block text-amber-300">precision at lab speed</span>
+                From fragmented<br />
+                to <span className="cs-animate-word inline-block">trusted</span>
               </h2>
             </div>
           </div>
 
-          <div ref={challengeRef} className="grid md:grid-cols-3 gap-12 md:gap-16">
-            <div className="space-y-6">
-              <p className="cs-subheadline">
-                After eggs are retrieved and fertilized, embryologists monitor each embryo for days — documenting stages, grading quality, recording procedures.
+          {/* Problem Section */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number text-pink-600">
+                × Problem
+              </div>
+            </div>
+            <div ref={problemBlockRef} className="md:col-span-10 space-y-8">
+              <p className="cs-subheadline-lg">
+                High-stakes workflow, low-trust tools
               </p>
+
+              {/* Animated Checklist */}
+              <div className="space-y-4">
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Spreadsheets and paper logs for life-changing decisions</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Data scattered across multiple disconnected systems</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">No real-time collaboration between lab and providers</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">One mistake could impact someone's future family</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Before/After Visual Comparison */}
+          <div ref={beforeAfterImagesRef} className="grid md:grid-cols-2 gap-6 md:gap-8 my-16">
+            {/* Error state - Left */}
+            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
+              <Image
+                src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80"
+                alt="Before - Fragmented workflow"
+                fill
+                className="object-cover"
+              />
+              {/* Error overlay with red tones */}
+              <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
+              <div className="absolute inset-0 bg-red-500/10"></div>
+              {/* Subtle noise texture */}
+              <div className="absolute inset-0 opacity-25" style={{
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'3.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+                backgroundSize: '150px 150px'
+              }}></div>
             </div>
 
-            <div className="space-y-6">
-              <p className="cs-subheadline">
-                This data directly impacts which embryos get transferred. A single error could mean the difference between success and failure.
-              </p>
+            {/* Clean state - Right */}
+            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
+              <Image
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
+                alt="After - Unified platform"
+                fill
+                className="object-cover"
+              />
             </div>
+          </div>
 
-            <div className="space-y-6">
-              <p className="cs-subheadline">
-                The existing process was fragmented. Spreadsheets. Paper logs. Multiple systems. We needed precision tools that worked at lab speed.
+          {/* Solution Section */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number text-emerald-700">
+                ✓ Solution
+              </div>
+            </div>
+            <div ref={solutionBlockRef} className="md:col-span-10 space-y-8">
+              <p className="cs-subheadline-lg">
+                A unified platform built for precision
               </p>
+
+              {/* Solution Checklist */}
+              <div className="space-y-4">
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Real-time embryo tracking with visual timelines</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Unified EMR connecting lab, providers, and patients</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Built-in safeguards preventing critical errors</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Designed with embryologists, trusted by doctors</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div ref={statsRef} className="cs-stats-grid">
+            <div className="cs-stat">
+              <div className="cs-stat-number cs-stat-number-accent" data-target="20">0</div>
+              <div className="cs-stat-label">clinics nationwide</div>
+            </div>
+            <div className="cs-stat">
+              <div className="cs-stat-number cs-stat-number-accent" data-target="1800">0</div>
+              <div className="cs-stat-label">cycles per month</div>
+            </div>
+            <div className="cs-stat col-span-2 md:col-span-1">
+              <div className="cs-stat-text">Zero</div>
+              <div className="cs-stat-label">critical errors</div>
             </div>
           </div>
 

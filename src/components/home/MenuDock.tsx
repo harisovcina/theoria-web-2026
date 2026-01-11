@@ -57,43 +57,28 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
     }, 200)
   }
 
-  // Responsive dock expansion using GSAP matchMedia (mobile-first approach)
+  // Dock expansion animation
   useGSAP(() => {
     if (!dockRef.current) return
 
     if (isCaseStudy) {
-      // Use GSAP's matchMedia for responsive animations
-      const mm = gsap.matchMedia()
+      // Expand to full width with responsive margins
+      // Mobile (<768px): 80px total margins
+      // Tablet (768-1280px): 200px total margins
+      // Desktop (>1280px): 800px total margins
+      let margin = 80
+      if (window.innerWidth >= 1280) {
+        margin = 800
+      } else if (window.innerWidth >= 768) {
+        margin = 200
+      }
+      const targetWidth = window.innerWidth - margin
 
-      mm.add({
-        // Mobile: 80px margins
-        "(max-width: 767px)": () => {
-          gsap.to(dockRef.current, {
-            width: () => window.innerWidth - 80,
-            duration: 0.8,
-            ease: "power3.inOut",
-          })
-        },
-        // Tablet: 200px margins
-        "(min-width: 768px) and (max-width: 1279px)": () => {
-          gsap.to(dockRef.current, {
-            width: () => window.innerWidth - 200,
-            duration: 0.8,
-            ease: "power3.inOut",
-          })
-        },
-        // Desktop: 800px margins
-        "(min-width: 1280px)": () => {
-          gsap.to(dockRef.current, {
-            width: () => window.innerWidth - 800,
-            duration: 0.8,
-            ease: "power3.inOut",
-          })
-        },
+      gsap.to(dockRef.current, {
+        width: targetWidth,
+        duration: 0.8,
+        ease: "power3.inOut",
       })
-
-      // Cleanup function
-      return () => mm.revert()
     } else {
       // Collapse back to original size
       gsap.to(dockRef.current, {

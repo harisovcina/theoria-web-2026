@@ -9,6 +9,7 @@ import { FlipWordDemo } from './FlipWordDemo'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
+import { Check, X } from 'lucide-react'
 
 // Register ScrambleText plugin
 if (typeof window !== 'undefined') {
@@ -49,8 +50,13 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
   const section2StatsRef = useRef<HTMLDivElement>(null)
   const problemBlockRef = useRef<HTMLDivElement>(null)
   const solutionBlockRef = useRef<HTMLDivElement>(null)
+  const beforeAfterImagesRef = useRef<HTMLDivElement>(null)
   const section3HeadlineRef = useRef<HTMLHeadingElement>(null)
+  const section3ProblemBlockRef = useRef<HTMLDivElement>(null)
+  const section3SolutionBlockRef = useRef<HTMLDivElement>(null)
+  const section3BeforeAfterImagesRef = useRef<HTMLDivElement>(null)
   const section3StatsRef = useRef<HTMLDivElement>(null)
+  const fluidWordRef = useRef<HTMLSpanElement>(null)
   const section4HeadlineRef = useRef<HTMLHeadingElement>(null)
   const galleryRef = useRef<HTMLElement>(null)
   const closingRef = useRef<HTMLElement>(null)
@@ -118,7 +124,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
       duration: 1.6,
       ease: "power2.inOut",
       scrambleText: {
-        text: "evolves",
+        text: "keeps evolving.",
         chars: "lowerCase",
         revealDelay: 0.5,
         tweenLength: false,
@@ -132,32 +138,226 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
   }, { scope: containerRef })
 
 
-  // Section 2: Blur-to-sharp reveal on "clarity"
-  useSplitTextReveal(section2HeadlineRef, scrollerRef, {
-    type: 'chars',
-    selector: '.cs-animate-word',
-    blur: 6,
-    duration: ANIMATION.duration.normal,
-    stagger: 0.02,
-    ease: ANIMATION.ease.sine,
-    start: ANIMATION.scroll.start75,
-  })
+  // Section 2: Blur animation on "clarity"
+  useGSAP(() => {
+    if (!section2HeadlineRef.current) return
 
-  // Section 2: Problem block slide from left
-  useSlideIn(problemBlockRef, scrollerRef, {
-    direction: 'left',
-    distance: 60,
-    duration: ANIMATION.duration.slow,
-    ease: ANIMATION.ease.outMedium,
-  })
+    const element = section2HeadlineRef.current
+    const scroller = element.closest('.overflow-y-auto') as HTMLElement
 
-  // Section 2: Solution block slide from right
-  useSlideIn(solutionBlockRef, scrollerRef, {
-    direction: 'right',
-    distance: 60,
-    duration: ANIMATION.duration.slow,
-    ease: ANIMATION.ease.outMedium,
-  })
+    const clarityWord = element.querySelector('.cs-animate-word')
+    if (!clarityWord) return
+
+    gsap.fromTo(clarityWord,
+      {
+        filter: 'blur(10px)',
+        opacity: 0,
+      },
+      {
+        filter: 'blur(0px)',
+        opacity: 1,
+        duration: 1.2,
+        ease: ANIMATION.ease.sine,
+        scrollTrigger: {
+          trigger: element,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Section 2: Animated problem checklist - appear one by one
+  useGSAP(() => {
+    if (!problemBlockRef.current) return
+
+    const scroller = problemBlockRef.current.closest('.overflow-y-auto') as HTMLElement
+    const checklistItems = problemBlockRef.current.querySelectorAll('.checklist-item')
+
+    if (!checklistItems.length) return
+
+    gsap.fromTo(checklistItems,
+      {
+        y: 20,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.15,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          trigger: problemBlockRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Section 2: Animated solution checklist - appear one by one
+  useGSAP(() => {
+    if (!solutionBlockRef.current) return
+
+    const scroller = solutionBlockRef.current.closest('.overflow-y-auto') as HTMLElement
+    const solutionItems = solutionBlockRef.current.querySelectorAll('.solution-item')
+
+    if (!solutionItems.length) return
+
+    gsap.fromTo(solutionItems,
+      {
+        y: 20,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.15,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          trigger: solutionBlockRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Before/After Images: Scale and fade in with stagger
+  useGSAP(() => {
+    if (!beforeAfterImagesRef.current) return
+
+    const scroller = beforeAfterImagesRef.current.closest('.overflow-y-auto') as HTMLElement
+    const images = beforeAfterImagesRef.current.querySelectorAll('.ba-image')
+
+    if (!images.length) return
+
+    gsap.fromTo(images,
+      {
+        scale: 0.96,
+        opacity: 0,
+        y: 40,
+      },
+      {
+        scale: 1,
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: beforeAfterImagesRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Section 3: Animated problem checklist - appear one by one
+  useGSAP(() => {
+    if (!section3ProblemBlockRef.current) return
+
+    const scroller = section3ProblemBlockRef.current.closest('.overflow-y-auto') as HTMLElement
+    const checklistItems = section3ProblemBlockRef.current.querySelectorAll('.checklist-item')
+
+    if (!checklistItems.length) return
+
+    gsap.fromTo(checklistItems,
+      {
+        y: 20,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.15,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          trigger: section3ProblemBlockRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Section 3: Animated solution checklist - appear one by one
+  useGSAP(() => {
+    if (!section3SolutionBlockRef.current) return
+
+    const scroller = section3SolutionBlockRef.current.closest('.overflow-y-auto') as HTMLElement
+    const solutionItems = section3SolutionBlockRef.current.querySelectorAll('.solution-item')
+
+    if (!solutionItems.length) return
+
+    gsap.fromTo(solutionItems,
+      {
+        y: 20,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.15,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          trigger: section3SolutionBlockRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Section 3: Before/After Images - Scale and fade in with stagger
+  useGSAP(() => {
+    if (!section3BeforeAfterImagesRef.current) return
+
+    const scroller = section3BeforeAfterImagesRef.current.closest('.overflow-y-auto') as HTMLElement
+    const images = section3BeforeAfterImagesRef.current.querySelectorAll('.ba-image')
+
+    if (!images.length) return
+
+    gsap.fromTo(images,
+      {
+        scale: 0.96,
+        opacity: 0,
+        y: 40,
+      },
+      {
+        scale: 1,
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section3BeforeAfterImagesRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        }
+      }
+    )
+  }, { scope: containerRef })
+
+  // Section 3: Fluid word animation - gentle floating effect
+  useGSAP(() => {
+    if (!fluidWordRef.current) return
+
+    // Gentle floating animation for fluid feel
+    gsap.to(fluidWordRef.current, {
+      y: -12,
+      duration: 1.6,
+      ease: "power2.inOut",
+      yoyo: true,
+      repeat: -1,
+    })
+  }, { scope: containerRef })
 
   // Section 4: Word reveal
   useSplitTextReveal(section4HeadlineRef, scrollerRef, {
@@ -290,7 +490,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           {/* Right column - Image */}
           <div ref={section1ImageRef} className="h-100vh relative">
             <Image
-              src="/img/sematext/study-ds.png"
+              src="/img/sematext/designsystem_x2.png"
               alt="Design system components"
               fill
               className="object-cover"
@@ -301,7 +501,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       {/* Section 2: Onboarding */}
       <section className="cs-section">
-        <div className="max-w-7xl mx-auto space-y-24">
+        <div className="max-w-5xl mx-auto space-y-24">
           <div className="grid md:grid-cols-12 gap-12">
             <div className="md:col-span-2">
               <div className="cs-section-number cs-section-number-accent">
@@ -310,24 +510,108 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             </div>
             <div className="md:col-span-10">
               <h2 ref={section2HeadlineRef} className="cs-section-headline">
-                From checklist to <span className="cs-animate-word inline-block">clarity</span>
+                From checklist<br />
+                to <span className="cs-animate-word inline-block">clarity</span>
               </h2>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 md:gap-24">
-            <div ref={problemBlockRef} className="cs-problem-block">
-              <div className="cs-eyebrow-error">× Problem</div>
-              <p className="cs-subheadline">
-                Old onboarding: bullet points you had to complete and revisit. Status checks. Long, low-quality tutorial videos. Tedious. Users bounced.
+          {/* Problem Section */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number text-pink-600">
+                × Problem
+              </div>
+            </div>
+            <div ref={problemBlockRef} className="md:col-span-10 space-y-8">
+              <p className="cs-subheadline-lg">
+                Old onboarding felt like homework
               </p>
+
+              {/* Animated Checklist */}
+              <div className="space-y-4">
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Bullet points you had to complete and revisit</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Endless status checks and confusing navigation</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Long, low-quality tutorial videos nobody watched</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Users got frustrated and bounced</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Before/After Visual Comparison */}
+          <div ref={beforeAfterImagesRef} className="grid md:grid-cols-2 gap-6 md:gap-8 my-16">
+            {/* Error state - Left */}
+            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
+              <Image
+                src="/img/sematext/onboarding-before.png"
+                alt="Before - Complex interface"
+                fill
+                className="object-cover"
+              />
+              {/* Error overlay with red tones - enhanced */}
+              <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
+              <div className="absolute inset-0 bg-red-500/10"></div>
+              {/* Subtle noise texture */}
+              <div className="absolute inset-0 opacity-25" style={{
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'3.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+                backgroundSize: '150px 150px'
+              }}></div>
             </div>
 
-            <div ref={solutionBlockRef} className="cs-solution-block">
-              <div className="cs-eyebrow cs-eyebrow-accent">✓ Solution</div>
-              <p className="cs-subheadline">
-                A visual node map of the entire platform. Hover a module, see dependencies. Click, see features. Start creating apps, monitors, status pages — all from one view.
+            {/* Clean state - Right */}
+            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
+              <Image
+                src="/img/sematext/onboarding-after.png"
+                alt="After - Clean interface"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Solution Section */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number text-emerald-700">
+                ✓ Solution
+              </div>
+            </div>
+            <div ref={solutionBlockRef} className="md:col-span-10 space-y-8">
+              <p className="cs-subheadline-lg">
+                A visual node map of the entire platform
               </p>
+
+              {/* Solution Checklist */}
+              <div className="space-y-4">
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Hover a module, see dependencies instantly</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Click to explore features and capabilities</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Start creating apps, monitors, status pages</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Everything accessible from one unified view</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -348,7 +632,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
           <div ref={parallaxImageRef} className="cs-image-wide mt-16">
             <Image
-              src="/img/sematext/study-onboarding.png"
+              src="/img/sematext/onboarding-after.png"
               alt="New onboarding flow"
               width={1600}
               height={900}
@@ -360,40 +644,117 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       {/* Section 3: App Creation Flow */}
       <section className="cs-section">
-        <div className="max-w-7xl mx-auto space-y-24">
-          <div className="grid md:grid-cols-12 gap-12 items-end">
-            <div className="md:col-span-1">
-              <div className="cs-section-number-vertical cs-section-number-accent">
+        <div className="max-w-5xl mx-auto space-y-24">
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number-accent">
                 03 / Core Flow
               </div>
             </div>
-            <div className="md:col-span-11">
+            <div className="md:col-span-10">
               <h2 ref={section3HeadlineRef} className="cs-section-headline">
-                <span className="inline-block"><span className="cs-strikethrough-word">Vertical</span></span> rhythm, <span className="cs-animate-word inline-block text-sky-400">horizontal</span> clarity
+                From fragmented<br />
+                to <span ref={fluidWordRef} className="cs-animate-word inline-block">fluid</span>
               </h2>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 md:gap-16">
-            <div className="space-y-6">
-              <div className="cs-eyebrow">Before</div>
-              <p className="cs-body-text">
-                Horizontal stepper. Looked clean at first, got overcrowded fast. Users lost context.
+          {/* Problem Section */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number text-pink-600">
+                × Problem
+              </div>
+            </div>
+            <div ref={section3ProblemBlockRef} className="md:col-span-10 space-y-8">
+              <p className="cs-subheadline-lg">
+                Horizontal stepper broke down under complexity
               </p>
+
+              {/* Animated Checklist */}
+              <div className="space-y-4">
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Steps got overcrowded as features grew</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Users lost context switching between steps</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">No sense of progress or completion</p>
+                </div>
+                <div className="checklist-item flex items-center gap-3">
+                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
+                  <p className="cs-subheadline">Hard to revisit or modify previous choices</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Before/After Visual Comparison */}
+          <div ref={section3BeforeAfterImagesRef} className="grid md:grid-cols-2 gap-6 md:gap-8 my-16">
+            {/* Error state - Left */}
+            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
+              <Image
+                src="/img/sematext/app-creation-before.png"
+                alt="Before - Fragmented flow"
+                fill
+                className="object-cover"
+              />
+              {/* Error overlay with red tones - enhanced */}
+              <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
+              <div className="absolute inset-0 bg-red-500/10"></div>
+              {/* Subtle noise texture */}
+              <div className="absolute inset-0 opacity-25" style={{
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'3.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+                backgroundSize: '150px 150px'
+              }}></div>
             </div>
 
-            <div className="space-y-6">
-              <div className="cs-eyebrow cs-eyebrow-accent">After</div>
-              <p className="cs-body-text">
-                Vertical timeline layout. Scroll-driven. Each choice reveals what's next. You learn as you go.
-              </p>
+            {/* Clean state - Right */}
+            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
+              <Image
+                src="/img/sematext/app-creation-after1.png"
+                alt="After - Fluid flow"
+                fill
+                className="object-cover"
+              />
             </div>
+          </div>
 
-            <div className="space-y-6">
-              <div className="cs-eyebrow">Impact</div>
-              <p className="cs-body-text">
-                One cohesive experience, not a fragmented wizard. Users stay oriented throughout.
+          {/* Solution Section */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2">
+              <div className="cs-section-number cs-section-number text-emerald-700">
+                ✓ Solution
+              </div>
+            </div>
+            <div ref={section3SolutionBlockRef} className="md:col-span-10 space-y-8">
+              <p className="cs-subheadline-lg">
+                Vertical timeline that grows with you
               </p>
+
+              {/* Solution Checklist */}
+              <div className="space-y-4">
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Scroll-driven layout reveals next steps naturally</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">See your entire journey at a glance</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Context-aware choices guide you forward</p>
+                </div>
+                <div className="solution-item flex items-center gap-3">
+                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
+                  <p className="cs-subheadline">Jump back to any step without losing progress</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -411,18 +772,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
               <div className="cs-stat-label">full context</div>
             </div>
           </div>
-
-          <div className="md:ml-24 mt-16">
-            <div className="cs-image-container">
-              <Image
-                src="/img/sematext/study-flow.png"
-                alt="App creation flow"
-                width={1600}
-                height={900}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
         </div>
       </section>
 
@@ -430,7 +779,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
       <section className="cs-section">
         <div className="max-w-5xl mx-auto text-center space-y-16">
           <h2 ref={section4HeadlineRef} className="cs-section-headline-center">
-            Built for people who <span className="cs-animate-word inline-block text-sky-400">don't have time</span> for bad UX
+            Built for people who <span className="cs-animate-word inline-block text-sky-400">don't have time</span> for downtime
           </h2>
 
           <blockquote className="cs-quote">
