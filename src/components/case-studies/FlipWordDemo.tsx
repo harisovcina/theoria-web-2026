@@ -45,10 +45,10 @@ export function FlipWordDemo() {
           // Find the word "MOVE" in section 1
           const wordToMove = Array.from(split1.words).find(word =>
             word.textContent?.toUpperCase().includes('MOVE')
-          )
+          ) as HTMLElement | undefined
 
           // Find first word in section 2
-          const firstWord = split2.words[0]
+          const firstWord = split2.words[0] as HTMLElement
 
           if (wordToMove && firstWord) {
             // Store original parent and next sibling for proper restoration
