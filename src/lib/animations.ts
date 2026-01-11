@@ -104,6 +104,41 @@ export const ANIMATION = {
 } as const
 
 /**
+ * HoverPreview Component Animation Configuration
+ *
+ * Optimized for smooth, refined motion based on GSAP best practices:
+ * - Softer easing (power1 instead of power3) for subtlety
+ * - Faster durations (0.4-0.6s instead of 0.5-0.9s) for snappier feel
+ * - More noticeable stagger (0.15-0.3s instead of 0.05-0.25s)
+ *
+ * Usage:
+ * import { HOVER_PREVIEW } from '@/lib/animations'
+ *
+ * gsap.to(element, {
+ *   opacity: 1,
+ *   duration: HOVER_PREVIEW.duration.background,
+ *   ease: HOVER_PREVIEW.ease.reveal,
+ * })
+ */
+export const HOVER_PREVIEW = {
+  duration: {
+    background: 0.4,  // Background image fade in/out
+    content: 0.6,     // Device/text clip-path reveals
+    meta: 0.5,        // Meta information (year, services)
+    collapse: 0.5,    // Exit animation when project deselected
+  },
+  ease: {
+    reveal: "power1.out",  // Gentle deceleration for reveals (was power3.out - too harsh)
+    collapse: "sine.in",   // Smooth acceleration for collapse (was power3.in - too harsh)
+  },
+  stagger: {
+    base: 0,           // First element starts immediately
+    medium: 0.15,      // Second element (was 0.05-0.1 - barely noticeable)
+    delayed: 0.3,      // Third element (was 0.15-0.25 - needs more separation)
+  },
+} as const
+
+/**
  * Type exports for TypeScript
  */
 export type AnimationDuration = keyof typeof ANIMATION.duration
