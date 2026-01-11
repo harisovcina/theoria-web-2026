@@ -3,386 +3,420 @@
 import { useRef } from "react"
 import Image from "next/image"
 import { CaseStudyProps } from '@/types'
-import { useFadeIn, useParallax, useSplitTextReveal, useFadeInStagger, useScaleIn, useSlideIn } from '@/hooks/useCaseStudyAnimations'
 import { ANIMATION } from '@/lib/animations'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { Check, X } from 'lucide-react'
 
-// Register ScrambleText plugin
+// Register GSAP plugins
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrambleTextPlugin)
+  gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin)
 }
 
 /**
  * Kindbody Case Study
  * Warm, human-centered healthcare aesthetic with pale yellow accents
  * Emphasis on trust, precision, and compassion
+ *
+ * ✅ Refactored to use GSAP context pattern with CSS selectors
+ * - Reduced from 19+ refs to 1 containerRef
+ * - All animations consolidated into single useGSAP block
+ * - Uses CSS class selectors for targeting elements
  */
-
-// TODO: CRITICAL REFACTOR - This component has 19 refs! This is extremely excessive
-// TODO: This violates GSAP best practices and creates unnecessary complexity
-// TODO: Refactor to use GSAP context pattern with CSS class selectors
-// TODO: Should have ONLY containerRef - all other elements targeted via CSS selectors
-// TODO: Example pattern to follow:
-//   const containerRef = useRef<HTMLDivElement>(null)
-//   useGSAP(() => {
-//     const ctx = gsap.context(() => {
-//       // Hero animations
-//       gsap.from('.hero-headline .cs-animate-word', { y: 30, blur: 4, stagger: 0.025 })
-//       gsap.to('.hero-number', { y: 150, scrollTrigger: {...} })
-//       gsap.from('.hero-image img', { yPercent: 30, scale: 1.1, scrollTrigger: {...} })
-//
-//       // Section animations
-//       gsap.from('.company-section', { y: 40, scrollTrigger: {...} })
-//       gsap.from('.role-item', { y: 30, stagger: 0.15, scrollTrigger: {...} })
-//     }, containerRef)
-//     return () => ctx.revert()
-//   }, [])
-// TODO: This eliminates 18 refs, improves performance, and makes code more maintainable
-// TODO: Also consolidates 15+ separate hook calls into one clean useGSAP block
 
 export function CaseStudyKindbody({ project }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const scrollerRef = useRef<HTMLElement>(null)
-  const heroHeadlineRef = useRef<HTMLHeadingElement>(null)
-  const heroImageRef = useRef<HTMLDivElement>(null)
-  const heroNumberRef = useRef<HTMLDivElement>(null)
-  const companyRef = useRef<HTMLElement>(null)
-  const roleRef = useRef<HTMLElement>(null)
-  const roleScrambleRef = useRef<HTMLSpanElement>(null)
-  const roleImageRef = useRef<HTMLDivElement>(null)
-  const challengeHeadlineRef = useRef<HTMLHeadingElement>(null)
-  const challengeRef = useRef<HTMLElement>(null)
-  const challengeImageRef = useRef<HTMLDivElement>(null)
-  const processHeadlineRef = useRef<HTMLHeadingElement>(null)
-  const processStep1ImageRef = useRef<HTMLDivElement>(null)
-  const processStep1TextRef = useRef<HTMLDivElement>(null)
-  const processStep2ImageRef = useRef<HTMLDivElement>(null)
-  const processStep2TextRef = useRef<HTMLDivElement>(null)
-  const processStep3ImageRef = useRef<HTMLDivElement>(null)
-  const processStep3TextRef = useRef<HTMLDivElement>(null)
-  const impactQuoteRef = useRef<HTMLElement>(null)
-  const labImageRef = useRef<HTMLDivElement>(null)
-  const problemBlockRef = useRef<HTMLDivElement>(null)
-  const solutionBlockRef = useRef<HTMLDivElement>(null)
-  const beforeAfterImagesRef = useRef<HTMLDivElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
-  const takeawayRef = useRef<HTMLElement>(null)
-  const closingRef = useRef<HTMLElement>(null)
 
-  // TODO: Replace all these custom hook calls with a single useGSAP + gsap.context() block
-  // TODO: Current approach: 15+ separate hooks, each requiring its own ref = performance overhead
-  // TODO: Better approach: One useGSAP hook, gsap.context() for scoping, CSS selectors for targets
-  // TODO: Benefits:
-  //   - Eliminates 18 unnecessary refs
-  //   - All animations in one place (easier to read/maintain)
-  //   - Automatic cleanup via ctx.revert()
-  //   - Better performance (single context vs multiple hook calls)
-  //   - Follows GSAP team's recommended pattern
-  // TODO: After refactor, this entire section should be ~50 lines instead of 150+ with refs
-
-  // Hero: Soft character reveal on "compassion"
-  useSplitTextReveal(heroHeadlineRef, scrollerRef, {
-    type: 'chars',
-    selector: '.cs-animate-word',
-    y: 30,
-    blur: 4,
-    duration: ANIMATION.duration.normal,
-    stagger: 0.025,
-    ease: ANIMATION.ease.sine,
-    delay: ANIMATION.delay.short,
-  })
-
-  // Hero: Background number parallax
-  useParallax(heroNumberRef, scrollerRef, {
-    y: 150,
-    opacity: 0.03,
-    trigger: heroHeadlineRef,
-  })
-
-  // Hero: Image parallax with scale
-  useParallax(heroImageRef, scrollerRef, {
-    yPercent: 30,
-    scale: 1.1,
-    selector: 'img',
-  })
-
-  // Company: Gentle fade in
-  useFadeIn(companyRef, scrollerRef, {
-    y: 40,
-    duration: ANIMATION.duration.slow,
-    start: ANIMATION.scroll.start75,
-  })
-
-  // Role: Image parallax
-  useParallax(roleImageRef, scrollerRef, {
-    y: -50,
-    scale: 1.08,
-    selector: 'img',
-    start: ANIMATION.scroll.startBottom,
-    end: ANIMATION.scroll.endTop,
-  })
-
-  // Role: ScrambleText animation on "trust"
   useGSAP(() => {
-    if (!roleScrambleRef.current) return
+    if (!containerRef.current) return
 
-    const element = roleScrambleRef.current
-    const scroller = element.closest('.overflow-y-auto') as HTMLElement
+    const ctx = gsap.context(() => {
+      const scroller = containerRef.current?.closest('.overflow-y-auto') as HTMLElement
 
-    gsap.to(element, {
-      duration: 1.6,
-      ease: "power2.inOut",
-      scrambleText: {
-        text: "trust.",
-        chars: "lowerCase",
-        revealDelay: 0.5,
-        tweenLength: false,
-      },
-      scrollTrigger: {
-        trigger: roleRef.current,
-        start: "top 75%",
-        scroller: scroller || undefined,
+      // Hero: Soft character reveal on "compassion"
+      const heroHeadline = containerRef.current?.querySelector('.hero-headline')
+      if (heroHeadline) {
+        const split = new SplitText(heroHeadline.querySelectorAll('.cs-animate-word'), {
+          type: 'chars',
+          charsClass: 'split-char'
+        })
+
+        gsap.from(split.chars, {
+          y: 30,
+          filter: 'blur(4px)',
+          opacity: 0,
+          duration: ANIMATION.duration.normal,
+          stagger: 0.025,
+          ease: ANIMATION.ease.sine,
+          delay: ANIMATION.delay.short,
+        })
       }
-    })
-  }, { scope: containerRef })
 
-  // Challenge: Word-by-word reveal
-  useSplitTextReveal(challengeHeadlineRef, scrollerRef, {
-    type: 'words',
-    selector: '.cs-animate-word',
-    y: 20,
-    duration: ANIMATION.duration.fast,
-    stagger: 0.04,
-    start: ANIMATION.scroll.start75,
-  })
-
-  // Challenge: Content scale in
-  useScaleIn(challengeRef, scrollerRef, {
-    selector: 'p',
-    scale: 0.97,
-    y: 20,
-    duration: ANIMATION.duration.slow,
-    stagger: ANIMATION.stagger.slow,
-    ease: ANIMATION.ease.outMedium,
-    start: ANIMATION.scroll.start75,
-  })
-
-  // Challenge: Image parallax
-  useParallax(challengeImageRef, scrollerRef, {
-    yPercent: 25,
-    selector: 'img',
-    start: ANIMATION.scroll.startBottom,
-    end: ANIMATION.scroll.endTop,
-  })
-
-  // Process: Headline character reveal
-  useSplitTextReveal(processHeadlineRef, scrollerRef, {
-    type: 'chars',
-    selector: '.cs-animate-word',
-    blur: 6,
-    duration: ANIMATION.duration.normal,
-    stagger: 0.02,
-    ease: ANIMATION.ease.sine,
-    start: ANIMATION.scroll.start75,
-  })
-
-  // Process Step 1: Image from left, text stagger
-  useSlideIn(processStep1ImageRef, scrollerRef, {
-    direction: 'left',
-    distance: 60,
-    duration: ANIMATION.duration.slow,
-    ease: ANIMATION.ease.outMedium,
-  })
-  useFadeInStagger(processStep1TextRef, scrollerRef, {
-    selector: '.cs-text-reveal',
-    y: 30,
-    duration: ANIMATION.duration.medium,
-    stagger: ANIMATION.stagger.fast,
-    delay: ANIMATION.delay.short,
-  })
-
-  // Process Step 2: Image from right, text stagger
-  useSlideIn(processStep2ImageRef, scrollerRef, {
-    direction: 'right',
-    distance: 60,
-    duration: ANIMATION.duration.slow,
-    ease: ANIMATION.ease.outMedium,
-  })
-  useFadeInStagger(processStep2TextRef, scrollerRef, {
-    selector: '.cs-text-reveal',
-    y: 30,
-    duration: ANIMATION.duration.medium,
-    stagger: ANIMATION.stagger.fast,
-    delay: ANIMATION.delay.short,
-  })
-
-  // Process Step 3: Image from left, text stagger
-  useSlideIn(processStep3ImageRef, scrollerRef, {
-    direction: 'left',
-    distance: 60,
-    duration: ANIMATION.duration.slow,
-    ease: ANIMATION.ease.outMedium,
-  })
-  useFadeInStagger(processStep3TextRef, scrollerRef, {
-    selector: '.cs-text-reveal',
-    y: 30,
-    duration: ANIMATION.duration.medium,
-    stagger: ANIMATION.stagger.fast,
-    delay: ANIMATION.delay.short,
-  })
-
-  // Impact Quote: Soft scale in
-  useScaleIn(impactQuoteRef, scrollerRef, {
-    scale: 0.95,
-    duration: ANIMATION.duration.xSlow,
-    ease: ANIMATION.ease.sine,
-    start: ANIMATION.scroll.start75,
-  })
-
-  // Lab Image: Parallax with scale
-  useParallax(labImageRef, scrollerRef, {
-    yPercent: 25,
-    scale: 1.08,
-    selector: 'img',
-    start: ANIMATION.scroll.startBottom,
-    end: ANIMATION.scroll.endTop,
-  })
-
-  // Takeaway: Gentle fade in
-  useFadeIn(takeawayRef, scrollerRef, {
-    y: 40,
-    duration: ANIMATION.duration.verySlow,
-    start: ANIMATION.scroll.start75,
-  })
-
-  // Closing: Fade in
-  useFadeIn(closingRef, scrollerRef, {
-    y: 20,
-    duration: ANIMATION.duration.medium,
-  })
-
-  // Problem checklist: Animated items appear one by one
-  useGSAP(() => {
-    if (!problemBlockRef.current) return
-
-    const scroller = problemBlockRef.current.closest('.overflow-y-auto') as HTMLElement
-    const checklistItems = problemBlockRef.current.querySelectorAll('.checklist-item')
-
-    if (!checklistItems.length) return
-
-    gsap.fromTo(checklistItems,
-      {
-        y: 20,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.15,
-        ease: ANIMATION.ease.outMedium,
+      // Hero: Background number parallax
+      gsap.to('.hero-number', {
+        y: 150,
+        opacity: 0.03,
+        ease: 'none',
         scrollTrigger: {
-          trigger: problemBlockRef.current,
-          start: 'top 75%',
-          scroller: scroller || undefined,
-        }
-      }
-    )
-  }, { scope: containerRef })
-
-  // Solution checklist: Animated items appear one by one
-  useGSAP(() => {
-    if (!solutionBlockRef.current) return
-
-    const scroller = solutionBlockRef.current.closest('.overflow-y-auto') as HTMLElement
-    const solutionItems = solutionBlockRef.current.querySelectorAll('.solution-item')
-
-    if (!solutionItems.length) return
-
-    gsap.fromTo(solutionItems,
-      {
-        y: 20,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.15,
-        ease: ANIMATION.ease.outMedium,
-        scrollTrigger: {
-          trigger: solutionBlockRef.current,
-          start: 'top 75%',
-          scroller: scroller || undefined,
-        }
-      }
-    )
-  }, { scope: containerRef })
-
-  // Before/After Images: Scale and fade in with stagger
-  useGSAP(() => {
-    if (!beforeAfterImagesRef.current) return
-
-    const scroller = beforeAfterImagesRef.current.closest('.overflow-y-auto') as HTMLElement
-    const images = beforeAfterImagesRef.current.querySelectorAll('.ba-image')
-
-    if (!images.length) return
-
-    gsap.fromTo(images,
-      {
-        scale: 0.96,
-        opacity: 0,
-        y: 40,
-      },
-      {
-        scale: 1,
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: beforeAfterImagesRef.current,
-          start: 'top 75%',
-          scroller: scroller || undefined,
-        }
-      }
-    )
-  }, { scope: containerRef })
-
-  // Stats: Animated numbers (without percentage for Kindbody)
-  useGSAP(() => {
-    if (!statsRef.current) return
-
-    const scroller = statsRef.current.closest('.overflow-y-auto') as HTMLElement
-    const statNumbers = statsRef.current.querySelectorAll('.cs-stat-number')
-
-    if (!statNumbers.length) return
-
-    statNumbers.forEach((stat) => {
-      const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
-      const obj = { value: 0 }
-
-      gsap.to(obj, {
-        value: target,
-        duration: 2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: statsRef.current,
-          start: 'top 75%',
-          scroller: scroller || undefined,
-        },
-        onUpdate: () => {
-          // Format with commas for large numbers (1,800)
-          const formatted = Math.round(obj.value).toLocaleString()
-          stat.textContent = formatted
+          scroller,
+          trigger: '.hero-headline',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
         }
       })
-    })
-  }, { scope: containerRef })
+
+      // Hero: Image parallax with scale
+      gsap.fromTo('.hero-image img',
+        { yPercent: 30, scale: 1.1 },
+        {
+          yPercent: -30,
+          scale: 1,
+          ease: 'none',
+          scrollTrigger: {
+            scroller,
+            trigger: '.hero-image',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          }
+        }
+      )
+
+      // Company: Gentle fade in
+      gsap.from('.company-section', {
+        y: 40,
+        opacity: 0,
+        duration: ANIMATION.duration.slow,
+        scrollTrigger: {
+          scroller,
+          trigger: '.company-section',
+          start: ANIMATION.scroll.start75,
+        }
+      })
+
+      // Role: Image parallax
+      gsap.fromTo('.role-image img',
+        { y: -50, scale: 1.08 },
+        {
+          y: 50,
+          scale: 1,
+          ease: 'none',
+          scrollTrigger: {
+            scroller,
+            trigger: '.role-image',
+            start: ANIMATION.scroll.startBottom,
+            end: ANIMATION.scroll.endTop,
+            scrub: true,
+          }
+        }
+      )
+
+      // Role: ScrambleText animation on "trust"
+      const roleScramble = containerRef.current?.querySelector('.role-scramble')
+      if (roleScramble) {
+        gsap.to(roleScramble, {
+          duration: 1.6,
+          ease: "power2.inOut",
+          scrambleText: {
+            text: "trust.",
+            chars: "lowerCase",
+            revealDelay: 0.5,
+            tweenLength: false,
+          },
+          scrollTrigger: {
+            scroller,
+            trigger: '.role-section',
+            start: "top 75%",
+          }
+        })
+      }
+
+      // Challenge: Word-by-word reveal
+      const challengeHeadline = containerRef.current?.querySelector('.challenge-headline')
+      if (challengeHeadline) {
+        const split = new SplitText(challengeHeadline.querySelectorAll('.cs-animate-word'), {
+          type: 'words',
+          wordsClass: 'split-word'
+        })
+
+        gsap.from(split.words, {
+          y: 20,
+          opacity: 0,
+          duration: ANIMATION.duration.fast,
+          stagger: 0.04,
+          scrollTrigger: {
+            scroller,
+            trigger: '.challenge-headline',
+            start: ANIMATION.scroll.start75,
+          }
+        })
+      }
+
+      // Challenge: Content scale in
+      gsap.from('.challenge-section p', {
+        scale: 0.97,
+        y: 20,
+        opacity: 0,
+        duration: ANIMATION.duration.slow,
+        stagger: ANIMATION.stagger.slow,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          scroller,
+          trigger: '.challenge-section',
+          start: ANIMATION.scroll.start75,
+        }
+      })
+
+      // Challenge: Image parallax
+      gsap.fromTo('.challenge-image img',
+        { yPercent: 25 },
+        {
+          yPercent: -25,
+          ease: 'none',
+          scrollTrigger: {
+            scroller,
+            trigger: '.challenge-image',
+            start: ANIMATION.scroll.startBottom,
+            end: ANIMATION.scroll.endTop,
+            scrub: true,
+          }
+        }
+      )
+
+      // Process: Headline character reveal
+      const processHeadline = containerRef.current?.querySelector('.process-headline')
+      if (processHeadline) {
+        const split = new SplitText(processHeadline.querySelectorAll('.cs-animate-word'), {
+          type: 'chars',
+          charsClass: 'split-char'
+        })
+
+        gsap.from(split.chars, {
+          filter: 'blur(6px)',
+          opacity: 0,
+          duration: ANIMATION.duration.normal,
+          stagger: 0.02,
+          ease: ANIMATION.ease.sine,
+          scrollTrigger: {
+            scroller,
+            trigger: '.process-headline',
+            start: ANIMATION.scroll.start75,
+          }
+        })
+      }
+
+      // Process Step 1: Image from left, text stagger
+      gsap.from('.process-step1-image', {
+        x: -60,
+        opacity: 0,
+        duration: ANIMATION.duration.slow,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          scroller,
+          trigger: '.process-step1-image',
+          start: 'top 75%',
+        }
+      })
+      gsap.from('.process-step1-text .cs-text-reveal', {
+        y: 30,
+        opacity: 0,
+        duration: ANIMATION.duration.medium,
+        stagger: ANIMATION.stagger.fast,
+        delay: ANIMATION.delay.short,
+        scrollTrigger: {
+          scroller,
+          trigger: '.process-step1-text',
+          start: 'top 75%',
+        }
+      })
+
+      // Process Step 2: Image from right, text stagger
+      gsap.from('.process-step2-image', {
+        x: 60,
+        opacity: 0,
+        duration: ANIMATION.duration.slow,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          scroller,
+          trigger: '.process-step2-image',
+          start: 'top 75%',
+        }
+      })
+      gsap.from('.process-step2-text .cs-text-reveal', {
+        y: 30,
+        opacity: 0,
+        duration: ANIMATION.duration.medium,
+        stagger: ANIMATION.stagger.fast,
+        delay: ANIMATION.delay.short,
+        scrollTrigger: {
+          scroller,
+          trigger: '.process-step2-text',
+          start: 'top 75%',
+        }
+      })
+
+      // Process Step 3: Image from left, text stagger
+      gsap.from('.process-step3-image', {
+        x: -60,
+        opacity: 0,
+        duration: ANIMATION.duration.slow,
+        ease: ANIMATION.ease.outMedium,
+        scrollTrigger: {
+          scroller,
+          trigger: '.process-step3-image',
+          start: 'top 75%',
+        }
+      })
+      gsap.from('.process-step3-text .cs-text-reveal', {
+        y: 30,
+        opacity: 0,
+        duration: ANIMATION.duration.medium,
+        stagger: ANIMATION.stagger.fast,
+        delay: ANIMATION.delay.short,
+        scrollTrigger: {
+          scroller,
+          trigger: '.process-step3-text',
+          start: 'top 75%',
+        }
+      })
+
+      // Impact Quote: Soft scale in
+      gsap.from('.impact-quote', {
+        scale: 0.95,
+        opacity: 0,
+        duration: ANIMATION.duration.xSlow,
+        ease: ANIMATION.ease.sine,
+        scrollTrigger: {
+          scroller,
+          trigger: '.impact-quote',
+          start: ANIMATION.scroll.start75,
+        }
+      })
+
+      // Lab Image: Parallax with scale
+      gsap.fromTo('.lab-image img',
+        { yPercent: 25, scale: 1.08 },
+        {
+          yPercent: -25,
+          scale: 1,
+          ease: 'none',
+          scrollTrigger: {
+            scroller,
+            trigger: '.lab-image',
+            start: ANIMATION.scroll.startBottom,
+            end: ANIMATION.scroll.endTop,
+            scrub: true,
+          }
+        }
+      )
+
+      // Takeaway: Gentle fade in
+      gsap.from('.takeaway-section', {
+        y: 40,
+        opacity: 0,
+        duration: ANIMATION.duration.verySlow,
+        scrollTrigger: {
+          scroller,
+          trigger: '.takeaway-section',
+          start: ANIMATION.scroll.start75,
+        }
+      })
+
+      // Closing: Fade in
+      gsap.from('.closing-section', {
+        y: 20,
+        opacity: 0,
+        duration: ANIMATION.duration.medium,
+        scrollTrigger: {
+          scroller,
+          trigger: '.closing-section',
+          start: 'top 75%',
+        }
+      })
+
+      // Problem checklist: Animated items appear one by one
+      gsap.fromTo('.problem-block .checklist-item',
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.15,
+          ease: ANIMATION.ease.outMedium,
+          scrollTrigger: {
+            scroller,
+            trigger: '.problem-block',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Solution checklist: Animated items appear one by one
+      gsap.fromTo('.solution-block .solution-item',
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.15,
+          ease: ANIMATION.ease.outMedium,
+          scrollTrigger: {
+            scroller,
+            trigger: '.solution-block',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Before/After Images: Scale and fade in with stagger
+      gsap.fromTo('.before-after-images .ba-image',
+        { scale: 0.96, opacity: 0, y: 40 },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            scroller,
+            trigger: '.before-after-images',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Stats: Animated numbers (without percentage for Kindbody)
+      const statsNumbers = containerRef.current?.querySelectorAll('.stats-grid .cs-stat-number')
+      statsNumbers?.forEach((stat) => {
+        const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
+        const obj = { value: 0 }
+
+        gsap.to(obj, {
+          value: target,
+          duration: 2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            scroller,
+            trigger: '.stats-grid',
+            start: 'top 75%',
+          },
+          onUpdate: () => {
+            // Format with commas for large numbers (1,800)
+            const formatted = Math.round(obj.value).toLocaleString()
+            stat.textContent = formatted
+          }
+        })
+      })
+
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [])
 
   return (
     <div ref={containerRef} className="cs-kindbody min-h-screen relative">
@@ -391,8 +425,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       <section className="min-h-screen flex items-center relative overflow-hidden px-6 md:px-12">
         {/* Soft background number */}
         <div
-          ref={heroNumberRef}
-          className="absolute top-0 right-0 text-[clamp(15rem,35vw,30rem)] font-extralight leading-none text-amber-300/[0.06] select-none pointer-events-none"
+          className="hero-number absolute top-0 right-0 text-[clamp(15rem,35vw,30rem)] font-extralight leading-none text-amber-300/[0.06] select-none pointer-events-none"
           style={{ letterSpacing: '-0.05em' }}
         >
           ✦
@@ -410,7 +443,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 </span>
               </div>
 
-              <h1 ref={heroHeadlineRef} className="cs-hero-headline">
+              <h1 className="hero-headline cs-hero-headline">
                 When precision meets <span className="cs-animate-word inline-block text-amber-300">compassion</span>
               </h1>
             </div>
@@ -440,7 +473,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Hero Visual */}
-      <section ref={heroImageRef} className="relative h-[70vh] overflow-hidden px-6 md:px-12 mb-32">
+      <section className="hero-image relative h-[70vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
             src="https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1920&q=80"
@@ -454,7 +487,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* The Company */}
-      <section ref={companyRef} className="cs-section">
+      <section className="company-section cs-section">
         <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16">
           <div className="md:col-span-2 space-y-6">
             <div className="cs-divider-accent"></div>
@@ -472,7 +505,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Section 1: Building Trust */}
-      <section ref={roleRef} className="cs-section relative h-screen">
+      <section className="role-section cs-section relative h-screen">
         <div className="h-full grid lg:grid-cols-2 gap-4">
           {/* Left column - Text */}
           <div className="flex flex-col justify-center space-y-12">
@@ -481,7 +514,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 01 / Foundation
               </div>
               <h2 className="cs-section-headline">
-                Designing for <span ref={roleScrambleRef} className="cs-animate-word inline-block">xj%4#8s9gg2&!ty/</span>
+                Designing for <span className="role-scramble cs-animate-word inline-block">xj%4#8s9gg2&!ty/</span>
               </h2>
             </div>
             <div className="cs-body-text space-y-4">
@@ -495,7 +528,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
 
           {/* Right column - Image */}
-          <div ref={roleImageRef} className="h-100vh relative">
+          <div className="role-image h-100vh relative">
             <Image
               src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
               alt="Healthcare professional working on digital tools"
@@ -507,7 +540,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* The Challenge */}
-      <section className="cs-section">
+      <section className="challenge-section cs-section">
         <div className="max-w-5xl mx-auto space-y-24">
           <div className="grid md:grid-cols-12 gap-12">
             <div className="md:col-span-2">
@@ -516,7 +549,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
               </div>
             </div>
             <div className="md:col-span-10">
-              <h2 ref={challengeHeadlineRef} className="cs-section-headline">
+              <h2 className="challenge-headline cs-section-headline">
                 From fragmented<br />
                 to <span className="cs-animate-word inline-block">trusted</span>
               </h2>
@@ -530,7 +563,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 × Problem
               </div>
             </div>
-            <div ref={problemBlockRef} className="md:col-span-10 space-y-8">
+            <div className="problem-block md:col-span-10 space-y-8">
               <p className="cs-subheadline-lg">
                 High-stakes workflow, low-trust tools
               </p>
@@ -558,7 +591,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
 
           {/* Before/After Visual Comparison */}
-          <div ref={beforeAfterImagesRef} className="grid md:grid-cols-2 gap-6 md:gap-8 my-16">
+          <div className="before-after-images grid md:grid-cols-2 gap-6 md:gap-8 my-16">
             {/* Error state - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
@@ -595,7 +628,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 ✓ Solution
               </div>
             </div>
-            <div ref={solutionBlockRef} className="md:col-span-10 space-y-8">
+            <div className="solution-block md:col-span-10 space-y-8">
               <p className="cs-subheadline-lg">
                 A unified platform built for precision
               </p>
@@ -622,7 +655,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
           </div>
 
-          <div ref={statsRef} className="cs-stats-grid">
+          <div className="stats-grid cs-stats-grid">
             <div className="cs-stat">
               <div className="cs-stat-number cs-stat-number-accent" data-target="20">0</div>
               <div className="cs-stat-label">clinics nationwide</div>
@@ -637,7 +670,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
           </div>
 
-          <div ref={challengeImageRef} className="cs-image-wide mt-16">
+          <div className="challenge-image cs-image-wide mt-16">
             <Image
               src="https://images.unsplash.com/photo-1583911860205-72f8ac8ddcbe?w=1920&q=80"
               alt="Scientific precision - embryology lab work"
@@ -659,7 +692,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
               </div>
             </div>
             <div className="md:col-span-11">
-              <h2 ref={processHeadlineRef} className="cs-section-headline">
+              <h2 className="process-headline cs-section-headline">
                 Earning <span className="cs-animate-word inline-block text-amber-300">trust</span>
               </h2>
             </div>
@@ -667,7 +700,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
           {/* Step 1 */}
           <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div ref={processStep1TextRef} className="cs-step-text md:col-span-5 space-y-6">
+            <div className="process-step1-text cs-step-text md:col-span-5 space-y-6">
               <div className="cs-text-reveal cs-eyebrow">The Problem</div>
               <p className="cs-text-reveal cs-subheadline">
                 Designing for healthcare means working with doctors and nurses who don't speak "product."
@@ -676,7 +709,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 Early sketches got looks that said "you don't understand what happens in the lab." They were right.
               </p>
             </div>
-            <div ref={processStep1ImageRef} className="cs-step-image md:col-span-7">
+            <div className="process-step1-image cs-step-image md:col-span-7">
               <Image
                 src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80"
                 alt="Medical professionals in discussion"
@@ -688,7 +721,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
           {/* Step 2 */}
           <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div ref={processStep2ImageRef} className="cs-step-image md:col-span-7 md:order-1">
+            <div className="process-step2-image cs-step-image md:col-span-7 md:order-1">
               <Image
                 src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200&q=80"
                 alt="Learning in the lab environment"
@@ -696,7 +729,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 className="object-cover"
               />
             </div>
-            <div ref={processStep2TextRef} className="cs-step-text md:col-span-5 md:order-2 space-y-6">
+            <div className="process-step2-text cs-step-text md:col-span-5 md:order-2 space-y-6">
               <div className="cs-text-reveal cs-eyebrow cs-eyebrow-accent">The Shift</div>
               <p className="cs-text-reveal cs-subheadline">
                 So we changed approach. We observed. We learned the difference between a Day 3 embryo and a blastocyst.
@@ -709,7 +742,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
           {/* Step 3 */}
           <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div ref={processStep3TextRef} className="cs-step-text md:col-span-5 space-y-6">
+            <div className="process-step3-text cs-step-text md:col-span-5 space-y-6">
               <div className="cs-text-reveal cs-eyebrow">The Breakthrough</div>
               <p className="cs-text-reveal cs-subheadline">
                 Once we found a shared language, everything clicked.
@@ -718,7 +751,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 Doctors became collaborators. The skeptical head nurse became our biggest advocate.
               </p>
             </div>
-            <div ref={processStep3ImageRef} className="cs-step-image md:col-span-7">
+            <div className="process-step3-image cs-step-image md:col-span-7">
               <Image
                 src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&q=80"
                 alt="Collaborative healthcare design work"
@@ -731,7 +764,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Impact Quote */}
-      <section ref={impactQuoteRef} className="cs-section">
+      <section className="impact-quote cs-section">
         <div className="max-w-5xl mx-auto text-center space-y-16">
           <div className="relative">
             <div className="cs-quote-mark">"</div>
@@ -743,7 +776,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Full-Width Lab Image */}
-      <section ref={labImageRef} className="relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
+      <section className="lab-image relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
             src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1920&q=80"
@@ -765,7 +798,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* The Takeaway */}
-      <section ref={takeawayRef} className="cs-section">
+      <section className="takeaway-section cs-section">
         <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16">
           <div className="md:col-span-2 space-y-6">
             <div className="cs-divider-accent"></div>
@@ -783,7 +816,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Closing */}
-      <section ref={closingRef} className="cs-section">
+      <section className="closing-section cs-section">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div className="cs-divider-vertical"></div>
           <div className="inline-flex items-center gap-4 text-xs uppercase tracking-widest text-foreground/30">
