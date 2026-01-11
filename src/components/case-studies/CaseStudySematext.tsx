@@ -259,6 +259,35 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
     )
   }, { scope: containerRef })
 
+  // Section 2: Animated stat numbers with percentage
+  useGSAP(() => {
+    if (!section2StatsRef.current) return
+
+    const scroller = section2StatsRef.current.closest('.overflow-y-auto') as HTMLElement
+    const statNumbers = section2StatsRef.current.querySelectorAll('.cs-stat-number')
+
+    if (!statNumbers.length) return
+
+    statNumbers.forEach((stat) => {
+      const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
+      const obj = { value: 0 }
+
+      gsap.to(obj, {
+        value: target,
+        duration: 2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section2StatsRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        },
+        onUpdate: () => {
+          stat.textContent = Math.round(obj.value) + '%'
+        }
+      })
+    })
+  }, { scope: containerRef })
+
   // Section 3: Animated problem checklist - appear one by one
   useGSAP(() => {
     if (!section3ProblemBlockRef.current) return
@@ -346,6 +375,35 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       }
     )
+  }, { scope: containerRef })
+
+  // Section 3: Animated stat numbers with percentage
+  useGSAP(() => {
+    if (!section3StatsRef.current) return
+
+    const scroller = section3StatsRef.current.closest('.overflow-y-auto') as HTMLElement
+    const statNumbers = section3StatsRef.current.querySelectorAll('.cs-stat-number')
+
+    if (!statNumbers.length) return
+
+    statNumbers.forEach((stat) => {
+      const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
+      const obj = { value: 0 }
+
+      gsap.to(obj, {
+        value: target,
+        duration: 2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section3StatsRef.current,
+          start: 'top 75%',
+          scroller: scroller || undefined,
+        },
+        onUpdate: () => {
+          stat.textContent = Math.round(obj.value) + '%'
+        }
+      })
+    })
   }, { scope: containerRef })
 
   // Section 3: Fluid word animation - gentle floating effect
