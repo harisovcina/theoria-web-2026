@@ -99,40 +99,40 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         // 1. Fade in dark background
         .to(overlay, {
           opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
+          duration: 1.6,
+          ease: "power1.inOut",
         }, 0)
         // 2. Move to center AND expand simultaneously from TIME 0!
         .to(deviceInner, {
           x: 0,
           width: targetWidth,
           height: targetHeight,
-          duration: 0.5,
-          ease: "power3.out",
+          duration: 1,
+          ease: "power1.Out",
         }, 0)
-        // 3. ~1 second pause (let it breathe)
-        .to({}, { duration: 0.3 })
+        // 3. pause (let it breathe)
+        .to({}, { duration: 0.2 })
         // 4. Content shifts down, revealing title and meta
         .to(device, {
           y: yShift,
-          duration: 0.8,
-          ease: "power2.inOut",
+          duration: 0.6,
+          ease: "power1.Out",
         })
         .to(header, {
           y: 0,
           opacity: 1,
-          duration: 0.8,
-          ease: "power2.out",
-        }, "-=0.6")
+          duration: 1.2,
+          ease: "expoScale(0.5,7,none)",
+        }, "-=1.1")
         // 5. Fade in case study content
         .to(content, {
           y: 0,
           opacity: 1,
-          duration: 0.6,
-          ease: "power2.out",
-        }, "-=0.3")
-        // 6. Scroll to case study content after 0.8s delay
-        .to({}, { duration: 0.8 })
+          duration: 0.8,
+          ease: "expoScale(0.5,7,none)",
+        }, "-=1.1")
+        // 6. Scroll to case study content after 0.6s delay
+        .to({}, { duration: 0.6 })
 
       // Add scroll animation if refs are available
       const contentElement = containerRef.current?.querySelector(content)
