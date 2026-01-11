@@ -73,7 +73,7 @@ interface ParallaxOptions {
   yPercent?: number
   scale?: number
   opacity?: number
-  trigger?: RefObject<HTMLElement>
+  trigger?: RefObject<HTMLElement | null>
 }
 
 /**
@@ -98,8 +98,8 @@ interface SplitTextOptions {
  *
  * Common pattern for revealing elements as they enter viewport
  */
-export function useFadeIn(
-  elementRef: RefObject<HTMLElement | null>,
+export function useFadeIn<T extends HTMLElement = HTMLElement>(
+  elementRef: RefObject<T | null>,
   scrollerRef: RefObject<HTMLElement | null>,
   options: FadeInOptions = {}
 ) {
@@ -159,8 +159,8 @@ export function useFadeIn(
  *
  * Reveals child elements sequentially
  */
-export function useFadeInStagger(
-  containerRef: RefObject<HTMLElement | null>,
+export function useFadeInStagger<T extends HTMLElement = HTMLElement>(
+  containerRef: RefObject<T | null>,
   scrollerRef: RefObject<HTMLElement | null>,
   options: FadeInOptions = {}
 ) {
@@ -213,8 +213,8 @@ export function useFadeInStagger(
  *
  * Moves element at different speed than scroll for depth effect
  */
-export function useParallax(
-  elementRef: RefObject<HTMLElement | null>,
+export function useParallax<T extends HTMLElement = HTMLElement>(
+  elementRef: RefObject<T | null>,
   scrollerRef: RefObject<HTMLElement | null>,
   options: ParallaxOptions = {}
 ) {
@@ -287,8 +287,8 @@ export function useParallax(
  *
  * Animates individual characters or words
  */
-export function useSplitTextReveal(
-  elementRef: RefObject<HTMLElement | null>,
+export function useSplitTextReveal<T extends HTMLElement = HTMLElement>(
+  elementRef: RefObject<T | null>,
   scrollerRef: RefObject<HTMLElement | null>,
   options: SplitTextOptions = {}
 ) {
@@ -367,8 +367,8 @@ export function useSplitTextReveal(
  *
  * Scales element from small to full size
  */
-export function useScaleIn(
-  elementRef: RefObject<HTMLElement | null>,
+export function useScaleIn<T extends HTMLElement = HTMLElement>(
+  elementRef: RefObject<T | null>,
   scrollerRef: RefObject<HTMLElement | null>,
   options: Partial<{ scale: number; duration: number; ease: string; start: string; selector: string; y: number; stagger: number }> = {}
 ) {
@@ -430,8 +430,8 @@ export function useScaleIn(
  *
  * Slides element from left or right
  */
-export function useSlideIn(
-  elementRef: RefObject<HTMLElement | null>,
+export function useSlideIn<T extends HTMLElement = HTMLElement>(
+  elementRef: RefObject<T | null>,
   scrollerRef: RefObject<HTMLElement | null>,
   options: Partial<{ direction: 'left' | 'right'; distance: number; duration: number; ease: string; start: string; selector: string; stagger: number; delay: number }> = {}
 ) {
