@@ -73,7 +73,7 @@ export function FlipWordDemo() {
                 hasAnimated = true
 
                 // 1. Capture state with ALL surrounding words
-                const flipState = Flip.getState([wordToMove, ...split2.words])
+                const flipState = Flip.getState([wordToMove, ...(split2.words as HTMLElement[])])
 
                 // 2. Move word directly to new location
                 firstWord.parentNode?.insertBefore(wordToMove, firstWord)
@@ -96,7 +96,7 @@ export function FlipWordDemo() {
                 hasAnimated = false
 
                 // 1. Capture state with ALL words
-                const state = Flip.getState([wordToMove, ...split2.words])
+                const state = Flip.getState([wordToMove, ...(split2.words as HTMLElement[])])
 
                 // 2. Move word back to original position
                 if (originalParent) {
