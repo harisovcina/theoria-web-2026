@@ -50,6 +50,7 @@ Don't just tell me how you'll solve it. *Show me* why this solution is the only 
 - Always check for trailing whitespace before submitting edits
 - DO NOT use semicolons in React
 - If new file add always add new line at the end of the file
+- **Images for case studies**: ALWAYS use images from the database (Vercel Blob). Parse `project.caseStudyImages` JSON field and map to component images. Never use hardcoded `/img/` paths for case study content
 
 ## Approaching development
 

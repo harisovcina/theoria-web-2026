@@ -64,25 +64,26 @@ model VerificationToken {
 
 // Theoria project models
 model Project {
-  id            String   @id @default(cuid())
-  name          String
-  client        String
-  summary       String?  // Short project description for hover preview
-  startYear     Int
-  endYear       Int?     // null if ongoing
-  services      String   // JSON or comma-separated
-  industry      String   // JSON or comma-separated
-  website       String?  // Project website URL
-  heroImage     String
-  deviceMockup  String
-  deviceType    String   // "laptop" | "mobile"
-  layoutVariant String   // "A" | "B" | "C" | "D" | "E" | "F"
-  caseStudy     String?  // markdown content, null if coming soon (legacy)
-  caseStudySlug String?  // slug for custom component-based case study (e.g., "acme-corp")
-  comingSoon    Boolean  @default(true)
-  order         Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id               String   @id @default(cuid())
+  name             String
+  client           String
+  summary          String?  // Short project description for hover preview
+  startYear        Int
+  endYear          Int?     // null if ongoing
+  services         String   // JSON or comma-separated
+  industry         String   // JSON or comma-separated
+  website          String?  // Project website URL
+  heroImage        String
+  deviceMockup     String
+  deviceType       String   // "laptop" | "mobile"
+  layoutVariant    String   // "A" | "B" | "C" | "D" | "E" | "F"
+  caseStudy        String?  // markdown content, null if coming soon (legacy)
+  caseStudySlug    String?  // slug for custom component-based case study (e.g., "acme-corp")
+  caseStudyImages  String?  // JSON array of Vercel Blob URLs for case study images
+  comingSoon       Boolean  @default(true)
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model TeamMember {
