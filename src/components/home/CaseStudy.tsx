@@ -32,163 +32,151 @@ interface CaseStudyProps {
   onClose: () => void
 }
 
-// TODO: Major refactor needed - this component has too many refs (6 refs!)
-// TODO: Following GSAP best practices, we should use gsap.context() with CSS selectors
-// TODO: Keep only containerRef and scrollContainerRef (needed for scroll control)
-// TODO: Replace overlayRef, deviceRef, headerRef, contentRef with class-based selectors
-// TODO: Benefits: cleaner code, better performance, automatic cleanup, easier maintenance
-
 export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const overlayRef = useRef<HTMLDivElement>(null)
-  const deviceRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // TODO: Refactor to use GSAP context pattern for better scoping and cleanup
-  // TODO: Replace all individual refs (overlayRef, headerRef, contentRef, etc.) with CSS class selectors
-  // TODO: Use single containerRef with gsap.context() to scope all animations
-  // TODO: Pattern should be:
-  //   const ctx = gsap.context(() => {
-  //     gsap.from('.case-study-overlay', { opacity: 0 })
-  //     gsap.from('.case-study-header', { y: -500, opacity: 0 })
-  //     gsap.from('.case-study-content', { y: 0, opacity: 0 })
-  //   }, containerRef)
-  //   return () => ctx.revert()
-  // TODO: This eliminates the need for 6+ individual refs and makes cleanup automatic
-
   useGSAP(() => {
-    if (!project) return
+    if (!project || !containerRef.current) return
 
-    // Disable scrolling during animation
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.style.overflow = 'hidden'
-    }
+    const ctx = gsap.context(() => {
+      // Disable scrolling during animation
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.style.overflow = 'hidden'
+      }
 
-    // Initial setup
-    gsap.set(overlayRef.current, { opacity: 0 })
-    gsap.set(headerRef.current, { y: -500, opacity: 0 })
-    gsap.set(contentRef.current, { y: 0, opacity: 0 })
+      // Get elements via CSS selectors
+      const overlay = '.case-study-overlay'
+      const header = '.case-study-header'
+      const content = '.case-study-content'
+      const device = '.case-study-device'
+      const deviceInner = '.device-inner'
 
-    const container = deviceRef.current
-    const deviceInner = container?.querySelector('.device-inner')
-    if (!container || !deviceInner) return
+      // Initial setup
+      gsap.set(overlay, { opacity: 0 })
+      gsap.set(header, { y: -500, opacity: 0 })
+      gsap.set(content, { y: 0, opacity: 0 })
 
-    // Use ACTUAL device position from HoverPreview
-    let startX = 0
+      // Use ACTUAL device position from HoverPreview
+      let startX = 0
 
-    if (deviceStartPosition) {
-      // Calculate offset from center
-      const centerX = window.innerWidth / 2
-      const deviceCenterX = deviceStartPosition.left + deviceStartPosition.width / 2
-      startX = deviceCenterX - centerX
-    }
+      if (deviceStartPosition) {
+        // Calculate offset from center
+        const centerX = window.innerWidth / 2
+        const deviceCenterX = deviceStartPosition.left + deviceStartPosition.width / 2
+        startX = deviceCenterX - centerX
+      }
 
-    gsap.set(deviceInner, { x: startX })
+      gsap.set(deviceInner, { x: startX })
 
-    // Calculate target dimensions - full width with proper aspect ratio
-    const targetWidth = window.innerWidth
-    // Calculate height to maintain aspect ratio of the initial dimensions
-    const initialWidth = project.deviceType === "laptop" ? 600 : 280
-    const initialHeight = project.deviceType === "laptop" ? 400 : 580
-    const aspectRatio = initialHeight / initialWidth
-    const targetHeight = targetWidth * aspectRatio
+      // Calculate target dimensions - full width with proper aspect ratio
+      const targetWidth = window.innerWidth
+      // Calculate height to maintain aspect ratio of the initial dimensions
+      const initialWidth = project.deviceType === "laptop" ? 600 : 280
+      const initialHeight = project.deviceType === "laptop" ? 400 : 580
+      const aspectRatio = initialHeight / initialWidth
+      const targetHeight = targetWidth * aspectRatio
 
-    // Responsive y-shift: dynamically calculated based on screen size
-    const screenWidth = window.innerWidth
-    let yShift: number
+      // Responsive y-shift: dynamically calculated based on screen size
+      const screenWidth = window.innerWidth
+      let yShift: number
 
-    if (screenWidth < 768) {
-      // Mobile
-      yShift = 96
-    } else if (screenWidth >= 768 && screenWidth < 1020) {
-      // Medium (tablets)
-      yShift = 160
-    } else {
-      // Desktop
-      yShift = 480
-    }
+      if (screenWidth < 768) {
+        // Mobile
+        yShift = 96
+      } else if (screenWidth >= 768 && screenWidth < 1020) {
+        // Medium (tablets)
+        yShift = 160
+      } else {
+        // Desktop
+        yShift = 480
+      }
 
-    // Animation timeline
-    const timeline = gsap.timeline()
+      // Animation timeline
+      const timeline = gsap.timeline()
 
-    timeline
-      // 1. Fade in dark background
-      .to(overlayRef.current, {
-        opacity: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      }, 0)
-      // 2. Move to center AND expand simultaneously from TIME 0!
-      .to(deviceInner, {
-        x: 0,
-        width: targetWidth,
-        height: targetHeight,
-        duration: 0.5,
-        ease: "power3.out",
-      }, 0)
-      // 3. ~1 second pause (let it breathe)
-      .to({}, { duration: 0.3 })
-      // 4. Content shifts down, revealing title and meta
-      .to(deviceRef.current, {
-        y: yShift,
-        duration: 0.8,
-        ease: "power2.inOut",
-      })
-      .to(headerRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power2.out",
-      }, "-=0.6")
-      // 5. Fade in case study content
-      .to(contentRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power2.out",
-      }, "-=0.3")
-      // 6. Scroll to case study content after 0.8s delay
-      .to({}, { duration: 0.8 })
+      timeline
+        // 1. Fade in dark background
+        .to(overlay, {
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        }, 0)
+        // 2. Move to center AND expand simultaneously from TIME 0!
+        .to(deviceInner, {
+          x: 0,
+          width: targetWidth,
+          height: targetHeight,
+          duration: 0.5,
+          ease: "power3.out",
+        }, 0)
+        // 3. ~1 second pause (let it breathe)
+        .to({}, { duration: 0.3 })
+        // 4. Content shifts down, revealing title and meta
+        .to(device, {
+          y: yShift,
+          duration: 0.8,
+          ease: "power2.inOut",
+        })
+        .to(header, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.out",
+        }, "-=0.6")
+        // 5. Fade in case study content
+        .to(content, {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: "power2.out",
+        }, "-=0.3")
+        // 6. Scroll to case study content after 0.8s delay
+        .to({}, { duration: 0.8 })
 
-    // Add scroll animation if refs are available
-    if (scrollContainerRef.current && contentRef.current) {
-      timeline.to(scrollContainerRef.current, {
-        scrollTo: {
-          y: contentRef.current,
-          offsetY: 0
-        },
-        duration: 1,
-        ease: "power2.inOut",
-        onComplete: () => {
-          // Re-enable scrolling after animation completes
-          if (scrollContainerRef.current) {
-            scrollContainerRef.current.style.overflow = 'auto'
+      // Add scroll animation if refs are available
+      const contentElement = containerRef.current?.querySelector(content)
+      if (scrollContainerRef.current && contentElement) {
+        timeline.to(scrollContainerRef.current, {
+          scrollTo: {
+            y: contentElement,
+            offsetY: 0
+          },
+          duration: 1,
+          ease: "power2.inOut",
+          onComplete: () => {
+            // Re-enable scrolling after animation completes
+            if (scrollContainerRef.current) {
+              scrollContainerRef.current.style.overflow = 'auto'
+            }
           }
-        }
-      })
-    }
+        })
+      }
+    }, containerRef)
+
+    return () => ctx.revert()
   }, [project])
 
-  // TODO: Refactor handleClose to use gsap.context() pattern
-  // TODO: Replace refs with CSS selectors: '.case-study-header', '.case-study-device', etc.
   const handleClose = () => {
-    const timeline = gsap.timeline({
-      onComplete: onClose,
-    })
+    if (!containerRef.current) return
 
-    timeline
-      .to([headerRef.current, deviceRef.current, contentRef.current], {
-        opacity: 0,
-        duration: 0.3,
-        ease: "power2.in",
+    const ctx = gsap.context(() => {
+      const timeline = gsap.timeline({
+        onComplete: onClose,
       })
-      .to(overlayRef.current, {
-        opacity: 0,
-        duration: 0.2,
-        ease: "power2.in",
-      }, 0.1)
+
+      timeline
+        .to(['.case-study-header', '.case-study-device', '.case-study-content'], {
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.in",
+        })
+        .to('.case-study-overlay', {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power2.in",
+        }, 0.1)
+    }, containerRef)
   }
 
   if (!project) return null
@@ -253,8 +241,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     >
       {/* Dark Background Overlay */}
       <div
-        ref={overlayRef}
-        className="absolute inset-0 bg-background"
+        className="case-study-overlay absolute inset-0 bg-background"
       />
 
       {/* Scrollable container - everything scrolls together */}
@@ -262,8 +249,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         <div className="relative min-h-screen">
           {/* Header Section - Revealed after device moves down */}
           <div
-            ref={headerRef}
-            className="absolute mt-24 md:mt-32 left-0 right-0 z-10 px-8 md:px-16 pointer-events-none"
+            className="case-study-header absolute mt-24 md:mt-32 left-0 right-0 z-10 px-8 md:px-16 pointer-events-none"
           >
             <div className="max-w-5xl mx-auto">
               {/* Large project name */}
@@ -317,8 +303,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
           {/* Device Mockup - Expands immediately from hover position */}
           <div
-            ref={deviceRef}
-            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+            className="case-study-device absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
             style={{ height: "100vh" }}
           >
             <div
@@ -343,8 +328,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
           {/* Case Study Content */}
           <div
-            ref={contentRef}
-            className="relative bg-background py-1 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
+            className="case-study-content relative bg-background py-1 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
           >
             <div className="max-w-9xl mx-auto">
               {renderContent()}
