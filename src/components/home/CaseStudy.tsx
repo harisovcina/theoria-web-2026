@@ -45,7 +45,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       scale: 1.4,
       opacity: 1,
       duration: 0.8,
-      ease: "power1.inOut",
+      ease: "back.inOut",
       repeat: -1,
       yoyo: true,
     })
@@ -115,15 +115,15 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         .to(overlay, {
           opacity: 1,
           duration: 1.6,
-          ease: "power1.inOut",
+          ease: "power1.Out",
         }, 0)
         // 2. Move to center AND expand simultaneously from TIME 0!
         .to(deviceInner, {
           x: 0,
           width: targetWidth,
           height: targetHeight,
-          duration: 1,
-          ease: "power1.Out",
+          duration: 1.2,
+          ease: "power1.inOut",
         }, 0)
         // 3. pause (let it breathe)
         .to({}, { duration: 0.2 })
@@ -131,20 +131,20 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
         .to(device, {
           y: yShift,
           duration: 0.6,
-          ease: "power1.Out",
+          ease: "back.Out",
         })
         .to(header, {
           y: 0,
           opacity: 1,
           duration: 1.2,
-          ease: "expoScale(0.5,7,none)",
+          ease: "back.Out",
         }, "-=1.1")
         // 5. Fade in case study content
         .to(content, {
           y: 0,
           opacity: 1,
           duration: 0.8,
-          ease: "expoScale(0.5,7,none)",
+          ease: "back.Out",
           onComplete: () => {
             // Re-enable scrolling after animation completes
             if (scrollContainerRef.current) {
@@ -253,7 +253,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           >
             <div className="max-w-5xl mx-auto">
               {/* Large project name */}
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extralight tracking-tight leading-none mb-4 md:mb-8">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-thin tracking-tight leading-none mb-4 md:mb-8 font-serif">
                 {project.name}
               </h1>
 

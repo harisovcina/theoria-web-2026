@@ -22,6 +22,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['Switzer', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-instrument-serif)', 'Georgia', 'serif'],
       },
       colors: {
         background: "hsl(var(--background))",

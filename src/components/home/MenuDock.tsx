@@ -77,14 +77,14 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
       gsap.to(dockRef.current, {
         width: targetWidth,
         duration: 0.8,
-        ease: "power3.inOut",
+        ease: "back.in",
       })
     } else {
       // Collapse back to original size
       gsap.to(dockRef.current, {
         width: "auto",
         duration: 0.8,
-        ease: "power3.inOut",
+        ease: "back.in",
       })
     }
   }, [isCaseStudy])
@@ -97,7 +97,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
       scale: 1.4,
       opacity: 1,
       duration: 0.8,
-      ease: "power1.inOut",
+      ease: "back.inOut",
       repeat: -1,
       yoyo: true,
     })

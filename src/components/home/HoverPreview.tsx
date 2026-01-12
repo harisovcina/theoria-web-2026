@@ -201,19 +201,19 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
 
     switch (project.layoutVariant) {
       case "A": // Centered
-        return "flex-col items-end justify-center gap-8"
+        return "flex-col-reverse items-start justify-center gap-32"
       case "B": // Left text, right device
-        return "flex-row items-end justify-between gap-12"
+        return "flex-row items-start justify-between gap-2"
       case "C": // Left device, right text
-        return "flex-row-reverse items-end justify-between gap-12"
+        return "flex-row-reverse items-start justify-between gap-24"
       case "D": // Top text, wide device bottom
         return "flex-col items-start justify-center gap-6"
       case "E": // Top device, bottom text
-        return "flex-col-reverse items-end justify-center gap-6"
+        return "grid grid-cols-2 items-end text-left justify-center gap-6"
       case "F": // Editorial offset
-        return "grid grid-cols-2 gap-8 items-end"
+        return "grid grid-cols-2 gap-8 items-start"
       default:
-        return "flex-col items-end justify-center gap-8"
+        return "flex-col items-start justify-center gap-8"
     }
   }
 
@@ -233,7 +233,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-background-5" />
+          <div className="absolute inset-0 bg-background/50" />
 
           {/* Image Copyright Credit */}
           <div className="absolute bottom-[clamp(1.5rem,3vw,2rem)] right-[clamp(1.5rem,4vw,4rem)] z-50">
@@ -264,7 +264,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
                   src={project.deviceMockup}
                   alt={`${project.name} mockup`}
                   fill
-                  className="object-contain drop-shadow-2xl"
+                  className="object-contain"
                   priority
                 />
               </div>
@@ -276,18 +276,18 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
               ref={titleRef}
               className={`flex flex-col gap-4 max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ${
                 project.layoutVariant === "B" ? "items-start text-left" :
-                project.layoutVariant === "C" ? "items-end text-right" :
+                project.layoutVariant === "C" ? "items-start text-left" :
                 project.layoutVariant === "F" ? "items-start" :
-                "items-end text-end"
+                "items-start text-start"
               }`}
               style={{ willChange: "clip-path" }}
             >
               <div>
-                <h2 className="text-[clamp(2.25rem,5vw+1rem,6rem)] font-extralight tracking-tight mb-2">
+                <h2 className="text-[clamp(2.25rem,5vw+1rem,6rem)] font-thin tracking-tight mb-2 font-serif">
                   {project.name}
                 </h2>
                 {project.summary && (
-                  <p className="text-[clamp(0.875rem,1.5vw,1.25rem)] font-extralight text-foreground mt-3">
+                  <p className="text-[clamp(0.6875rem,1vw,1.25rem)] font-extralight text-foreground mt-3">
                     {project.summary}
                   </p>
                 )}
