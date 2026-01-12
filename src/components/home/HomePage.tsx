@@ -23,9 +23,10 @@ export function HomePage({ projects }: HomePageProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [showLoader, setShowLoader] = useState(true)
   const [loadingPercent, setLoadingPercent] = useState(0)
-  const hoverPreviewRef = useRef<{ getDevicePosition: () => DOMRect | null }>(null)
+  const hoverPreviewRef = useRef<{ getDevicePosition: () => DOMRect | null; reverse: () => void; play: () => void }>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const maskShapeRef = useRef<SVGRectElement>(null)
+  const mainTitleRef = useRef<HTMLHeadingElement>(null)
 
   useGSAP(() => {
     if (!overlayRef.current || !maskShapeRef.current) return
@@ -88,6 +89,20 @@ export function HomePage({ projects }: HomePageProps) {
       duration: 0.3,
       ease: "expoScale(0.5,7,none)",
     }, "-=0.3")
+
+    // Main title blur animation
+    if (mainTitleRef.current) {
+      gsap.fromTo(mainTitleRef.current,
+        { filter: 'blur(128px)', opacity: 0 },
+        {
+          filter: 'blur(0px)',
+          opacity: 1,
+          duration: 1.6,
+          ease: "sine.inOut",
+          delay: 0.6
+        }
+      )
+    }
 
   }, [])
 
@@ -157,12 +172,13 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Default State Content */}
       <div
+        ref={mainTitleRef}
         className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
         style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5, paddingTop: "30vh", alignItems: "flex-start" }}
       >
         <div className="text-start space-y-4 md:space-y-6 lg:space-y-8 max-w-2xl md:max-w-3xl lg:max-w-3xl xl:max-w-4xl px-8">
           {/* Main Tagline*/}
-          <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight opacity-0 animate-fade-in-up animation-delay-2000">
+          <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight">
             We turn complex products into simple interfaces
           </h1>
           <p className="text-xs sm:text-sm md:text-sm text-foreground/80 font-light uppercase font-mono tracking-widest opacity-0 animate-fade-in-up animation-delay-400">
@@ -180,6 +196,7 @@ export function HomePage({ projects }: HomePageProps) {
             setSelectedProject(project)
             setPageState("case-study")
           }}
+          hoverPreviewRef={hoverPreviewRef}
         />
       )}
 

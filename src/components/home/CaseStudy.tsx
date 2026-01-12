@@ -35,6 +35,21 @@ interface CaseStudyProps {
 export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const dotRef = useRef<HTMLDivElement>(null)
+
+  // Pulsating dot animation
+  useGSAP(() => {
+    if (!dotRef.current) return
+
+    gsap.to(dotRef.current, {
+      scale: 1.4,
+      opacity: 1,
+      duration: 0.8,
+      ease: "power1.inOut",
+      repeat: -1,
+      yoyo: true,
+    })
+  }, [])
 
   useGSAP(() => {
     if (!project || !containerRef.current) return
@@ -130,28 +145,13 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
           opacity: 1,
           duration: 0.8,
           ease: "expoScale(0.5,7,none)",
-        }, "-=1.1")
-        // 6. Scroll to case study content after 0.6s delay
-        .to({}, { duration: 0.6 })
-
-      // Add scroll animation if refs are available
-      const contentElement = containerRef.current?.querySelector(content)
-      if (scrollContainerRef.current && contentElement) {
-        timeline.to(scrollContainerRef.current, {
-          scrollTo: {
-            y: contentElement,
-            offsetY: 0
-          },
-          duration: 1,
-          ease: "power2.inOut",
           onComplete: () => {
             // Re-enable scrolling after animation completes
             if (scrollContainerRef.current) {
               scrollContainerRef.current.style.overflow = 'auto'
             }
           }
-        })
-      }
+        }, "-=1.1")
     }, containerRef)
 
     return () => ctx.revert()
@@ -262,7 +262,10 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
                 {/* Website */}
                 {project.website && (
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">See Live</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">See Live</span>
+                      <div ref={dotRef} className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    </div>
                     <a
                       href={project.website.startsWith('http') ? project.website : `https://${project.website}`}
                       target="_blank"

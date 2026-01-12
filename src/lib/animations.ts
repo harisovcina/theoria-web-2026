@@ -122,10 +122,10 @@ export const ANIMATION = {
  */
 export const HOVER_PREVIEW = {
   duration: {
-    background: 0.4,  // Background image fade in/out
-    content: 0.6,     // Device/text clip-path reveals
-    meta: 0.5,        // Meta information (year, services)
-    collapse: 0.5,    // Exit animation when project deselected
+    background: 0.2,  // Background image fade in/out
+    content: 0.3,     // Device/text clip-path reveals
+    meta: 0.25,        // Meta information (year, services)
+    collapse: 0.25,    // Exit animation when project deselected
   },
   ease: {
     reveal: "power1.out",  // Gentle deceleration for reveals (was power3.out - too harsh)
