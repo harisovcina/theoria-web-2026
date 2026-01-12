@@ -6,12 +6,13 @@ import { CaseStudyProps } from '@/types'
 import { ANIMATION } from '@/lib/animations'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { Check, X } from 'lucide-react'
 
-// Register ScrambleText plugin
+// Register GSAP plugins
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrambleTextPlugin)
+  gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin)
 }
 
 /**
@@ -47,7 +48,11 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           duration: ANIMATION.duration.slow,
           stagger: 0.075,
           ease: ANIMATION.ease.outMedium,
-          delay: ANIMATION.delay.medium,
+          scrollTrigger: {
+            scroller,
+            trigger: '.hero-headline',
+            start: 'top 80%',
+          }
         }
       )
 
