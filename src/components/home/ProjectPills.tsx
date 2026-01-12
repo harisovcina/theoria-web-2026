@@ -8,7 +8,7 @@ interface ProjectPillsProps {
   projects: Project[]
   onHover: (project: Project | null) => void
   onClick: (project: Project) => void
-  hoverPreviewRef: React.RefObject<{ getDevicePosition: () => DOMRect | null; reverse: () => void; play: () => void }>
+  hoverPreviewRef: React.RefObject<{ getDevicePosition: () => DOMRect | null; reverse: () => void; play: () => void } | null>
 }
 
 interface ProjectPillProps {
