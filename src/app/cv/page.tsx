@@ -1,10 +1,11 @@
 import Link from "next/link"
+import { SavePDFButton } from "@/components/cv/SavePDFButton"
 
 export default function CVPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-8 left-8 md:left-12 z-50">
+      <nav className="fixed top-8 left-8 md:left-12 z-50" data-print-hidden="true">
         <Link
           href="/"
           className="px-5 py-2.5 rounded-full border border-border/40 bg-background/60 backdrop-blur-md hover:bg-foreground hover:text-background transition-all duration-200"
@@ -13,8 +14,11 @@ export default function CVPage() {
         </Link>
       </nav>
 
+      {/* Save PDF Button */}
+      <SavePDFButton />
+
       {/* CV Content */}
-      <section className="container max-w-4xl mx-auto px-8 pt-32 pb-16">
+      <section className="container max-w-4xl mx-auto px-8 pt-32 pb-16 cv-print-container">
         <div className="prose prose-neutral dark:prose-invert max-w-none">
           <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4 opacity-0 animate-fade-in-up">
             Haris Ovčina
