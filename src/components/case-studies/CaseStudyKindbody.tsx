@@ -51,7 +51,11 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           duration: ANIMATION.duration.normal,
           stagger: 0.025,
           ease: ANIMATION.ease.sine,
-          delay: ANIMATION.delay.short,
+          scrollTrigger: {
+            scroller,
+            trigger: '.hero-headline',
+            start: 'top 80%',
+          }
         })
       }
 
