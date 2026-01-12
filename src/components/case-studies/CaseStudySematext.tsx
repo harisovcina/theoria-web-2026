@@ -41,13 +41,13 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       // Hero: Character reveal on "running" - sliding from left
       gsap.fromTo('.hero-headline .cs-animate-word',
-        { x: -60, opacity: 0 },
+        { x: -120, opacity: 0 },
         {
           x: 0,
           opacity: 1,
           duration: ANIMATION.duration.slow,
           stagger: 0.075,
-          ease: ANIMATION.ease.outMedium,
+          ease: 'back.inOut',
           scrollTrigger: {
             scroller,
             trigger: '.hero-headline',

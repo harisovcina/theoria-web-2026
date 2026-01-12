@@ -25,7 +25,7 @@ export function MenuPill({ onClick, isExpanded }: MenuPillProps) {
     >
       <div className="flex items-center gap-2">
         <MenuIcon className="w-4 h-4" />
-        <span className="text-sm font-normal">Menu</span>
+        <span className="text-7xl font-normal">Menu</span>
       </div>
     </button>
   )

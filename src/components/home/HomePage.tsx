@@ -121,6 +121,10 @@ export function HomePage({ projects }: HomePageProps) {
         </video>
         {/* Video Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/20" />
+        {/* Full Black Overlay when in case study */}
+        {pageState === "case-study" && (
+          <div className="absolute inset-0 bg-black" />
+        )}
       </div>
 
       {/* Loading Screen */}
