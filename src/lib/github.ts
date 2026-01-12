@@ -12,6 +12,7 @@ export interface GitHubRepo {
   stargazers_count: number
   watchers_count: number
   language: string | null
+  default_branch: string
 }
 
 export interface PlaygroundExperiment {
@@ -74,7 +75,7 @@ export async function fetchPlaygroundRepos(
       githubUrl: repo.html_url,
       liveUrl: repo.homepage,
       tags: repo.topics || [],
-      thumbnail: getThumbnailUrl(username, repo.name),
+      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch),
       updatedAt: repo.updated_at,
     }))
 
@@ -124,7 +125,7 @@ export async function fetchPlaygroundRepo(
       githubUrl: repo.html_url,
       liveUrl: repo.homepage,
       tags: repo.topics || [],
-      thumbnail: getThumbnailUrl(username, repo.name),
+      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch),
       updatedAt: repo.updated_at,
     }
   } catch (error) {
@@ -150,8 +151,9 @@ function cleanPlaygroundTitle(repoName: string): string {
  * Get the thumbnail URL from the repo
  * @param username - GitHub username
  * @param repoName - Repository name
+ * @param branch - Branch name (e.g., "main" or "master")
  * @returns URL to preview.png in the repo
  */
-function getThumbnailUrl(username: string, repoName: string): string {
-  return `https://raw.githubusercontent.com/${username}/${repoName}/main/preview.png`
+function getThumbnailUrl(username: string, repoName: string, branch: string = "main"): string {
+  return `https://raw.githubusercontent.com/${username}/${repoName}/${branch}/preview.png`
 }
