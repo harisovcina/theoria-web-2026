@@ -4,7 +4,6 @@ import { useRef } from "react"
 import Image from "next/image"
 import { CaseStudyProps } from '@/types'
 import { ANIMATION } from '@/lib/animations'
-import { FlipWordDemo } from './FlipWordDemo'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
@@ -793,9 +792,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           <div className="cs-divider-vertical"></div>
         </div>
       </section>
-
-      {/* Flip Word Demo */}
-      <FlipWordDemo />
 
     </div>
   )

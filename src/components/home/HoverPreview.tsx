@@ -66,9 +66,23 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
     const metaRef = useRef<HTMLDivElement>(null)
     const previousProjectId = useRef<string | null>(null)
 
+    // Store timelines for reversible animations
+    const backgroundTween = useRef<gsap.core.Tween | null>(null)
+    const contentTimeline = useRef<gsap.core.Timeline | null>(null)
+
     useImperativeHandle(ref, () => ({
       getDevicePosition: () => {
         return deviceRef.current?.getBoundingClientRect() || null
+      },
+      reverse: () => {
+        // Reverse the animations immediately
+        backgroundTween.current?.reverse()
+        contentTimeline.current?.reverse()
+      },
+      play: () => {
+        // Play/restart the animations forward
+        backgroundTween.current?.play()
+        contentTimeline.current?.play()
       },
     }))
 
@@ -104,11 +118,16 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
     if (backgroundRef.current) {
       // Force set clipPath to none to ensure no clip-path is applied
       gsap.set(backgroundRef.current, { clipPath: "none" })
-      gsap.to(backgroundRef.current, {
-        opacity: 1,
-        duration: HOVER_PREVIEW.duration.background,
-        ease: HOVER_PREVIEW.ease.reveal,
-      })
+
+      // Store the tween for reversing - use fromTo for explicit start/end
+      backgroundTween.current = gsap.fromTo(backgroundRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: HOVER_PREVIEW.duration.background,
+          ease: HOVER_PREVIEW.ease.reveal,
+        }
+      )
     }
 
     // Animate device mockup based on layout variant
@@ -118,7 +137,8 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
 
     // Mobile: Simple fade + slide (better performance, no clip-path)
     mm.add("(max-width: 767px)", () => {
-      gsap.fromTo(
+      // Store the tween for reversing (fromTo returns a tween/timeline)
+      contentTimeline.current = gsap.fromTo(
         [titleRef.current, deviceRef.current, metaRef.current],
         {
           y: 30,
@@ -132,37 +152,45 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
           ease: HOVER_PREVIEW.ease.reveal,
           force3D: true,
         }
-      )
+      ) as gsap.core.Timeline
     })
 
     // Desktop: Complex clip-path animations
     mm.add("(min-width: 768px)", () => {
       const config = LAYOUT_CONFIGS[project.layoutVariant as keyof typeof LAYOUT_CONFIGS] || LAYOUT_CONFIGS.A
 
+      // Set initial states
       gsap.set(titleRef.current, { clipPath: `inset(${config.title})` })
       gsap.set(deviceRef.current, { clipPath: `inset(${config.device})` })
       gsap.set(metaRef.current, { clipPath: `inset(${config.meta})` })
 
-      const timeline = gsap.timeline()
-      timeline
-        .to(titleRef.current, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: HOVER_PREVIEW.duration.content,
-          ease: HOVER_PREVIEW.ease.reveal,
-          force3D: true,
-        }, HOVER_PREVIEW.stagger.base)
-        .to(deviceRef.current, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: HOVER_PREVIEW.duration.content,
-          ease: HOVER_PREVIEW.ease.reveal,
-          force3D: true,
-        }, HOVER_PREVIEW.stagger.medium)
-        .to(metaRef.current, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: HOVER_PREVIEW.duration.meta,
-          ease: HOVER_PREVIEW.ease.reveal,
-          force3D: true,
-        }, HOVER_PREVIEW.stagger.delayed)
+      // Store timeline for reversing - use fromTo for explicit reversing
+      contentTimeline.current = gsap.timeline()
+      contentTimeline.current
+        .fromTo(titleRef.current,
+          { clipPath: `inset(${config.title})` },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: HOVER_PREVIEW.duration.content,
+            ease: HOVER_PREVIEW.ease.reveal,
+            force3D: true,
+          }, HOVER_PREVIEW.stagger.base)
+        .fromTo(deviceRef.current,
+          { clipPath: `inset(${config.device})` },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: HOVER_PREVIEW.duration.content,
+            ease: HOVER_PREVIEW.ease.reveal,
+            force3D: true,
+          }, HOVER_PREVIEW.stagger.medium)
+        .fromTo(metaRef.current,
+          { clipPath: `inset(${config.meta})` },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: HOVER_PREVIEW.duration.meta,
+            ease: HOVER_PREVIEW.ease.reveal,
+            force3D: true,
+          }, HOVER_PREVIEW.stagger.delayed)
     })
 
     return () => mm.revert()

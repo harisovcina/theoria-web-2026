@@ -763,6 +763,31 @@ overwrite: "auto"       // Smartly handle conflicting tweens
 
 ---
 
+
+## GSAP + React Hover/Reveal Patterns
+
+### Timeline Management
+- Store in refs, not state
+- Expose via useImperativeHandle
+- Always .kill() on unmount
+
+### Animation Setup
+- Use .fromTo() for reversible animations
+- Create timeline once (useGSAP or useEffect with empty deps)
+- paused: true by default
+
+### State Timing
+- Reverse animation BEFORE clearing state
+- Use onReverseComplete or setTimeout(duration)
+- Track switching vs first interaction separately
+
+### Switching Items
+- First hover: immediate
+- Switching: small delay (100-200ms)
+- Reset "first hover" flag on mouse leave
+
+---
+
 ## Inspiration Sites Analysis
 
 Sites like **vucko.co**, **weareflow.uk**, and **factory.ai** share these patterns:
