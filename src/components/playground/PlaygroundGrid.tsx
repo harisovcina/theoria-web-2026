@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { ExternalLinkIcon, GithubIcon, TagIcon } from "lucide-react"
+import { PlaygroundModal } from "./PlaygroundModal"
 
 interface Experiment {
   id: number
@@ -21,18 +22,33 @@ interface PlaygroundGridProps {
 
 export function PlaygroundGrid({ experiments }: PlaygroundGridProps) {
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set())
+  const [selectedExperiment, setSelectedExperiment] =
+    useState<Experiment | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleImageError = (id: number) => {
     setImageErrors((prev) => new Set(prev).add(id))
   }
 
+  const openModal = (experiment: Experiment) => {
+    setSelectedExperiment(experiment)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setTimeout(() => setSelectedExperiment(null), 300)
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-0 animate-fade-in animation-delay-600">
-      {experiments.map((experiment) => (
-        <div
-          key={experiment.id}
-          className="group border border-border/40 rounded-xl overflow-hidden hover:border-border transition-all duration-200 bg-background/50 backdrop-blur-sm"
-        >
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-0 animate-fade-in animation-delay-600">
+        {experiments.map((experiment) => (
+          <div
+            key={experiment.id}
+            onClick={() => openModal(experiment)}
+            className="group border border-border/40 rounded-xl overflow-hidden hover:border-border transition-all duration-200 bg-background/50 backdrop-blur-sm cursor-pointer"
+          >
           {/* Thumbnail */}
           <div className="relative w-full aspect-video bg-muted overflow-hidden">
             {experiment.thumbnail && !imageErrors.has(experiment.id) ? (
@@ -82,6 +98,7 @@ export function PlaygroundGrid({ experiments }: PlaygroundGridProps) {
                 href={experiment.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors"
               >
                 <GithubIcon className="w-4 h-4" />
@@ -95,6 +112,7 @@ export function PlaygroundGrid({ experiments }: PlaygroundGridProps) {
                     href={experiment.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     className="flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors"
                   >
                     <ExternalLinkIcon className="w-4 h-4" />
@@ -107,5 +125,12 @@ export function PlaygroundGrid({ experiments }: PlaygroundGridProps) {
         </div>
       ))}
     </div>
+
+    <PlaygroundModal
+      isOpen={isModalOpen}
+      onClose={closeModal}
+      experiment={selectedExperiment}
+    />
+  </>
   )
 }
