@@ -68,7 +68,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
 
     // Store timelines for reversible animations
     const backgroundTween = useRef<gsap.core.Tween | null>(null)
-    const contentTimeline = useRef<gsap.core.Timeline | null>(null)
+    const contentTimeline = useRef<gsap.core.Tween | gsap.core.Timeline | null>(null)
 
     useImperativeHandle(ref, () => ({
       getDevicePosition: () => {
@@ -137,7 +137,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
 
     // Mobile: Simple fade + slide (better performance, no clip-path)
     mm.add("(max-width: 767px)", () => {
-      // Store the tween for reversing (fromTo returns a tween/timeline)
+      // Store the tween for reversing
       contentTimeline.current = gsap.fromTo(
         [titleRef.current, deviceRef.current, metaRef.current],
         {
@@ -152,7 +152,7 @@ export const HoverPreview = forwardRef<{ getDevicePosition: () => DOMRect | null
           ease: HOVER_PREVIEW.ease.reveal,
           force3D: true,
         }
-      ) as gsap.core.Timeline
+      )
     })
 
     // Desktop: Complex clip-path animations
