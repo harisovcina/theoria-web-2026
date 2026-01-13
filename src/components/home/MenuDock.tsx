@@ -197,7 +197,8 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
             <nav className="flex flex-col items-center gap-12">
               {[
                 { href: "/about", label: "About", number: "01" },
-                { href: "/haris", label: "Playground", number: "02" }
+                { href: "/work", label: "Our Work", number: "02" },
+                { href: "/haris", label: "Playground", number: "03" }
               ].map(({ href, label, number }) => (
                 <Link
                   key={href}
