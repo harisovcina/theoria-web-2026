@@ -27,7 +27,7 @@ function ProjectPill({ project, onMouseEnter, onMouseLeave, onClick }: ProjectPi
       onClick={onClick}
       className={cn(
         // Layout
-        "flex items-center gap-2 w-fit px-5 py-2.5 rounded-full",
+        "flex items-center gap-2 w-fit px-2.5 py-2 rounded-full",
         // Appearance
         "bg-background/10 backdrop-blur-custom",
         "border border-foreground/5",
@@ -40,7 +40,7 @@ function ProjectPill({ project, onMouseEnter, onMouseLeave, onClick }: ProjectPi
         "pointer-events-auto"
       )}
     >
-      <span className="text-xs font-normal font-mono uppercase tracking-widest whitespace-nowrap">
+      <span className="text-[11px] font-normal font-mono uppercase tracking-widest whitespace-nowrap">
         {project.name}
       </span>
       {project.comingSoon && (
@@ -110,13 +110,13 @@ export function ProjectPills({ projects, onHover, onClick, hoverPreviewRef }: Pr
       className={cn(
         // Base positioning
         "fixed z-10 pointer-events-none",
-        // Mobile: 2-column grid at bottom
+        // Mobile: 3-column grid at bottom, full width
         "left-4 right-4 bottom-16",
-        "grid grid-cols-2 gap-1 w-fit",
+        "grid grid-cols-3 gap-1",
         // Tablet: adjust spacing and position
-        "md:left-8 md:right-auto md:bottom-24 md:gap-2",
-        // Desktop: vertical stack, centered vertically
-        "xl:left-12 xl:top-[50vh] xl:bottom-auto",
+        "md:left-8 md:right-auto md:bottom-24 md:gap-2 md:w-fit",
+        // Desktop: vertical stack, truly centered vertically
+        "xl:left-12 xl:top-[50vh] xl:-translate-y-1/2 xl:bottom-auto",
         "xl:flex xl:flex-col"
       )}
     >
