@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { fetchPlaygroundRepos } from "@/lib/github"
 import { PlaygroundGrid } from "@/components/playground/PlaygroundGrid"
+import { PageMenuDock } from "@/components/shared/PageMenuDock"
 
 export default async function HarisPage() {
   // Fetch playground experiments from GitHub
@@ -8,15 +9,8 @@ export default async function HarisPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-8 left-8 md:left-12 z-50">
-        <Link
-          href="/"
-          className="px-5 py-2.5 rounded-full border border-border/40 bg-background/60 backdrop-blur-md hover:bg-foreground hover:text-background transition-all duration-200"
-        >
-          <span className="text-sm">← Back</span>
-        </Link>
-      </nav>
+      {/* Menu Dock */}
+      <PageMenuDock />
 
       {/* Personal Intro Section */}
       <section className="container max-w-6xl mx-auto px-8 pt-32 pb-16">
