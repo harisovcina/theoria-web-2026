@@ -219,15 +219,10 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
             {projects.length > 0 && (
               <div className="flex flex-col items-center gap-4 mt-24 opacity-0 animate-fade-in-up animation-delay-600">
                 {/* Divider */}
-                <div className="w-12 h-[1px] bg-foreground/10" />
+                <div className="w-12 h-[1px] my-8 bg-foreground/10" />
 
-                {/* Label */}
-                <span className="font-mono mt-8 text-[11px] uppercase tracking-widest text-foreground/30">
-                  Case Studies
-                </span>
-
-                {/* Pills Row */}
-                <div className="flex flex-col md:flex-row items-center gap-2">
+                {/* Pills Grid */}
+                <div className="grid grid-cols-3 items-start gap-2">
                   {projects.map((project) => (
                     <button
                       key={project.id}

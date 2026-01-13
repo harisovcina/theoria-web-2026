@@ -180,9 +180,9 @@ export function HomePage({ projects }: HomePageProps) {
         className="fixed inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300"
         style={{ opacity: hoveredProject ? 0 : 1, zIndex: 5, paddingTop: "30vh", alignItems: "flex-start" }}
       >
-        <div className="text-start space-y-4 md:space-y-6 lg:space-y-8 max-w-2xl md:max-w-3xl lg:max-w-3xl xl:max-w-4xl px-8">
+        <div className="text-start space-y-4 md:space-y-32 lg:space-y-8 max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl px-8">
           {/* Main Tagline*/}
-          <h1 className="text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-foreground font-extralight leading-none tracking-tight">
             We turn complex products into simple interfaces
           </h1>
           <p className="text-xs sm:text-sm md:text-sm text-foreground/80 font-light uppercase font-mono tracking-widest opacity-0 animate-fade-in-up animation-delay-400">
