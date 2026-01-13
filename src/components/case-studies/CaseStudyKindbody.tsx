@@ -423,7 +423,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
   }, [])
 
   return (
-    <div ref={containerRef} className="cs-kindbody min-h-screen relative">
+    <div ref={containerRef} className="cs-kindbody min-h-screen relative overflow-x-hidden">
 
       {/* Hero Section */}
       <section className="min-h-screen flex items-center relative overflow-hidden px-6 md:px-12">
@@ -509,8 +509,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Section 1: Building Trust */}
-      <section className="role-section cs-section relative h-screen">
-        <div className="h-full grid lg:grid-cols-2 gap-4">
+      <section className="role-section cs-section relative overflow-hidden">
+        <div className="max-w-7xl mx-auto min-h-screen grid lg:grid-cols-2 gap-8 items-center px-6 md:px-12">
           {/* Left column - Text */}
           <div className="flex flex-col justify-center space-y-12">
             <div className="space-y-6">
@@ -532,7 +532,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
 
           {/* Right column - Image */}
-          <div className="role-image h-100vh relative">
+          <div className="role-image h-[60vh] lg:h-[80vh] relative">
             <Image
               src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
               alt="Healthcare professional working on digital tools"
