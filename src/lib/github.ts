@@ -75,7 +75,7 @@ export async function fetchPlaygroundRepos(
       githubUrl: repo.html_url,
       liveUrl: repo.homepage,
       tags: repo.topics || [],
-      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch),
+      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch, repo.pushed_at),
       updatedAt: repo.updated_at,
     }))
 
@@ -125,7 +125,7 @@ export async function fetchPlaygroundRepo(
       githubUrl: repo.html_url,
       liveUrl: repo.homepage,
       tags: repo.topics || [],
-      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch),
+      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch, repo.pushed_at),
       updatedAt: repo.updated_at,
     }
   } catch (error) {
@@ -148,12 +148,22 @@ function cleanPlaygroundTitle(repoName: string): string {
 }
 
 /**
- * Get the thumbnail URL from the repo
+ * Get the thumbnail URL from the repo with cache-busting
  * @param username - GitHub username
  * @param repoName - Repository name
  * @param branch - Branch name (e.g., "main" or "master")
- * @returns URL to preview.png in the repo
+ * @param pushedAt - Timestamp of last push (used for cache-busting)
+ * @returns URL to preview.png in the repo with cache-busting parameter
  */
-function getThumbnailUrl(username: string, repoName: string, branch: string = "main"): string {
-  return `https://raw.githubusercontent.com/${username}/${repoName}/${branch}/preview.png`
+function getThumbnailUrl(username: string, repoName: string, branch: string = "main", pushedAt?: string): string {
+  const baseUrl = `https://raw.githubusercontent.com/${username}/${repoName}/${branch}/preview.png`
+
+  // Add cache-busting query parameter using pushed_at timestamp
+  // This ensures images update when the repo is updated
+  if (pushedAt) {
+    const timestamp = new Date(pushedAt).getTime()
+    return `${baseUrl}?t=${timestamp}`
+  }
+
+  return baseUrl
 }

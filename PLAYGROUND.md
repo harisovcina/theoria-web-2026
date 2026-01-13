@@ -77,6 +77,8 @@ playground-[component-name]/
 └── README.md
 ```
 
+**Image Updates**: Preview images automatically update when you push changes to your repo. The system uses cache-busting based on your repo's `pushed_at` timestamp, so updated preview.png files will reflect immediately after the next page revalidation (max 1 hour).
+
 ### Recommended Repo Setup
 
 1. **Description**: Add a clear description in GitHub repo settings
@@ -110,10 +112,18 @@ vercel --prod
 
 ## Troubleshooting
 
+### Preview Image Not Updating
+1. **Wait for cache revalidation** - The page cache refreshes every hour (ISR revalidation)
+2. **Force immediate update locally**: `rm -rf .next && npm run dev`
+3. **Force production update**: Push any change to trigger redeployment, or wait up to 1 hour
+4. **Verify image exists**: Check `https://raw.githubusercontent.com/[username]/[repo]/[branch]/preview.png`
+5. **Note**: Images use automatic cache-busting based on repo's `pushed_at` timestamp
+
 ### Preview Not Loading
 1. Verify homepage URL is set: `gh repo view harisovcina/playground-[component-name] --web`
 2. Check Vercel deployment: `vercel inspect [deployment-url]`
-3. Clear local cache: `rm -rf .next`
+3. Ensure preview.png exists in repo root
+4. Check Next.js image optimization in production logs
 
 ### Component Not Appearing
 1. Ensure repo name starts with `playground-`
