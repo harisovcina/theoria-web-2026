@@ -198,7 +198,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
               {[
                 { href: "/about", label: "About", number: "01" },
                 { href: "/work", label: "Our Work", number: "02" },
-                { href: "/haris", label: "Playground", number: "03" }
+                { href: "/playground", label: "Playground", number: "03" }
               ].map(({ href, label, number }) => (
                 <Link
                   key={href}

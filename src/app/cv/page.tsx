@@ -1,113 +1,291 @@
-import Link from "next/link"
+import { db } from "@/lib/db"
+import { PageMenuDock } from "@/components/shared/PageMenuDock"
 
-export default function CVPage() {
+export default async function CVPage() {
+  const projects = await db.project.findMany({
+    orderBy: { order: "asc" },
+  })
+
   return (
     <main className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-8 left-8 md:left-12 z-50">
-        <Link
-          href="/"
-          className="px-5 py-2.5 rounded-full border border-border/40 bg-background/60 backdrop-blur-md hover:bg-foreground hover:text-background transition-all duration-200"
-        >
-          <span className="text-sm">← Back</span>
-        </Link>
-      </nav>
+      {/* Menu Dock */}
+      <PageMenuDock projects={projects} />
 
-      {/* CV Content */}
-      <section className="container max-w-4xl mx-auto px-8 pt-32 pb-16">
-        <div className="prose prose-neutral dark:prose-invert max-w-none">
-          <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-4 opacity-0 animate-fade-in-up">
-            Haris Ovčina
-          </h1>
-          <p className="text-xl text-foreground/70 font-light mb-12 opacity-0 animate-fade-in-up animation-delay-200">
-            Product Designer • Founder @ theoria
-          </p>
+      {/* Hero Section */}
+      <section className="relative px-[clamp(1rem,5vw,4rem)] pt-[clamp(8rem,15vh,12rem)]">
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <div className="mb-16 opacity-0 animate-fade-in-up">
+            <div className="flex items-center gap-6 mb-4">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-foreground/5 flex-shrink-0">
+                <img
+                  src="/img/haris1.webp"
+                  alt="Haris Ovčina"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h1 className="text-5xl md:text-7xl font-extralight tracking-tight">
+                Haris Ovčina
+              </h1>
+            </div>
+            <p className="text-sm font-mono uppercase text-muted-foreground">
+              Product Designer · Founder @ theoria
+            </p>
+          </div>
+
+          {/* Separator */}
+          <div className="border-t border-border/50 mb-16 opacity-0 animate-fade-in animation-delay-100" />
 
           {/* Summary */}
-          <div className="mb-12 opacity-0 animate-fade-in animation-delay-400">
-            <h2 className="text-2xl font-light mb-4">Summary</h2>
-            <p className="text-foreground/70 leading-relaxed">
-              Product designer with 10+ years of experience creating intuitive interfaces for
-              complex products. Background in architecture, now specialized in digital product
-              design, UX research, and design systems. Founded theoria, a product design studio
-              based in Sarajevo.
+          <div className="mb-20 opacity-0 animate-fade-in animation-delay-200">
+            <p className="text-base text-muted-foreground font-light leading-relaxed">
+              UX/UI and Product Designer with a background in architectural design. Innovative and efficient
+              problem solver with 10+ years creating intuitive interfaces for complex systems. Founded theoria,
+              a boutique design agency specializing in UX and product design, working with clients ranging from
+              small startups to Fortune 500 companies.
             </p>
           </div>
 
           {/* Experience */}
-          <div className="mb-12 opacity-0 animate-fade-in animation-delay-600">
-            <h2 className="text-2xl font-light mb-6">Experience</h2>
+          <div className="mb-20 opacity-0 animate-fade-in animation-delay-300">
+            <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8">
+              Experience
+            </h2>
 
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-xl font-medium mb-1">Founder & Lead Designer</h3>
-                <p className="text-foreground/60 mb-2">theoria • 2020 - Present</p>
-                <p className="text-foreground/70 leading-relaxed">
-                  Founded and leading a product design studio specializing in UX/UI design for
-                  complex B2B SaaS products. Working with international clients to transform
-                  complicated workflows into simple, intuitive interfaces.
-                </p>
+            <div className="space-y-12">
+              {/* Kindbody */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/kb-logo-sq.svg" alt="Kindbody" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Lead UX/UI Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">Sept 2022 — April 2025</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Kindbody · New York City, NY</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Led design across patient- and provider-facing tools at Kindbody, a healthcare startup that reached
+                    unicorn status with a $1.8B valuation. Collaborated with product owners, developers, marketing, and
+                    business teams to deliver cohesive experiences. Helped lay groundwork for scalable design by
+                    collaborating on design system and improving design-engineering workflows.
+                  </p>
+                </div>
               </div>
 
-              <div>
-                <h3 className="text-xl font-medium mb-1">Senior Product Designer</h3>
-                <p className="text-foreground/60 mb-2">Various Companies • 2014 - 2020</p>
-                <p className="text-foreground/70 leading-relaxed">
-                  Led design initiatives for multiple startups and established companies,
-                  focusing on user research, interaction design, and building scalable design
-                  systems.
-                </p>
+              {/* Sematext */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/sematext-logo-sq.svg" alt="Sematext" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Lead Product Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">Nov 2020 — Present</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Sematext Group, Inc. · New York City, NY</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Working as lead product designer as part of globally distributed team with multiple Fortune 100
+                    clients in developing and improving new or existing solutions.
+                  </p>
+                </div>
+              </div>
+
+              {/* theoria */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/theoria-logo-sq.svg" alt="theoria" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Founder / Senior Product Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">Jun 2021 — Present</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">theoria · Sarajevo, BiH</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    A boutique design agency specializing in UX and product design. Led and delivered projects across
+                    diverse industries. Oversaw design strategy, client communication, and hands-on execution—from early
+                    discovery to polished delivery.
+                  </p>
+                </div>
+              </div>
+
+              {/* Toptal */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/toptal.png" alt="Toptal" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">UX/UI/Product Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">Sept 2018 — Present</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Toptal</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Occasionally working as freelance designer for different clients, ranging from small startups to
+                    some of the largest Fortune 500 companies.
+                  </p>
+                </div>
+              </div>
+
+              {/* Atlantbh */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/atlantbh.png" alt="Atlantbh" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">UX/UI Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">Sept 2017 — Nov 2020</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Atlantbh · Sarajevo, BiH</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Working for multiple Fortune 500 and FTSE 100 companies in fast-paced, agile team. Closely
+                    collaborating with stakeholders, product owners and developers in delivering software solutions
+                    from product concepts to full-scale projects.
+                  </p>
+                </div>
+              </div>
+
+              {/* CityOS Foundation */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/cityos.png" alt="CityOS Foundation" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Product Designer / Mentor</p>
+                  <p className="text-xs text-muted-foreground font-mono">Feb 2016 — Sept 2017</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">CityOS Foundation · Sarajevo / San Francisco</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Designing open-source IoT solutions. Helped in organizing workshops and hackathons. Collaborating
+                    with winners in designing and developing their solutions.
+                  </p>
+                </div>
+              </div>
+
+              {/* HUB 387 */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/hub387.png" alt="HUB 387" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Product Designer / UX Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">May 2015 — Feb 2016</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">HUB 387 · Sarajevo, BiH</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Working as only designer in the first startup accelerator in Bosnia and Herzegovina. Designing IoT
+                    solutions such as smart beehives, hydroponic devices as well as accompanying web and mobile applications.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Skills */}
-          <div className="mb-12 opacity-0 animate-fade-in animation-delay-600">
-            <h2 className="text-2xl font-light mb-6">Skills</h2>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="mb-20 opacity-0 animate-fade-in animation-delay-400">
+            <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8">
+              Skills & Tools
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8">
               <div>
-                <h4 className="font-medium mb-2">Design</h4>
-                <ul className="text-foreground/70 space-y-1">
-                  <li>• UX/UI Design</li>
-                  <li>• User Research</li>
-                  <li>• Design Systems</li>
-                  <li>• Prototyping</li>
-                  <li>• Interaction Design</li>
+                <p className="text-sm font-medium mb-3">Design</p>
+                <ul className="text-sm text-muted-foreground space-y-2 font-light">
+                  <li>Product Strategy</li>
+                  <li>Design Systems</li>
+                  <li>Prototyping</li>
+                  <li>Usability Testing</li>
+                  <li>Visual Design</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-2">Tools</h4>
-                <ul className="text-foreground/70 space-y-1">
-                  <li>• Figma</li>
-                  <li>• Adobe Creative Suite</li>
-                  <li>• HTML/CSS</li>
-                  <li>• React (basics)</li>
-                  <li>• Framer</li>
+                <p className="text-sm font-medium mb-3">Tools</p>
+                <ul className="text-sm text-muted-foreground space-y-2 font-light">
+                  <li>Figma</li>
+                  <li>Sketch</li>
+                  <li>Adobe Suite</li>
+                  <li>3DS Max</li>
+                  <li>Blender</li>
+                </ul>
+              </div>
+              <div>
+                <p className="text-sm font-medium mb-3">Development</p>
+                <ul className="text-sm text-muted-foreground space-y-2 font-light">
+                  <li>HTML/CSS/JS</li>
+                  <li>React & Next.js</li>
+                  <li>Tailwind CSS</li>
+                  <li>GSAP Animations</li>
+                  <li>Three.js</li>
                 </ul>
               </div>
             </div>
+
           </div>
 
           {/* Education */}
-          <div className="mb-12 opacity-0 animate-fade-in animation-delay-600">
-            <h2 className="text-2xl font-light mb-6">Education</h2>
-            <div>
-              <h3 className="text-xl font-medium mb-1">Architecture</h3>
-              <p className="text-foreground/60">University • Year</p>
+          <div className="mb-20 opacity-0 animate-fade-in animation-delay-500">
+            <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground mb-8">
+              Education
+            </h2>
+
+            <div className="space-y-8">
+              {/* Architecture Degree */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded bg-muted-foreground/10 flex items-center justify-center">
+                  <span className="text-xs font-medium">U</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">B.Arch - Architecture</p>
+                  <p className="text-xs text-muted-foreground font-mono">Class of 2014</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Faculty of Architecture · Sarajevo, BiH</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Architecture and Related Services
+                  </p>
+                </div>
+              </div>
+
+              {/* Udacity Nanodegrees */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded bg-muted-foreground/10 flex items-center justify-center">
+                  <span className="text-xs font-medium">U</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Nanodegrees</p>
+                  <p className="text-xs text-muted-foreground font-mono">2018</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Udacity</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Design Sprint Foundations Nanodegree · UX Designer Nanodegree
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Contact */}
-          <div className="border-t border-border/30 pt-8 opacity-0 animate-fade-in animation-delay-600">
+          <div className="border-t border-border/50 pt-12 opacity-0 animate-fade-in animation-delay-600">
+            <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
+              Get in touch
+            </p>
             <a
               href="mailto:haris@theoria.co"
-              className="text-lg hover:text-foreground/70 transition-colors"
+              className="inline-block text-2xl md:text-4xl font-extralight hover:text-muted-foreground transition-colors"
             >
               haris@theoria.co
             </a>
           </div>
         </div>
       </section>
+
+      {/* Bottom Spacing */}
+      <div className="h-32" />
     </main>
   )
 }
