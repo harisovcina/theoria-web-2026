@@ -14,8 +14,8 @@ export function PageMenuDock({ projects = [] }: PageMenuDockProps) {
   const router = useRouter()
 
   const handleProjectClick = (project: Project) => {
-    if (project.comingSoon) return
-    router.push(`/work/${project.slug}`)
+    if (project.comingSoon || !project.caseStudySlug) return
+    router.push(`/work/${project.caseStudySlug}`)
   }
 
   return (
