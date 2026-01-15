@@ -1,12 +1,20 @@
 import Link from "next/link"
+import { db } from "@/lib/db"
 import { ClientCarousel } from "@/components/work/ClientCarousel"
 import { PageMenuDock } from "@/components/shared/PageMenuDock"
 
-export default function WorkPage() {
+// Force dynamic rendering to avoid database access during build
+export const dynamic = 'force-dynamic'
+
+export default async function WorkPage() {
+  const projects = await db.project.findMany({
+    orderBy: { order: "asc" },
+  })
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* Menu Dock */}
-      <PageMenuDock />
+      <PageMenuDock projects={projects} />
 
       {/* Main Content */}
       <div className="container max-w-7xl mx-auto px-8 pt-32 pb-16">
