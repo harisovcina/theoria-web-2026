@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { MenuDock } from "@/components/home/MenuDock"
 import { Project } from "@/types"
+import { useCaseStudy } from "@/contexts/CaseStudyContext"
 
 interface PageMenuDockProps {
   projects?: Project[]
@@ -12,18 +13,25 @@ interface PageMenuDockProps {
 export function PageMenuDock({ projects = [] }: PageMenuDockProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
+  const { isModalOpen, openCaseStudy, closeCaseStudy } = useCaseStudy()
 
   const handleProjectClick = (project: Project) => {
     if (project.comingSoon || !project.caseStudySlug) return
-    router.push(`/work/${project.caseStudySlug}`)
+    openCaseStudy(project, null)
   }
 
   return (
     <MenuDock
       onMenuClick={() => setIsMenuOpen(!isMenuOpen)}
       isMenuOpen={isMenuOpen}
-      isCaseStudy={false}
-      onBackClick={() => router.push("/")}
+      isCaseStudy={isModalOpen}
+      onBackClick={() => {
+        if (isModalOpen) {
+          closeCaseStudy()
+        } else {
+          router.push("/")
+        }
+      }}
       projects={projects}
       onProjectClick={handleProjectClick}
     />

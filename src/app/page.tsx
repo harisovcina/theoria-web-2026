@@ -1,5 +1,5 @@
 import { db } from "@/lib/db"
-import { HomePage } from "@/components/home/HomePage"
+import { HomePageWrapper } from "@/components/home/HomePageWrapper"
 
 // Force dynamic rendering to avoid database access during build
 export const dynamic = 'force-dynamic'
@@ -9,5 +9,5 @@ export default async function Home() {
     orderBy: { order: "asc" },
   })
 
-  return <HomePage projects={projects} />
+  return <HomePageWrapper projects={projects} />
 }

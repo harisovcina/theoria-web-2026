@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Instrument_Serif } from "next/font/google";
+import { Providers } from "@/components/providers/Providers";
 
 const instrumentSerif = Instrument_Serif({
   weight: ["400"],
@@ -27,8 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${instrumentSerif.variable}`} suppressHydrationWarning>
-        {children}
-        <Toaster />
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   )
