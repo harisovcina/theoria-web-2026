@@ -521,7 +521,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             {/* Mobile app detail - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/kindbody/kb-app3.webp"
+                src="/img/kindbody/truck.webp"
                 alt="Kindbody mobile app - cycle tracking"
                 fill
                 className="object-cover"
@@ -619,8 +619,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
             <div className="process-step1-image cs-step-image md:col-span-7">
               <Image
-                src="/img/kindbody/kb-app2.webp"
-                alt="Kindbody mobile app interface design"
+                src="/img/kindbody/pills.webp"
+                alt="Kindbody medication and treatment planning"
                 fill
                 className="object-cover"
               />
@@ -661,8 +661,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
             <div className="process-step3-image cs-step-image md:col-span-7">
               <Image
-                src="/img/kindbody/kb-app3.webp"
-                alt="Kindbody mobile app patient experience"
+                src="/img/kindbody/truck.webp"
+                alt="Kindbody delivery and logistics"
                 fill
                 className="object-cover"
               />
@@ -683,22 +683,22 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* Full-Width Lab Image */}
+      {/* Full-Width Clinic Image */}
       <section className="relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
-            src="/img/kindbody/kb-desktop1.webp"
-            alt="Kindbody desktop platform overview"
+            src="/img/kindbody/kindbodyclinic.webp"
+            alt="Kindbody clinic location"
             fill
             className="object-cover"
           />
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
             <div className="text-center space-y-6 px-8">
-              <div className="text-[clamp(4rem,12vw,10rem)] font-extralight text-amber-300/30 leading-none">
+              <div className="text-[clamp(4rem,12vw,10rem)] font-extralight text-amber-300 leading-none">
                 1.8B
               </div>
               <p className="text-xl md:text-2xl font-light text-foreground/70 max-w-2xl mx-auto">
-                Peak valuation. 20+ clinics. Thousands of patients. One design system.
+                Peak valuation. 20+ clinics. Thousands of patients. <br></br> One design system.
               </p>
             </div>
           </div>
