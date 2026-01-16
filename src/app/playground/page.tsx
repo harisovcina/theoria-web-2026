@@ -20,7 +20,7 @@ export default async function HarisPage() {
 
       {/* Hero Section */}
       <section className="relative px-[clamp(1rem,5vw,4rem)] pt-[clamp(8rem,20vh,12rem)]">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           {/* Main Headline */}
           <h1 className="text-5xl md:text-7xl font-extralight tracking-tight mb-12 opacity-0 animate-fade-in-up">
             Where theory meets practice{" "}
@@ -57,11 +57,11 @@ export default async function HarisPage() {
                 <h2 className="text-6xl font-extralight tracking-tight mb-3">
                   Haris Ovčina
                 </h2>
-                <p className="text-xs font-mono uppercase text-slate-500 font-light leading-relaxed max-w-4xl">
+                <p className="text-xs font-mono uppercase text-slate-500 font-light leading-relaxed">
                   Product designer · Former architect · Code enthusiast
                 </p>
 
-                <p className="text-xs font-mono uppercase text-foreground font-light leading-relaxed max-w-4xl">
+                <p className="text-xs font-mono uppercase text-foreground font-light leading-relaxed">
                   Sarajevo-based, globally deployed.
                 </p>
               </div>
@@ -111,7 +111,7 @@ export default async function HarisPage() {
       </section>
 
       {/* Experiments Grid */}
-      <section className="px-[clamp(1rem,5vw,4rem)] py-[clamp(6rem,12vw,10rem)]">
+      <section className="px-[clamp(1rem,5vw,4rem)] py-[clamp(6rem,9vw,10rem)]">
         <div className="max-w-4xl mx-auto">
           <div className="border-t border-foreground/10 pt-[clamp(4rem,8vw,6rem)]">
             <div className="mb-[clamp(2rem,4vw,3rem)] opacity-0 animate-fade-in animation-delay-400">
