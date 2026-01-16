@@ -392,8 +392,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       <section className="relative h-[70vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
-            src="https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1920&q=80"
-            alt="Modern medical laboratory environment"
+            src="/img/kindbody/kb-desktop1.webp"
+            alt="Kindbody platform dashboard"
             fill
             className="object-cover"
             priority
@@ -446,8 +446,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           {/* Right column - Image */}
           <div className="h-100vh relative">
             <Image
-              src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
-              alt="Healthcare professional working on digital tools"
+              src="/img/kindbody/dashboard1.webp"
+              alt="Kindbody provider dashboard interface"
               fill
               className="object-cover"
             />
@@ -508,29 +508,21 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
           {/* Before/After Visual Comparison */}
           <div className="before-after-images grid md:grid-cols-2 gap-6 md:gap-8 my-16">
-            {/* Error state - Left */}
+            {/* Mobile app - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80"
-                alt="Before - Fragmented workflow"
+                src="/img/kindbody/kb-app2.webp"
+                alt="Kindbody mobile app - patient view"
                 fill
                 className="object-cover"
               />
-              {/* Error overlay with red tones */}
-              <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
-              <div className="absolute inset-0 bg-red-500/10"></div>
-              {/* Subtle noise texture */}
-              <div className="absolute inset-0 opacity-25" style={{
-                backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'3.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-                backgroundSize: '150px 150px'
-              }}></div>
             </div>
 
-            {/* Clean state - Right */}
+            {/* Mobile app detail - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
-                alt="After - Unified platform"
+                src="/img/kindbody/kb-app3.webp"
+                alt="Kindbody mobile app - cycle tracking"
                 fill
                 className="object-cover"
               />
@@ -588,8 +580,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
           <div className="cs-image-wide mt-16">
             <Image
-              src="https://images.unsplash.com/photo-1583911860205-72f8ac8ddcbe?w=1920&q=80"
-              alt="Scientific precision - embryology lab work"
+              src="/img/kindbody/app1.webp"
+              alt="Kindbody mobile application overview"
               width={1600}
               height={900}
               className="w-full h-full object-cover"
@@ -627,8 +619,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
             <div className="process-step1-image cs-step-image md:col-span-7">
               <Image
-                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80"
-                alt="Medical professionals in discussion"
+                src="/img/kindbody/kb-app2.webp"
+                alt="Kindbody mobile app interface design"
                 fill
                 className="object-cover"
               />
@@ -639,8 +631,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
             <div className="process-step2-image cs-step-image md:col-span-7 md:order-1">
               <Image
-                src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1200&q=80"
-                alt="Learning in the lab environment"
+                src="/img/kindbody/dashboard1.webp"
+                alt="Kindbody provider dashboard and workflow"
                 fill
                 className="object-cover"
               />
@@ -669,8 +661,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
             <div className="process-step3-image cs-step-image md:col-span-7">
               <Image
-                src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&q=80"
-                alt="Collaborative healthcare design work"
+                src="/img/kindbody/kb-app3.webp"
+                alt="Kindbody mobile app patient experience"
                 fill
                 className="object-cover"
               />
@@ -695,8 +687,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       <section className="relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
-            src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1920&q=80"
-            alt="Medical laboratory precision work"
+            src="/img/kindbody/kb-desktop1.webp"
+            alt="Kindbody desktop platform overview"
             fill
             className="object-cover"
           />
