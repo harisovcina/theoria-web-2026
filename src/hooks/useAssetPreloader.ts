@@ -51,14 +51,14 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
         const imageUrls: string[] = []
 
         projects.forEach(project => {
-          // Preview images
-          if (project.previewImage) {
-            imageUrls.push(project.previewImage)
+          // Hero images (main project images)
+          if (project.heroImage) {
+            imageUrls.push(project.heroImage)
           }
 
-          // Thumbnail
-          if (project.thumbnail) {
-            imageUrls.push(project.thumbnail)
+          // Device mockup images
+          if (project.deviceMockup) {
+            imageUrls.push(project.deviceMockup)
           }
 
           // Case study images (if they exist in JSON format)
