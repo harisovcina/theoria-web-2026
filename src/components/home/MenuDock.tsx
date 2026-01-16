@@ -175,7 +175,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
       </div>
 
       {/* Expanded Menu */}
-      {shouldRenderMenu && !isCaseStudy && (
+      {shouldRenderMenu && (
         <div
           id="main-menu"
           role="navigation"
@@ -237,7 +237,10 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
                       )}
                       onMouseEnter={() => handleProjectMouseEnter(project)}
                       onMouseLeave={handleProjectMouseLeave}
-                      onClick={() => onProjectClick?.(project)}
+                      onClick={() => {
+                        onProjectClick?.(project)
+                        onMenuClick() // Close the menu after clicking a project
+                      }}
                     >
                       <span className="text-xs font-normal font-mono uppercase tracking-widest whitespace-nowrap">
                         {project.name}

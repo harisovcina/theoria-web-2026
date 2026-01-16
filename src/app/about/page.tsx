@@ -10,10 +10,14 @@ export default async function AboutPage() {
     orderBy: { order: "asc" },
   })
 
+  const projects = await db.project.findMany({
+    orderBy: { order: "asc" },
+  })
+
   return (
     <main className="min-h-screen bg-background">
       {/* Menu Dock */}
-      <PageMenuDock />
+      <PageMenuDock projects={projects} />
 
       {/* About Section */}
       <section className="container max-w-6xl mx-auto px-8 pt-32 pb-16">

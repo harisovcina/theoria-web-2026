@@ -1,15 +1,15 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ExpoScaleEase } from "gsap/EasePack"
 import { ProjectPills } from "./ProjectPills"
 import { MenuDock } from "./MenuDock"
 import { HoverPreview } from "./HoverPreview"
-import { CaseStudy } from "./CaseStudy"
 import { Project } from '@/types'
 import { PAGE_STATES, type PageState } from '@/lib/constants'
+import { useCaseStudy } from '@/contexts/CaseStudyContext'
 
 gsap.registerPlugin(ExpoScaleEase)
 
@@ -18,15 +18,24 @@ interface HomePageProps {
 }
 
 export function HomePage({ projects }: HomePageProps) {
+  const { selectedProject, isModalOpen, deviceStartPosition, openCaseStudy, closeCaseStudy } = useCaseStudy()
   const [pageState, setPageState] = useState<PageState>("default")
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null)
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [showLoader, setShowLoader] = useState(true)
   const [loadingPercent, setLoadingPercent] = useState(0)
   const hoverPreviewRef = useRef<{ getDevicePosition: () => DOMRect | null; reverse: () => void; play: () => void }>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const maskShapeRef = useRef<SVGRectElement>(null)
   const mainTitleRef = useRef<HTMLHeadingElement>(null)
+
+  // Sync pageState with modal state
+  useEffect(() => {
+    if (isModalOpen) {
+      setPageState("case-study")
+    } else if (pageState === "case-study") {
+      setPageState("default")
+    }
+  }, [isModalOpen])
 
   useGSAP(() => {
     if (!overlayRef.current || !maskShapeRef.current) return
@@ -162,17 +171,6 @@ export function HomePage({ projects }: HomePageProps) {
           <rect width="100%" height="100%" fill="#F0FFFE" mask="url(#expandingMask)" />
         </svg>
       </div>
-      {/* Case Study Layer */}
-      {pageState === "case-study" && (
-        <CaseStudy
-          project={selectedProject}
-          deviceStartPosition={hoverPreviewRef.current?.getDevicePosition() || null}
-          onClose={() => {
-            setSelectedProject(null)
-            setPageState("default")
-          }}
-        />
-      )}
 
       {/* Default State Content */}
       <div
@@ -197,8 +195,8 @@ export function HomePage({ projects }: HomePageProps) {
           projects={projects}
           onHover={setHoveredProject}
           onClick={(project) => {
-            setSelectedProject(project)
-            setPageState("case-study")
+            const devicePosition = hoverPreviewRef.current?.getDevicePosition() || null
+            openCaseStudy(project, devicePosition)
           }}
           hoverPreviewRef={hoverPreviewRef}
         />
@@ -207,24 +205,21 @@ export function HomePage({ projects }: HomePageProps) {
       {/* Hover Preview Layer - Keep visible but hide device during case study */}
       <HoverPreview
         ref={hoverPreviewRef}
-        project={pageState === "case-study" ? selectedProject : hoveredProject}
-        hideDevice={pageState === "case-study"}
+        project={isModalOpen ? selectedProject : hoveredProject}
+        hideDevice={isModalOpen}
       />
 
       {/* Menu Dock - Top Center */}
       <MenuDock
         onMenuClick={() => setPageState(pageState === "menu" ? "default" : "menu")}
         isMenuOpen={pageState === "menu"}
-        isCaseStudy={pageState === "case-study"}
-        onBackClick={() => {
-          setSelectedProject(null)
-          setPageState("default")
-        }}
+        isCaseStudy={isModalOpen}
+        onBackClick={closeCaseStudy}
         projects={projects}
         onProjectHover={setHoveredProject}
         onProjectClick={(project) => {
-          setSelectedProject(project)
-          setPageState("case-study")
+          const devicePosition = hoverPreviewRef.current?.getDevicePosition() || null
+          openCaseStudy(project, devicePosition)
         }}
       />
     </main>
