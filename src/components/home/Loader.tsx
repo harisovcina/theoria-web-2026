@@ -39,29 +39,42 @@ export function Loader({ progress, onComplete }: LoaderProps) {
       defaults: { ease: 'power2.out' }
     })
 
+    const progressBarContainer = progressBarRef.current?.parentElement
+
     // Stagger in the elements with editorial timing
-    tl.from(labelRef.current, {
-      y: 20,
-      opacity: 0,
-      duration: 0.6,
-    })
-    .from(percentRef.current, {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'back.out(1.7)',
-    }, '-=0.4')
-    .from(progressBarRef.current?.parentElement, {
-      scaleX: 0,
-      opacity: 0,
-      duration: 0.6,
-      transformOrigin: 'left center',
-    }, '-=0.5')
-    .from(subtextRef.current, {
-      y: 10,
-      opacity: 0,
-      duration: 0.5,
-    }, '-=0.3')
+    if (labelRef.current) {
+      tl.from(labelRef.current, {
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+      })
+    }
+
+    if (percentRef.current) {
+      tl.from(percentRef.current, {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'back.out(1.7)',
+      }, '-=0.4')
+    }
+
+    if (progressBarContainer) {
+      tl.from(progressBarContainer, {
+        scaleX: 0,
+        opacity: 0,
+        duration: 0.6,
+        transformOrigin: 'left center',
+      }, '-=0.5')
+    }
+
+    if (subtextRef.current) {
+      tl.from(subtextRef.current, {
+        y: 10,
+        opacity: 0,
+        duration: 0.5,
+      }, '-=0.3')
+    }
 
   }, { scope: containerRef })
 
@@ -72,41 +85,58 @@ export function Loader({ progress, onComplete }: LoaderProps) {
         onComplete: onComplete
       })
 
-      tl.to(percentRef.current, {
-        scale: 1.1,
-        ease: 'back.out(2)',
-        duration: 0.3,
-      })
-      .to(percentRef.current, {
-        scale: 1,
-        ease: 'power2.out',
-        duration: 0.2,
-      })
-      .to([labelRef.current, subtextRef.current], {
-        y: -10,
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power2.in',
-        stagger: 0.05,
-      }, '-=0.1')
-      .to(progressBarRef.current?.parentElement, {
-        scaleX: 0,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-        transformOrigin: 'right center',
-      }, '-=0.3')
-      .to(percentRef.current, {
-        y: -20,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-      }, '-=0.4')
-      .to(containerRef.current, {
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.in',
-      }, '-=0.2')
+      const progressBarContainer = progressBarRef.current?.parentElement
+
+      if (percentRef.current) {
+        tl.to(percentRef.current, {
+          scale: 1.1,
+          ease: 'back.out(2)',
+          duration: 0.3,
+        })
+        .to(percentRef.current, {
+          scale: 1,
+          ease: 'power2.out',
+          duration: 0.2,
+        })
+      }
+
+      const exitTargets = [labelRef.current, subtextRef.current].filter(Boolean)
+      if (exitTargets.length > 0) {
+        tl.to(exitTargets, {
+          y: -10,
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power2.in',
+          stagger: 0.05,
+        }, '-=0.1')
+      }
+
+      if (progressBarContainer) {
+        tl.to(progressBarContainer, {
+          scaleX: 0,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.in',
+          transformOrigin: 'right center',
+        }, '-=0.3')
+      }
+
+      if (percentRef.current) {
+        tl.to(percentRef.current, {
+          y: -20,
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.in',
+        }, '-=0.4')
+      }
+
+      if (containerRef.current) {
+        tl.to(containerRef.current, {
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+        }, '-=0.2')
+      }
     }
   }, [progress])
 
