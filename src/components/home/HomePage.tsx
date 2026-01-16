@@ -7,9 +7,11 @@ import { ExpoScaleEase } from "gsap/EasePack"
 import { ProjectPills } from "./ProjectPills"
 import { MenuDock } from "./MenuDock"
 import { HoverPreview } from "./HoverPreview"
+import { Loader } from "./Loader"
 import { Project } from '@/types'
 import { PAGE_STATES, type PageState } from '@/lib/constants'
 import { useCaseStudy } from '@/contexts/CaseStudyContext'
+import { useAssetPreloader } from '@/hooks/useAssetPreloader'
 
 gsap.registerPlugin(ExpoScaleEase)
 
@@ -28,6 +30,9 @@ export function HomePage({ projects }: HomePageProps) {
   const maskShapeRef = useRef<SVGRectElement>(null)
   const mainTitleRef = useRef<HTMLHeadingElement>(null)
 
+  // Preload all assets before starting animations
+  const { isLoaded: assetsLoaded, progress: assetProgress } = useAssetPreloader({ projects })
+
   // Sync pageState with modal state
   useEffect(() => {
     if (isModalOpen) {
@@ -38,7 +43,7 @@ export function HomePage({ projects }: HomePageProps) {
   }, [isModalOpen])
 
   useGSAP(() => {
-    if (!overlayRef.current || !maskShapeRef.current) return
+    if (!overlayRef.current || !maskShapeRef.current || !assetsLoaded) return
 
     const tl = gsap.timeline()
 
@@ -54,12 +59,9 @@ export function HomePage({ projects }: HomePageProps) {
       }
     })
 
-    // Loading counter
+    // Small pause before starting reveal animation
     tl.to({}, {
-      duration: 1,
-      onUpdate: function() {
-        setLoadingPercent(Math.round(this.progress() * 100))
-      }
+      duration: 0.3
     })
 
     // Fade out loader
@@ -113,7 +115,12 @@ export function HomePage({ projects }: HomePageProps) {
       )
     }
 
-  }, [])
+  }, [assetsLoaded])
+
+  // Update loading percent from asset preloader
+  useEffect(() => {
+    setLoadingPercent(assetProgress)
+  }, [assetProgress])
 
   return (
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden">
@@ -138,11 +145,7 @@ export function HomePage({ projects }: HomePageProps) {
 
       {/* Loading Screen */}
       {showLoader && (
-        <div className="fixed inset-0 bg-[#F0FFFE] flex items-center justify-center z-[1001]">
-          <span className="font-mono text-sm tracking-widest uppercase text-black">
-            LOADING <span>{loadingPercent}</span>%
-          </span>
-        </div>
+        <Loader progress={loadingPercent} />
       )}
 
       {/* Reveal Overlay - SVG mask that expands */}

@@ -7,13 +7,12 @@ import { ANIMATION } from '@/lib/animations'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { Check, X } from 'lucide-react'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin)
+  gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin)
 }
 
 /**
@@ -21,10 +20,10 @@ if (typeof window !== 'undefined') {
  * Warm, human-centered healthcare aesthetic with pale yellow accents
  * Emphasis on trust, precision, and compassion
  *
- * ✅ Refactored to use GSAP context pattern with CSS selectors
- * - Reduced from 19+ refs to 1 containerRef
- * - All animations consolidated into single useGSAP block
- * - Uses CSS class selectors for targeting elements
+ * ✅ Refactored to use simplified animation pattern from Sematext
+ * - Minimal parallax effects
+ * - No overlapping scrub triggers
+ * - Clean, smooth scrolling behavior
  */
 
 export function CaseStudyKindbody({ project }: CaseStudyProps) {
@@ -36,28 +35,22 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
     const ctx = gsap.context(() => {
       const scroller = containerRef.current?.closest('.overflow-y-auto') as HTMLElement
 
-      // Hero: Soft character reveal on "compassion"
-      const heroHeadline = containerRef.current?.querySelector('.hero-headline')
-      if (heroHeadline) {
-        const split = new SplitText(heroHeadline.querySelectorAll('.cs-animate-word'), {
-          type: 'chars',
-          charsClass: 'split-char'
-        })
-
-        gsap.from(split.chars, {
-          y: 30,
-          filter: 'blur(4px)',
-          opacity: 0,
-          duration: ANIMATION.duration.normal,
-          stagger: 0.025,
-          ease: ANIMATION.ease.sine,
+      // Hero: Word reveal on "compassion"
+      gsap.fromTo('.hero-headline .cs-animate-word',
+        { x: -120, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.slow,
+          stagger: 0.075,
+          ease: 'back.inOut',
           scrollTrigger: {
             scroller,
             trigger: '.hero-headline',
             start: 'top 80%',
           }
-        })
-      }
+        }
+      )
 
       // Hero: Background number parallax
       gsap.to('.hero-number', {
@@ -73,48 +66,17 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       })
 
-      // Hero: Image parallax with scale
-      gsap.fromTo('.hero-image img',
-        { yPercent: 30, scale: 1.1 },
-        {
-          yPercent: -30,
-          scale: 1,
-          ease: 'none',
-          scrollTrigger: {
-            scroller,
-            trigger: '.hero-image',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          }
-        }
-      )
-
       // Company: Gentle fade in
-      gsap.from('.company-section', {
-        y: 40,
-        opacity: 0,
-        duration: ANIMATION.duration.slow,
-        scrollTrigger: {
-          scroller,
-          trigger: '.company-section',
-          start: ANIMATION.scroll.start75,
-        }
-      })
-
-      // Role: Image parallax
-      gsap.fromTo('.role-image img',
-        { y: -50, scale: 1.08 },
+      gsap.fromTo('.company-section',
+        { y: 30, opacity: 0 },
         {
-          y: 50,
-          scale: 1,
-          ease: 'none',
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.slow,
           scrollTrigger: {
             scroller,
-            trigger: '.role-image',
-            start: ANIMATION.scroll.startBottom,
-            end: ANIMATION.scroll.endTop,
-            scrub: true,
+            trigger: '.company-section',
+            start: ANIMATION.scroll.start75,
           }
         }
       )
@@ -139,78 +101,117 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         })
       }
 
-      // Challenge: Word-by-word reveal
-      const challengeHeadline = containerRef.current?.querySelector('.challenge-headline')
-      if (challengeHeadline) {
-        const split = new SplitText(challengeHeadline.querySelectorAll('.cs-animate-word'), {
-          type: 'words',
-          wordsClass: 'split-word'
-        })
-
-        gsap.from(split.words, {
-          y: 20,
-          opacity: 0,
-          duration: ANIMATION.duration.fast,
-          stagger: 0.04,
-          scrollTrigger: {
-            scroller,
-            trigger: '.challenge-headline',
-            start: ANIMATION.scroll.start75,
+      // Challenge: Word reveal
+      const challengeWords = containerRef.current?.querySelectorAll('.challenge-headline .cs-animate-word')
+      if (challengeWords?.length) {
+        gsap.fromTo(challengeWords,
+          { x: -10, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: ANIMATION.duration.fast,
+            stagger: 0.02,
+            scrollTrigger: {
+              scroller,
+              trigger: '.challenge-headline',
+              start: ANIMATION.scroll.start75,
+            }
           }
-        })
+        )
       }
 
-      // Challenge: Content scale in
-      gsap.from('.challenge-section p', {
-        scale: 0.97,
-        y: 20,
-        opacity: 0,
-        duration: ANIMATION.duration.slow,
-        stagger: ANIMATION.stagger.slow,
-        ease: ANIMATION.ease.outMedium,
-        scrollTrigger: {
-          scroller,
-          trigger: '.challenge-section',
-          start: ANIMATION.scroll.start75,
-        }
-      })
-
-      // Challenge: Image parallax
-      gsap.fromTo('.challenge-image img',
-        { yPercent: 25 },
+      // Challenge: Problem checklist
+      gsap.fromTo('.problem-block .checklist-item',
+        { y: 20, opacity: 0 },
         {
-          yPercent: -25,
-          ease: 'none',
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.15,
+          ease: ANIMATION.ease.outMedium,
           scrollTrigger: {
             scroller,
-            trigger: '.challenge-image',
-            start: ANIMATION.scroll.startBottom,
-            end: ANIMATION.scroll.endTop,
-            scrub: true,
+            trigger: '.problem-block',
+            start: 'top 75%',
           }
         }
       )
 
-      // Process: Headline character reveal
-      const processHeadline = containerRef.current?.querySelector('.process-headline')
-      if (processHeadline) {
-        const split = new SplitText(processHeadline.querySelectorAll('.cs-animate-word'), {
-          type: 'chars',
-          charsClass: 'split-char'
-        })
-
-        gsap.from(split.chars, {
-          filter: 'blur(6px)',
-          opacity: 0,
-          duration: ANIMATION.duration.normal,
-          stagger: 0.02,
-          ease: ANIMATION.ease.sine,
+      // Challenge: Solution checklist
+      gsap.fromTo('.solution-block .solution-item',
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.15,
+          ease: ANIMATION.ease.outMedium,
           scrollTrigger: {
             scroller,
-            trigger: '.process-headline',
-            start: ANIMATION.scroll.start75,
+            trigger: '.solution-block',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Challenge: Before/After Images
+      gsap.fromTo('.before-after-images .ba-image',
+        { scale: 0.96, opacity: 0, y: 40 },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            scroller,
+            trigger: '.before-after-images',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Stats: Animated numbers (without percentage for Kindbody)
+      const statsNumbers = containerRef.current?.querySelectorAll('.stats-grid .cs-stat-number')
+      statsNumbers?.forEach((stat) => {
+        const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
+        const obj = { value: 0 }
+
+        gsap.to(obj, {
+          value: target,
+          duration: 2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            scroller,
+            trigger: '.stats-grid',
+            start: 'top 75%',
+          },
+          onUpdate: () => {
+            // Format with commas for large numbers (1,800)
+            const formatted = Math.round(obj.value).toLocaleString()
+            stat.textContent = formatted
           }
         })
+      })
+
+      // Process: Headline word reveal
+      const processWords = containerRef.current?.querySelectorAll('.process-headline .cs-animate-word')
+      if (processWords?.length) {
+        gsap.fromTo(processWords,
+          { x: -10, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: ANIMATION.duration.fast,
+            stagger: 0.02,
+            scrollTrigger: {
+              scroller,
+              trigger: '.process-headline',
+              start: ANIMATION.scroll.start75,
+            }
+          }
+        )
       }
 
       // Process Step 1: Image from left, text stagger
@@ -301,23 +302,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       })
 
-      // Lab Image: Parallax with scale
-      gsap.fromTo('.lab-image img',
-        { yPercent: 25, scale: 1.08 },
-        {
-          yPercent: -25,
-          scale: 1,
-          ease: 'none',
-          scrollTrigger: {
-            scroller,
-            trigger: '.lab-image',
-            start: ANIMATION.scroll.startBottom,
-            end: ANIMATION.scroll.endTop,
-            scrub: true,
-          }
-        }
-      )
-
       // Takeaway: Gentle fade in
       gsap.from('.takeaway-section', {
         y: 40,
@@ -331,91 +315,19 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       })
 
       // Closing: Fade in
-      gsap.from('.closing-section', {
-        y: 20,
-        opacity: 0,
-        duration: ANIMATION.duration.medium,
-        scrollTrigger: {
-          scroller,
-          trigger: '.closing-section',
-          start: 'top 75%',
-        }
-      })
-
-      // Problem checklist: Animated items appear one by one
-      gsap.fromTo('.problem-block .checklist-item',
-        { y: 20, opacity: 0 },
+      gsap.fromTo('.closing-section',
+        { y: 30, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.5,
-          stagger: 0.15,
-          ease: ANIMATION.ease.outMedium,
+          duration: ANIMATION.duration.slow,
           scrollTrigger: {
             scroller,
-            trigger: '.problem-block',
-            start: 'top 75%',
+            trigger: '.closing-section',
+            start: ANIMATION.scroll.start75,
           }
         }
       )
-
-      // Solution checklist: Animated items appear one by one
-      gsap.fromTo('.solution-block .solution-item',
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.15,
-          ease: ANIMATION.ease.outMedium,
-          scrollTrigger: {
-            scroller,
-            trigger: '.solution-block',
-            start: 'top 75%',
-          }
-        }
-      )
-
-      // Before/After Images: Scale and fade in with stagger
-      gsap.fromTo('.before-after-images .ba-image',
-        { scale: 0.96, opacity: 0, y: 40 },
-        {
-          scale: 1,
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: 'power2.out',
-          scrollTrigger: {
-            scroller,
-            trigger: '.before-after-images',
-            start: 'top 75%',
-          }
-        }
-      )
-
-      // Stats: Animated numbers (without percentage for Kindbody)
-      const statsNumbers = containerRef.current?.querySelectorAll('.stats-grid .cs-stat-number')
-      statsNumbers?.forEach((stat) => {
-        const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
-        const obj = { value: 0 }
-
-        gsap.to(obj, {
-          value: target,
-          duration: 2,
-          ease: 'power2.out',
-          scrollTrigger: {
-            scroller,
-            trigger: '.stats-grid',
-            start: 'top 75%',
-          },
-          onUpdate: () => {
-            // Format with commas for large numbers (1,800)
-            const formatted = Math.round(obj.value).toLocaleString()
-            stat.textContent = formatted
-          }
-        })
-      })
 
     }, containerRef)
 
@@ -423,7 +335,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
   }, [])
 
   return (
-    <div ref={containerRef} className="cs-kindbody min-h-screen relative overflow-x-hidden">
+    <div ref={containerRef} className="cs-kindbody min-h-screen relative">
 
       {/* Hero Section */}
       <section className="min-h-screen flex items-center relative overflow-hidden px-6 md:px-12">
@@ -477,13 +389,13 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Hero Visual */}
-      <section className="hero-image relative h-[70vh] overflow-hidden px-6 md:px-12 mb-32">
+      <section className="relative h-[70vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
             src="https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1920&q=80"
             alt="Modern medical laboratory environment"
             fill
-            className="object-cover will-change-transform"
+            className="object-cover"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
@@ -509,8 +421,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Section 1: Building Trust */}
-      <section className="role-section cs-section relative overflow-hidden">
-        <div className="max-w-7xl mx-auto min-h-screen grid lg:grid-cols-2 gap-8 items-center px-6 md:px-12">
+      <section className="role-section cs-section relative h-screen">
+        <div className="h-full grid lg:grid-cols-2 gap-4">
           {/* Left column - Text */}
           <div className="flex flex-col justify-center space-y-12">
             <div className="space-y-6">
@@ -532,7 +444,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
 
           {/* Right column - Image */}
-          <div className="role-image h-[60vh] lg:h-[80vh] relative">
+          <div className="h-100vh relative">
             <Image
               src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80"
               alt="Healthcare professional working on digital tools"
@@ -674,14 +586,14 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
           </div>
 
-          <div className="challenge-image cs-image-wide mt-16">
+          <div className="cs-image-wide mt-16">
             <Image
               src="https://images.unsplash.com/photo-1583911860205-72f8ac8ddcbe?w=1920&q=80"
               alt="Scientific precision - embryology lab work"
-              fill
-              className="object-cover will-change-transform"
+              width={1600}
+              height={900}
+              className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/20 to-transparent" />
           </div>
         </div>
       </section>
@@ -780,13 +692,13 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
       </section>
 
       {/* Full-Width Lab Image */}
-      <section className="lab-image relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
+      <section className="relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
         <div className="max-w-7xl mx-auto h-full cs-image-container">
           <Image
             src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1920&q=80"
             alt="Medical laboratory precision work"
             fill
-            className="object-cover will-change-transform"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
             <div className="text-center space-y-6 px-8">
