@@ -721,7 +721,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
             <div className="text-center space-y-6 px-8">
               <div className="text-[clamp(4rem,12vw,10rem)] font-extralight text-amber-300 leading-none">
-                1.8B
+                $1.8B
               </div>
               <p className="text-xl md:text-2xl font-light text-foreground max-w-2xl mx-auto">
                 Peak valuation. 20+ clinics. Thousands of patients. <br></br> One design system.
