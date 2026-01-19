@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 
@@ -15,12 +15,13 @@ interface LoaderProps {
  */
 export function Loader({ progress, onComplete }: LoaderProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const percentRef = useRef<HTMLSpanElement>(null)
+  const percentRef = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
   const labelRef = useRef<HTMLDivElement>(null)
   const subtextRef = useRef<HTMLDivElement>(null)
+  const [displayProgress, setDisplayProgress] = useState(0)
 
-  // Animate progress bar
+  // Animate progress bar and counter
   useEffect(() => {
     if (progressBarRef.current) {
       gsap.to(progressBarRef.current, {
@@ -29,7 +30,18 @@ export function Loader({ progress, onComplete }: LoaderProps) {
         ease: 'power2.out',
       })
     }
-  }, [progress])
+
+    // Animate the counter with GSAP
+    const counter = { value: displayProgress }
+    gsap.to(counter, {
+      value: progress,
+      duration: 0.3,
+      ease: 'power2.out',
+      onUpdate: () => {
+        setDisplayProgress(Math.round(counter.value))
+      }
+    })
+  }, [progress, displayProgress])
 
   // Entrance animation
   useGSAP(() => {
@@ -156,15 +168,15 @@ export function Loader({ progress, onComplete }: LoaderProps) {
         </div>
 
         {/* Large Percentage Display */}
-        <div className="relative">
-          <span
+        <div className="relative overflow-hidden px-8 py-4">
+          <div
             ref={percentRef}
-            className="text-[clamp(4rem,12vw,8rem)] font-extralight leading-none tracking-tight text-black"
+            className="text-[clamp(4rem,12vw,8rem)] font-extralight leading-none tracking-tight text-black inline-flex items-baseline tabular-nums"
             style={{ fontFamily: 'var(--font-instrument-serif)' }}
           >
-            {progress}
+            {displayProgress}
             <span className="ml-4 text-[0.4em] opacity-50">%</span>
-          </span>
+          </div>
         </div>
 
         {/* Progress Bar */}

@@ -9,6 +9,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { Check, X } from 'lucide-react'
+import { CaseStudyTestimonial } from './CaseStudyTestimonial'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -289,6 +290,21 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       })
 
+      // Testimonial: Gentle fade in
+      gsap.fromTo('.testimonial-section',
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.slow,
+          scrollTrigger: {
+            scroller,
+            trigger: '.testimonial-section',
+            start: ANIMATION.scroll.start75,
+          }
+        }
+      )
+
       // Impact Quote: Soft scale in
       gsap.from('.impact-quote', {
         scale: 0.95,
@@ -454,6 +470,16 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
         </div>
       </section>
+
+      {/* Testimonial */}
+      <CaseStudyTestimonial
+        quote="The collaboration was transformative. The team combined deep business understanding with thoughtful design execution. Their work helped modernize our patient portal while improving efficiency and supporting new EMR workflows."
+        avatarUrl="/img/kindbody/viet-tran-avatar.png"
+        name="Viet Tran"
+        title="Product Manager"
+        company="Kindbody"
+        accentColor="yellow-300"
+      />
 
       {/* The Challenge */}
       <section className="challenge-section cs-section">
@@ -697,7 +723,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
               <div className="text-[clamp(4rem,12vw,10rem)] font-extralight text-amber-300 leading-none">
                 1.8B
               </div>
-              <p className="text-xl md:text-2xl font-light text-foreground/70 max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl font-light text-foreground max-w-2xl mx-auto">
                 Peak valuation. 20+ clinics. Thousands of patients. <br></br> One design system.
               </p>
             </div>
@@ -712,7 +738,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             <div className="cs-divider-accent"></div>
             <div className="cs-eyebrow">Lesson</div>
           </div>
-          <div className="md:col-span-10 space-y-12">
+          <div className="md:col-span-10 space-y-12 pb-24">
             <h2 className="cs-section-headline">
               The<br/>Takeaway
             </h2>
@@ -720,21 +746,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
               This wasn't about clever UI patterns. It was about earning trust from people where mistakes have real consequences. The best design work happens when you shut up and learn someone else's language first.
             </blockquote>
           </div>
-        </div>
-      </section>
-
-      {/* Closing */}
-      <section className="closing-section cs-section">
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          <div className="cs-divider-vertical"></div>
-          <div className="inline-flex items-center gap-4 text-xs uppercase tracking-widest text-foreground/30">
-            <span>Lead Product Designer</span>
-            <span className="w-1 h-1 rounded-full bg-foreground/30" />
-            <span>2023–2025</span>
-            <span className="w-1 h-1 rounded-full bg-foreground/30" />
-            <span>Kindbody</span>
-          </div>
-          <div className="cs-divider-vertical"></div>
         </div>
       </section>
 

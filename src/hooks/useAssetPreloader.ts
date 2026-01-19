@@ -72,6 +72,27 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
               // Ignore parsing errors
             }
           }
+
+          // Hardcoded case study images (for Kindbody and other case studies with /img/ paths)
+          // TODO: Eventually move these to database, but preload them for now
+          if (project.slug === 'kindbody') {
+            const kindbodyImages = [
+              '/img/kindbody/kb-desktop1.webp',
+              '/img/kindbody/dashboard1.webp',
+              '/img/kindbody/kb-app2.webp',
+              '/img/kindbody/truck.webp',
+              '/img/kindbody/app1.webp',
+              '/img/kindbody/pills.webp',
+              '/img/kindbody/kindbodyclinic.webp',
+              '/img/kindbody/viet-tran-avatar.png',
+            ]
+            imageUrls.push(...kindbodyImages)
+          }
+
+          // Add more case studies here as needed
+          // if (project.slug === 'another-project') {
+          //   imageUrls.push('/img/another-project/image.webp')
+          // }
         })
 
         if (cancelled) return
