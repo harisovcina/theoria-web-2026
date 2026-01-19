@@ -55,12 +55,18 @@ export default async function AboutPage() {
       {/* Contact Section */}
       <section className="container max-w-6xl mx-auto px-8 py-16">
         <div className="border-t border-border/30 pt-16">
-          <a
-            href="mailto:info@theoria.co"
-            className="text-2xl md:text-3xl font-light hover:text-foreground/70 transition-colors opacity-0 animate-fade-in-up animation-delay-600"
-          >
-            info@theoria.co
-          </a>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <a
+              href="mailto:info@theoria.co"
+              className="text-2xl md:text-3xl font-light hover:text-foreground/70 transition-colors opacity-0 animate-fade-in-up animation-delay-600"
+            >
+              info@theoria.co
+            </a>
+            <div className="text-xs font-mono uppercase tracking-widest text-foreground/40 opacity-0 animate-fade-in-up animation-delay-700">
+              43°51′44″N 18°23′21″E<br />
+              ELEVATION: 500M
+            </div>
+          </div>
         </div>
       </section>
     </main>
