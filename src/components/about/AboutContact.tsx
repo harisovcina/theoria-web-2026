@@ -49,6 +49,7 @@ export function AboutContact() {
       let hoverTl: gsap.core.Timeline | null = null
 
       emailRef.current?.addEventListener('mouseenter', () => {
+        if (!chars) return
         if (hoverTl) hoverTl.kill()
         hoverTl = gsap.timeline()
 

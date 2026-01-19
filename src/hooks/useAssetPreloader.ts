@@ -75,7 +75,7 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
 
           // Hardcoded case study images (for Kindbody and other case studies with /img/ paths)
           // TODO: Eventually move these to database, but preload them for now
-          if (project.slug === 'kindbody') {
+          if (project.caseStudySlug === 'kindbody') {
             const kindbodyImages = [
               '/img/kindbody/kb-desktop1.webp',
               '/img/kindbody/dashboard1.webp',

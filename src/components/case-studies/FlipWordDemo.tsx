@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
-import { Flip } from "gsap/Flip"
+import { Flip } from "gsap/dist/Flip"
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
