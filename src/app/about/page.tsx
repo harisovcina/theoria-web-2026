@@ -63,8 +63,8 @@ export default async function AboutPage() {
               info@theoria.co
             </a>
             <div className="text-xs font-mono uppercase tracking-widest text-foreground/40 opacity-0 animate-fade-in-up animation-delay-700">
-              43°51′44″N 18°23′21″E<br />
-              ELEVATION: 500M
+              43°49′39″N 18°20′55″E<br />
+              ELEVATION: 541m
             </div>
           </div>
         </div>
