@@ -45,6 +45,34 @@ export function HomePage({ projects }: HomePageProps) {
   useGSAP(() => {
     if (!overlayRef.current || !maskShapeRef.current || !assetsLoaded) return
 
+    // Mobile optimization: Skip fancy animations, show content immediately
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+    if (isMobile) {
+      // Fast mobile reveal for better LCP
+      setShowLoader(false)
+      gsap.to(overlayRef.current, {
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      })
+
+      if (mainTitleRef.current) {
+        gsap.fromTo(mainTitleRef.current,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            delay: 0.2
+          }
+        )
+      }
+      return
+    }
+
+    // Desktop: Full animation experience
     const tl = gsap.timeline()
 
     // Set initial state - very wide, short rounded rectangle (pill shape)

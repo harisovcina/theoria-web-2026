@@ -38,6 +38,9 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
 
     const preloadAssets = async () => {
       try {
+        // Mobile optimization: Check if mobile for faster loading
+        const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
         // Step 1: Wait for DOM to be interactive (10%)
         if (document.readyState === 'loading') {
           await new Promise(resolve => {
@@ -61,6 +64,12 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
             imageUrls.push(project.deviceMockup)
           }
 
+          // Mobile: Skip case study images for faster LCP, only load visible content
+          if (isMobile) {
+            return // Don't preload case study images on mobile
+          }
+
+          // Desktop: Load all case study images
           // Case study images (if they exist in JSON format)
           if (project.caseStudyImages) {
             try {
