@@ -1,0 +1,47 @@
+{
+  "redirects": [
+    {
+      "source": "/:path((?!_next|api|static|favicon.ico|robots.txt|sitemap.xml).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.theoria.co"
+        }
+      ],
+      "destination": "https://theoria.co/:path*",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/img/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

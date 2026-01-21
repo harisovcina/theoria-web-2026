@@ -16,6 +16,9 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://theoria.co'),
+  alternates: {
+    canonical: 'https://theoria.co',
+  },
   title: {
     default: "theoria — Product Design Studio in Sarajevo",
     template: "%s | theoria"
