@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/admin/'],
       },
     ],
-    sitemap: 'https://theoria.co/sitemap.xml',
+    sitemap: 'https://www.theoria.co/sitemap.xml',
   }
 }
