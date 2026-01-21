@@ -8,8 +8,8 @@ export function StructuredData() {
     "@context": "https://schema.org",
     "@type": "DesignAgency",
     "name": "theoria",
-    "url": "https://theoria.co",
-    "logo": "https://theoria.co/logo.svg",
+    "url": "https://www.theoria.co",
+    "logo": "https://www.theoria.co/logo.svg",
     "description": "World-class UX design studio based in Sarajevo. We turn complex products into simple, intuitive interfaces.",
     "address": {
       "@type": "PostalAddress",
@@ -37,7 +37,7 @@ export function StructuredData() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "theoria",
-    "url": "https://theoria.co",
+    "url": "https://www.theoria.co",
     "description": "World-class UX design studio based in Sarajevo",
     "publisher": {
       "@type": "Organization",

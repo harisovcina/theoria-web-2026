@@ -15,9 +15,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://theoria.co'),
+  metadataBase: new URL('https://www.theoria.co'),
   alternates: {
-    canonical: 'https://theoria.co',
+    canonical: 'https://www.theoria.co',
   },
   title: {
     default: "theoria — Product Design Studio in Sarajevo",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "theoria — Product Design Studio in Sarajevo",
     description: "World-class UX design studio based in Sarajevo. We turn complex products into simple, intuitive interfaces.",
-    url: "https://theoria.co",
+    url: "https://www.theoria.co",
     siteName: "theoria",
     locale: "en_US",
     type: "website",
