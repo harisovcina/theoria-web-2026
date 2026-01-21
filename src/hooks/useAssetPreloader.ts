@@ -142,28 +142,9 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
         if (cancelled) return
         setProgress(70)
 
-        // Step 4: Preload background video (75%)
-        const videoElement = document.querySelector('video[src*="background-video"]') as HTMLVideoElement
-        if (videoElement) {
-          await new Promise<void>((resolve) => {
-            if (videoElement.readyState >= 3) {
-              // HAVE_FUTURE_DATA or better
-              resolve()
-            } else {
-              const onCanPlay = () => {
-                videoElement.removeEventListener('canplay', onCanPlay)
-                resolve()
-              }
-              videoElement.addEventListener('canplay', onCanPlay)
-              // Timeout after 3 seconds to not block forever
-              setTimeout(() => {
-                videoElement.removeEventListener('canplay', onCanPlay)
-                resolve()
-              }, 3000)
-            }
-          })
-        }
-        if (cancelled) return
+        // Step 4: Skip video preloading for better LCP
+        // Video will load in background, doesn't block initial render
+        // This improves Largest Contentful Paint significantly
         setProgress(75)
 
         // Step 5: Wait for fonts to load (85%)
@@ -173,17 +154,13 @@ export function useAssetPreloader({ projects, enabled = true }: UseAssetPreloade
         if (cancelled) return
         setProgress(85)
 
-        // Step 6: Wait for window load event (95%)
-        if (document.readyState !== 'complete') {
-          await new Promise(resolve => {
-            window.addEventListener('load', resolve, { once: true })
-          })
-        }
+        // Step 6: Skip waiting for full window load for better LCP
+        // Images are already loaded, don't need to wait for everything else
         if (cancelled) return
         setProgress(95)
 
-        // Step 7: Small buffer to ensure everything is painted (100%)
-        await new Promise(resolve => setTimeout(resolve, 100))
+        // Step 7: Minimal buffer for smooth transition (100%)
+        await new Promise(resolve => setTimeout(resolve, 50))
         if (cancelled) return
         setProgress(100)
 

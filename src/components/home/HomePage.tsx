@@ -131,6 +131,7 @@ export function HomePage({ projects }: HomePageProps) {
           loop
           muted
           playsInline
+          preload="none"
           className="w-full h-full object-cover"
         >
           <source src="/background-video.webm" type="video/webm" />
