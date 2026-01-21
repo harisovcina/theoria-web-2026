@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import { Instrument_Serif } from "next/font/google";
 import { Providers } from "@/components/providers/Providers";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 const instrumentSerif = Instrument_Serif({
   weight: ["400"],
@@ -94,6 +95,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <StructuredData />
+        <GoogleAnalytics />
       </head>
       <body className={`font-sans ${instrumentSerif.variable}`} suppressHydrationWarning>
         <Providers>
