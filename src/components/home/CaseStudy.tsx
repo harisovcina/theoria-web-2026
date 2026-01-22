@@ -32,6 +32,147 @@ interface CaseStudyProps {
   onClose: () => void
 }
 
+function ComingSoonState({ project }: { project: Project }) {
+  const orb1Ref = useRef<HTMLDivElement>(null)
+  const orb2Ref = useRef<HTMLDivElement>(null)
+  const orb3Ref = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const badgeRef = useRef<HTMLDivElement>(null)
+  const dotRef = useRef<HTMLDivElement>(null)
+
+  // Floating orbs animation
+  useGSAP(() => {
+    if (!orb1Ref.current || !orb2Ref.current || !orb3Ref.current) return
+
+    // Orb 1 - Slow drift
+    gsap.to(orb1Ref.current, {
+      x: 40,
+      y: -60,
+      scale: 1.2,
+      duration: 6,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    })
+
+    // Orb 2 - Medium drift
+    gsap.to(orb2Ref.current, {
+      x: -50,
+      y: 40,
+      scale: 0.8,
+      duration: 8,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    })
+
+    // Orb 3 - Fast drift
+    gsap.to(orb3Ref.current, {
+      x: 30,
+      y: 50,
+      scale: 1.1,
+      duration: 7,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    })
+  }, [])
+
+  // Staggered entrance animation
+  useGSAP(() => {
+    const elements = [badgeRef.current, titleRef.current, subtitleRef.current]
+
+    gsap.fromTo(
+      elements,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        stagger: 0.2,
+        ease: "back.out(1.2)",
+      }
+    )
+  }, [])
+
+  // Pulsating dot animation (from MenuDock)
+  useGSAP(() => {
+    if (!dotRef.current) return
+
+    gsap.to(dotRef.current, {
+      scale: 1.4,
+      opacity: 1,
+      duration: 0.8,
+      ease: "back.inOut",
+      repeat: -1,
+      yoyo: true,
+    })
+  }, [])
+
+  return (
+    <div
+      className="relative flex items-start justify-center min-h-screen overflow-hidden py-64 bg-background"
+      style={{
+        backgroundImage: `radial-gradient(circle, hsl(var(--foreground) / 0.08) 1px, transparent 1px)`,
+        backgroundSize: '24px 24px',
+      }}
+    >
+      {/* Animated gradient background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[100px]" />
+      </div>
+
+      {/* Floating orbs */}
+      <div
+        ref={orb1Ref}
+        className="absolute top-1/4 left-1/3 w-32 h-32 bg-violet-500/10 rounded-full blur-xl"
+      />
+      <div
+        ref={orb2Ref}
+        className="absolute bottom-1/3 right-1/4 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl"
+      />
+      <div
+        ref={orb3Ref}
+        className="absolute top-1/2 right-1/3 w-28 h-28 bg-violet-500/5 rounded-full blur-xl"
+      />
+
+      {/* Main content */}
+      <div className="relative z-10 text-center max-w-3xl px-8">
+        {/* Badge */}
+        <div ref={badgeRef} className="flex justify-center mb-12">
+          <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-background backdrop-blur-custom border border-foreground/10">
+            <div ref={dotRef} className="w-2 h-2 rounded-full bg-violet-500" />
+            <span className="text-xs font-mono uppercase tracking-widest text-violet-400">
+              In Progress
+            </span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <h2
+          ref={titleRef}
+          className="text-6xl md:text-7xl lg:text-8xl font-serif font-light tracking-tight leading-none mb-8"
+        >
+          Coming Soon
+        </h2>
+
+        {/* Subtitle */}
+        <p
+          ref={subtitleRef}
+          className="text-sm md:text-base font-extralight text-foreground leading-relaxed"
+        >
+          We're crafting a detailed case study for{" "}
+          <span className="text-foreground font-semibold">{project.name}</span>.
+          <br />
+          Check back soon to explore the full story.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -221,14 +362,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
     }
 
     // Priority 3: Coming soon state
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4">
-          <h3 className="text-2xl font-light text-foreground/60">Coming Soon</h3>
-          <p className="text-foreground/40">This case study is currently being prepared.</p>
-        </div>
-      </div>
-    )
+    return <ComingSoonState project={project} />
   }
 
   return (

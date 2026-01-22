@@ -232,8 +232,7 @@ export function MenuDock({ onMenuClick, isMenuOpen, isCaseStudy = false, onBackC
                         "bg-background/10 backdrop-blur-custom border border-foreground/5",
                         "transition-[background-color,color,border-color,box-shadow,opacity] duration-200 ease-out",
                         "hover:bg-foreground hover:text-background hover:border-foreground hover:shadow-md",
-                        "text-left pointer-events-auto",
-                        project.comingSoon && "opacity-40 hover:opacity-50"
+                        "text-left pointer-events-auto"
                       )}
                       onMouseEnter={() => handleProjectMouseEnter(project)}
                       onMouseLeave={handleProjectMouseLeave}
