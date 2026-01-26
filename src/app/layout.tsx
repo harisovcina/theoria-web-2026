@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/img/og-image.jpg",
+        url: "https://www.theoria.co/img/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "theoria — Product Design Studio"
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "theoria — Product Design Studio in Sarajevo",
     description: "World-class UX design studio based in Sarajevo. We turn complex products into simple, intuitive interfaces.",
-    images: ["/img/og-image.jpg"],
+    images: ["https://www.theoria.co/img/og-image.jpg"],
   },
   robots: {
     index: true,
