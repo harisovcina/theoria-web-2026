@@ -9,6 +9,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { Check, X } from 'lucide-react'
+import { CaseStudyTestimonial } from './CaseStudyTestimonial'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -16,30 +17,36 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Sematext Case Study
+ * Sematext Case Study - Redesigned with narrative context
  * Technical, refined aesthetic with light blue accents
- * Emphasis on data, observability, and systematic design
- *
- * ✅ Refactored to use GSAP context pattern with CSS selectors
- * - Reduced from 17 refs to 1 containerRef
- * - All animations consolidated into single useGSAP block
- * - Uses CSS class selectors for targeting elements
  */
 
 export function CaseStudySematext({ project }: CaseStudyProps) {
-  // Parse case study images from database (Vercel Blob URLs)
   const images = project.caseStudyImages ? JSON.parse(project.caseStudyImages) : []
-
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Consolidated GSAP animations using context pattern
   useGSAP(() => {
     if (!containerRef.current) return
 
     const ctx = gsap.context(() => {
       const scroller = containerRef.current?.closest('.overflow-y-auto') as HTMLElement
 
-      // Hero: Character reveal on "running" - sliding from left
+      // Landscape section: fade in
+      gsap.fromTo('.landscape-section',
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.slow,
+          scrollTrigger: {
+            scroller,
+            trigger: '.landscape-section',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Hero: Word reveal on "running"
       gsap.fromTo('.hero-headline .cs-animate-word',
         { x: -120, opacity: 0 },
         {
@@ -47,7 +54,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           opacity: 1,
           duration: ANIMATION.duration.slow,
           stagger: 0.075,
-          ease: 'back.inOut',
+          ease: 'back.out(1.7)',
           scrollTrigger: {
             scroller,
             trigger: '.hero-headline',
@@ -70,8 +77,8 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       })
 
-      // Intro: Gentle fade in
-      gsap.fromTo('.section-intro',
+      // Challenge section: fade in
+      gsap.fromTo('.challenge-intro',
         { y: 30, opacity: 0 },
         {
           y: 0,
@@ -79,7 +86,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           duration: ANIMATION.duration.slow,
           scrollTrigger: {
             scroller,
-            trigger: '.section-intro',
+            trigger: '.challenge-intro',
             start: ANIMATION.scroll.start75,
           }
         }
@@ -99,7 +106,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       })
 
-      // Section 1: ScrambleText animation for "evolves"
+      // Section 1: ScrambleText animation
       const section1Scramble = containerRef.current?.querySelector('.section1-scramble')
       if (section1Scramble) {
         gsap.to(section1Scramble, {
@@ -138,7 +145,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         )
       }
 
-      // Section 2: Animated problem checklist
+      // Animated problem checklist
       gsap.fromTo('.problem-block .checklist-item',
         { y: 20, opacity: 0 },
         {
@@ -155,7 +162,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       )
 
-      // Section 2: Animated solution checklist
+      // Animated solution checklist
       gsap.fromTo('.solution-block .solution-item',
         { y: 20, opacity: 0 },
         {
@@ -172,7 +179,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       )
 
-      // Section 2: Before/After Images
+      // Before/After Images
       gsap.fromTo('.before-after-images .ba-image',
         { scale: 0.96, opacity: 0, y: 40 },
         {
@@ -190,9 +197,9 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       )
 
-      // Section 2: Animated stat numbers
-      const section2Stats = containerRef.current?.querySelectorAll('.section2-stats .cs-stat-number')
-      section2Stats?.forEach((stat) => {
+      // Animated stat numbers
+      const statsNumbers = containerRef.current?.querySelectorAll('.stats-section .cs-stat-number')
+      statsNumbers?.forEach((stat) => {
         const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
         const obj = { value: 0 }
 
@@ -202,7 +209,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           ease: 'power2.out',
           scrollTrigger: {
             scroller,
-            trigger: '.section2-stats',
+            trigger: '.stats-section',
             start: 'top 75%',
           },
           onUpdate: () => {
@@ -263,7 +270,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         }
       )
 
-      // Section 3: Animated stat numbers
+      // Section 3 stats
       const section3Stats = containerRef.current?.querySelectorAll('.section3-stats .cs-stat-number')
       section3Stats?.forEach((stat) => {
         const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
@@ -283,37 +290,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
           }
         })
       })
-
-      // Section 3: Fluid word animation
-      const fluidWord = containerRef.current?.querySelector('.fluid-word')
-      if (fluidWord) {
-        gsap.to(fluidWord, {
-          y: -12,
-          duration: 1.6,
-          ease: "power2.inOut",
-          yoyo: true,
-          repeat: -1,
-        })
-      }
-
-      // Section 4: Word reveal
-      const section4Words = containerRef.current?.querySelectorAll('.section4-headline .cs-animate-word')
-      if (section4Words?.length) {
-        gsap.fromTo(section4Words,
-          { x: -10, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: ANIMATION.duration.fast,
-            stagger: 0.02,
-            scrollTrigger: {
-              scroller,
-              trigger: '.section4-headline',
-              start: ANIMATION.scroll.start75,
-            }
-          }
-        )
-      }
 
       // Gallery: Staggered image reveal
       gsap.fromTo('.gallery-section .cs-gallery-item',
@@ -369,9 +345,9 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
   return (
     <div ref={containerRef} className="cs-sematext min-h-screen relative">
 
+
       {/* Hero Section */}
       <section className="min-h-screen flex items-center relative overflow-hidden px-6 md:px-12">
-        {/* Background number */}
         <div
           className="hero-number absolute top-0 right-0 text-[clamp(15rem,35vw,30rem)] font-extralight leading-none text-sky-400/[0.02] select-none pointer-events-none"
           style={{ letterSpacing: '-0.05em' }}
@@ -417,29 +393,53 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* Intro */}
-      <section className="section-intro cs-section">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16">
+      {/* Who are Sematext? */}
+      <section className="landscape-section cs-section">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
           <div className="md:col-span-2 space-y-6">
             <div className="cs-divider-accent"></div>
-            <div className="cs-eyebrow">Overview</div>
+            <div className="cs-eyebrow">Context</div>
+          </div>
+          <div className="md:col-span-10">
+            <p className="cs-intro-text">
+              Sematext Cloud competes with Datadog, New Relic, and Splunk, offering full-stack observability without the enterprise bloat. When your platform monitors the infrastructure that keeps the internet running, <span className="text-sky-400">"good enough" UI isn't an option.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial - Costas */}
+      <CaseStudyTestimonial
+        quote="Working with this team felt less like hiring an agency and more like gaining a product design partner. They challenged our assumptions, pushed us to think bigger, and delivered work that our engineering team could actually build with."
+        avatarUrl="/img/sematext/costas-avatar.jpg"
+        name="Costas Pipilas"
+        title="Senior Product Manager"
+        company="Sematext"
+        accentColor="sky-400"
+      />
+
+      {/* The Brief */}
+      <section className="challenge-intro cs-section">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-2 space-y-6">
+            <div className="cs-divider-accent"></div>
+            <div className="cs-eyebrow">The Brief</div>
           </div>
           <div className="md:col-span-7">
             <p className="cs-intro-text">
-              Sematext helps engineering teams monitor everything: logs, infrastructure, traces, synthetics.
-              Trusted by ASOS, WebMD, MIT.
+              Make observability <span className="text-sky-400">less overwhelming</span> for teams who don't have dedicated DevOps engineers.
             </p>
           </div>
-          <div className="md:col-span-3 text-base font-light text-foreground/80 leading-relaxed">
-            <p>Since then: two complete platform redesigns, a design system built from scratch, and dozens of shipped features.</p>
+          <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
+            <p>What began as a design system project evolved into two platform redesigns, dozens of features, and an ongoing partnership.</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">2021 — Ongoing</p>
           </div>
         </div>
       </section>
 
       {/* Section 1: Design System */}
       <section className="cs-section relative h-screen">
-        <div className="h-full grid lg:grid-cols-2 gap-4">
-          {/* Left column - Text */}
+        <div className="max-w-7xl mx-auto h-full grid lg:grid-cols-2 gap-12">
           <div className="flex flex-col justify-center space-y-12">
             <div className="space-y-6">
               <div className="cs-section-number cs-section-number-accent">
@@ -451,15 +451,14 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             </div>
             <div className="cs-body-text space-y-4">
               <p>
-                Started in 2021 as a way to bring consistency to a rapidly growing product. Not a static Figma library — a living system that adapts to real product needs.
+                Before we could redesign anything, we needed a foundation. The product had grown organically—new features bolted on, inconsistent patterns, no shared component library.
               </p>
               <p>
-                Components are built for dense, data-heavy interfaces where every pixel matters. Information density over whitespace.
+                We built a design system not as a static Figma file, but as a living system that could evolve with the product. Information density over whitespace. Built for power users who live in dashboards.
               </p>
             </div>
           </div>
 
-          {/* Right column - Image */}
           <div className="section1-image h-100vh relative">
             <Image
               src={images[0] || "/img/sematext/designsystem_x2.png"}
@@ -473,7 +472,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       {/* Section 2: Onboarding */}
       <section className="cs-section">
-        <div className="max-w-5xl mx-auto space-y-24">
+        <div className="max-w-7xl mx-auto space-y-24">
           <div className="grid md:grid-cols-12 gap-12">
             <div className="md:col-span-2">
               <div className="cs-section-number cs-section-number-accent">
@@ -485,6 +484,16 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 From checklist<br />
                 to <span className="cs-animate-word inline-block">clarity</span>
               </h2>
+            </div>
+          </div>
+
+          {/* NEW: Why this mattered */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2"></div>
+            <div className="md:col-span-10">
+              <p className="text-lg md:text-xl font-light text-foreground/70 leading-relaxed max-w-2xl">
+                Onboarding is where most observability platforms lose people. The old Sematext onboarding was a checklist of tasks—install agents, configure monitors, watch tutorial videos. Users bounced. Trial conversions suffered. Something had to change.
+              </p>
             </div>
           </div>
 
@@ -500,7 +509,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 Old onboarding felt like homework
               </p>
 
-              {/* Animated Checklist */}
               <div className="space-y-4">
                 <div className="checklist-item flex items-center gap-3">
                   <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
@@ -524,7 +532,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
           {/* Before/After Visual Comparison */}
           <div className="before-after-images grid md:grid-cols-2 gap-6 md:gap-8 my-16">
-            {/* Error state - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
                 src={images[1] || "/img/sematext/onboarding-before.png"}
@@ -532,17 +539,14 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 fill
                 className="object-cover"
               />
-              {/* Error overlay with red tones - enhanced */}
               <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
               <div className="absolute inset-0 bg-red-500/10"></div>
-              {/* Subtle noise texture */}
               <div className="absolute inset-0 opacity-25" style={{
                 backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'3.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
                 backgroundSize: '150px 150px'
               }}></div>
             </div>
 
-            {/* Clean state - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
                 src={images[2] || "/img/sematext/onboarding-after.png"}
@@ -565,7 +569,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 A visual node map of the entire platform
               </p>
 
-              {/* Solution Checklist */}
               <div className="space-y-4">
                 <div className="solution-item flex items-center gap-3">
                   <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
@@ -587,7 +590,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             </div>
           </div>
 
-          <div className="section2-stats cs-stats-grid">
+          <div className="stats-section cs-stats-grid">
             <div className="cs-stat">
               <div className="cs-stat-number cs-stat-number-accent" data-target="75">0</div>
               <div className="cs-stat-label">fewer clicks</div>
@@ -616,7 +619,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       {/* Section 3: App Creation Flow */}
       <section className="cs-section">
-        <div className="max-w-5xl mx-auto space-y-24">
+        <div className="max-w-7xl mx-auto space-y-24">
           <div className="grid md:grid-cols-12 gap-12">
             <div className="md:col-span-2">
               <div className="cs-section-number cs-section-number-accent">
@@ -626,8 +629,18 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
             <div className="md:col-span-10">
               <h2 className="section3-headline cs-section-headline">
                 From fragmented<br />
-                to <span className="fluid-word cs-animate-word inline-block">fluid</span>
+                to <span className="cs-animate-word inline-block">fluid</span>
               </h2>
+            </div>
+          </div>
+
+          {/* NEW: The compounding problem */}
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2"></div>
+            <div className="md:col-span-10">
+              <p className="text-lg md:text-xl font-light text-foreground/70 leading-relaxed max-w-2xl">
+                As Sematext added more monitoring types (logs, infrastructure, synthetics, experience), the app creation flow buckled under its own complexity. What started as a simple 3-step wizard had ballooned into a fragmented experience where users lost context between steps.
+              </p>
             </div>
           </div>
 
@@ -643,7 +656,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 Horizontal stepper broke down under complexity
               </p>
 
-              {/* Animated Checklist */}
               <div className="space-y-4">
                 <div className="checklist-item flex items-center gap-3">
                   <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
@@ -667,7 +679,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
           {/* Before/After Visual Comparison */}
           <div className="section3-before-after grid md:grid-cols-2 gap-6 md:gap-8 my-16">
-            {/* Error state - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
                 src={images[4] || "/img/sematext/app-creation-before.png"}
@@ -675,17 +686,14 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 fill
                 className="object-cover"
               />
-              {/* Error overlay with red tones - enhanced */}
               <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
               <div className="absolute inset-0 bg-red-500/10"></div>
-              {/* Subtle noise texture */}
               <div className="absolute inset-0 opacity-25" style={{
                 backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'3.5\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
                 backgroundSize: '150px 150px'
               }}></div>
             </div>
 
-            {/* Clean state - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
                 src={images[5] || "/img/sematext/app-creation-after1.png"}
@@ -708,7 +716,6 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
                 Vertical timeline that grows with you
               </p>
 
-              {/* Solution Checklist */}
               <div className="space-y-4">
                 <div className="solution-item flex items-center gap-3">
                   <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
@@ -747,22 +754,15 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* Section 4: Testimonial */}
-      <section className="cs-section">
-        <div className="max-w-5xl mx-auto text-center space-y-16">
-          <h2 className="section4-headline cs-section-headline-center">
-            Built for people who <span className="cs-animate-word inline-block text-sky-400">don't have time</span> for downtime
-          </h2>
-
-          <blockquote className="cs-quote">
-            <div className="cs-quote-mark">"</div>
-            <p className="cs-quote-text">
-              The new onboarding finally makes sense. I set up three monitors in the time it used to take to find the right video.
-            </p>
-            <cite className="cs-quote-cite">— Sematext user</cite>
-          </blockquote>
-        </div>
-      </section>
+      {/* Testimonial */}
+      <CaseStudyTestimonial
+        quote="We've worked with many agencies over the years, but what sets this partnership apart is the depth of understanding. They didn't just redesign screens—they learned our users' workflows, understood the technical constraints of observability platforms, and delivered a design system that's been the foundation of our product evolution for five years. The onboarding redesign alone transformed our trial conversion rates. This is what embedded, long-term design partnership looks like."
+        avatarUrl="/img/sematext/otis-avatar.jpeg"
+        name="Otis Gospodnetić"
+        title="Founder and CEO"
+        company="Sematext"
+        accentColor="sky-400"
+      />
 
       {/* Gallery */}
       <section className="gallery-section cs-section">
@@ -784,17 +784,23 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* Closing */}
+      {/* Outro */}
       <section className="closing-section cs-section">
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          <div className="cs-divider-vertical"></div>
-          <h2 className="cs-section-headline-center">
-            5 years.<br/>Still shipping.
-          </h2>
-          <p className="cs-closing-text">
-            Sematext is an ongoing partnership. The product keeps growing, the system keeps evolving, and we keep shipping. No agency handoff. No 'final deliverable.' Just continuous, embedded design.
-          </p>
-          <div className="cs-divider-vertical"></div>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-2 space-y-6">
+              <div className="cs-divider-accent"></div>
+              <div className="cs-eyebrow">Outro</div>
+            </div>
+            <div className="md:col-span-10 space-y-8">
+              <h2 className="text-[clamp(2.5rem,6vw,4rem)] font-extralight leading-[1.1] tracking-tight" style={{ letterSpacing: '-0.03em' }}>
+                5 years. Still shipping.
+              </h2>
+              <p className="text-lg md:text-xl font-light leading-relaxed text-foreground/70 max-w-3xl">
+                Sematext is an ongoing partnership. The product keeps growing, the system keeps evolving, and we keep shipping. No agency handoff. No 'final deliverable.' Just continuous, embedded design.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

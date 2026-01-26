@@ -2,7 +2,11 @@ import { auth, signOut } from "@/auth"
 import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/admin/Sidebar"
 
-const AUTHORIZED_ADMINS = ["haris.ovcina@gmail.com"]
+const AUTHORIZED_ADMINS = [
+  "haris.ovcina@gmail.com",
+  "harisovcina@gmail.com",
+  // Add any other authorized admin emails here
+]
 const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
 
 export default async function AdminLayout({

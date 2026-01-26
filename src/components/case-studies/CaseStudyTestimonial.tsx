@@ -29,7 +29,10 @@ export function CaseStudyTestimonial({
   // Map accent colors to their background equivalents
   const bgColorMap: Record<string, string> = {
     'amber-300': 'bg-amber-400',
+    'yellow-300': 'bg-yellow-300',
+    'orange-400': 'bg-orange-400',
     'blue-300': 'bg-blue-500',
+    'sky-400': 'bg-sky-400',
     'emerald-300': 'bg-emerald-500',
     'purple-300': 'bg-purple-500',
   }
