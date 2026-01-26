@@ -7,16 +7,26 @@ const AUTHORIZED_ADMINS = [
   "harisovcina@gmail.com",
 ]
 const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
-// Temporary emergency password (will be removed once OAuth fixed)
-const EMERGENCY_PASSWORD = process.env.ADMIN_EMERGENCY_PASSWORD
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // SKIP ALL AUTH - EMERGENCY ACCESS
-  // TODO: Fix Google OAuth and re-enable proper auth
+  // Skip auth check if bypassed (for local development only)
+  if (!BYPASS_AUTH_IN_DEV) {
+    const session = await auth()
+
+    // If not signed in at all, redirect to sign in page
+    if (!session?.user?.email) {
+      redirect("/api/auth/signin?callbackUrl=/admin")
+    }
+
+    // If signed in but not authorized, redirect to homepage
+    if (!AUTHORIZED_ADMINS.includes(session.user.email)) {
+      redirect("/")
+    }
+  }
 
   return (
     <div className="flex min-h-screen">
