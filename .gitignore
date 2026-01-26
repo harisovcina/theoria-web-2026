@@ -43,3 +43,5 @@ next-env.d.ts
 /prisma/*.db-journal
 
 /generated/prisma
+.env.check
+cookies.txt
