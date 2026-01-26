@@ -32,7 +32,6 @@ Avoid harsh easings. Use soft, natural curves:
 "power4.out"      // Way too snappy
 "elastic"         // Rarely appropriate
 "bounce"          // Almost never use
-"back"            // Only for playful UI elements
 ```
 
 

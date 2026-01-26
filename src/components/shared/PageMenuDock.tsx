@@ -16,7 +16,7 @@ export function PageMenuDock({ projects = [] }: PageMenuDockProps) {
   const { isModalOpen, openCaseStudy, closeCaseStudy } = useCaseStudy()
 
   const handleProjectClick = (project: Project) => {
-    if (project.comingSoon || !project.caseStudySlug) return
+    // Allow all projects to be clicked - CaseStudy component handles "coming soon" state
     openCaseStudy(project, null)
   }
 

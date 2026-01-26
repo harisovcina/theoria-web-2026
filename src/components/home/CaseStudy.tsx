@@ -222,10 +222,19 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
     // Priority 3: Coming soon state
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4">
-          <h3 className="text-2xl font-light text-foreground/60">Coming Soon</h3>
-          <p className="text-foreground/40">This case study is currently being prepared.</p>
+      <div className="flex items-center justify-center min-h-[60vh] px-6">
+        <div className="text-center space-y-6 max-w-md">
+          <div className="inline-block px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20">
+            <span className="text-xs uppercase tracking-widest text-violet-400 font-medium">
+              Coming Soon
+            </span>
+          </div>
+          <h3 className="text-4xl md:text-5xl font-light text-foreground/80 tracking-tight">
+            In Progress
+          </h3>
+          <p className="text-base md:text-lg text-foreground/50 leading-relaxed">
+            This case study is currently being crafted. Check back soon for the full story.
+          </p>
         </div>
       </div>
     )
