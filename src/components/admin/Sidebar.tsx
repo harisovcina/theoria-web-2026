@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { FolderIcon, UsersIcon, LogOutIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { handleSignOut } from "@/app/actions/auth"
 
 const navItems = [
   {
@@ -55,7 +56,7 @@ export function Sidebar() {
       </nav>
 
       <div className="p-4 border-t border-border">
-        <form action="/api/auth/signout" method="POST">
+        <form action={handleSignOut}>
           <Button
             type="submit"
             variant="ghost"
