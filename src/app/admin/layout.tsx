@@ -13,8 +13,12 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
+  // TEMPORARILY BYPASSED FOR EMERGENCY ACCESS
+  // TODO: Re-enable auth after fixing Google OAuth
+  const EMERGENCY_BYPASS = true
+
   // Skip auth check if bypassed (for local development)
-  if (!BYPASS_AUTH_IN_DEV) {
+  if (!BYPASS_AUTH_IN_DEV && !EMERGENCY_BYPASS) {
     const session = await auth()
 
     // If not signed in at all, redirect to sign in page
