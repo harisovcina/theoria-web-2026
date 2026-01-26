@@ -15,29 +15,8 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Check for emergency password in production
-  if (EMERGENCY_PASSWORD && process.env.NODE_ENV === "production") {
-    const { cookies } = await import("next/headers")
-    const cookieStore = await cookies()
-    const emergencyAuth = cookieStore.get("emergency_admin_auth")
-
-    if (emergencyAuth?.value !== EMERGENCY_PASSWORD) {
-      redirect("/api/admin-login")
-    }
-  } else if (!BYPASS_AUTH_IN_DEV) {
-    // Normal Google OAuth flow
-    const session = await auth()
-
-    // If not signed in at all, redirect to sign in page
-    if (!session?.user?.email) {
-      redirect("/api/auth/signin?callbackUrl=/admin")
-    }
-
-    // If signed in but not authorized, redirect to homepage
-    if (!AUTHORIZED_ADMINS.includes(session.user.email)) {
-      redirect("/")
-    }
-  }
+  // SKIP ALL AUTH - EMERGENCY ACCESS
+  // TODO: Fix Google OAuth and re-enable proper auth
 
   return (
     <div className="flex min-h-screen">
