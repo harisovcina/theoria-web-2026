@@ -7,18 +7,25 @@ const AUTHORIZED_ADMINS = [
   "harisovcina@gmail.com",
 ]
 const BYPASS_AUTH_IN_DEV = process.env.BYPASS_AUTH === "true"
+// Temporary emergency password (will be removed once OAuth fixed)
+const EMERGENCY_PASSWORD = process.env.ADMIN_EMERGENCY_PASSWORD
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // TEMPORARILY BYPASSED FOR EMERGENCY ACCESS
-  // TODO: Re-enable auth after fixing Google OAuth
-  const EMERGENCY_BYPASS = true
+  // Check for emergency password in production
+  if (EMERGENCY_PASSWORD && process.env.NODE_ENV === "production") {
+    const { cookies } = await import("next/headers")
+    const cookieStore = await cookies()
+    const emergencyAuth = cookieStore.get("emergency_admin_auth")
 
-  // Skip auth check if bypassed (for local development)
-  if (!BYPASS_AUTH_IN_DEV && !EMERGENCY_BYPASS) {
+    if (emergencyAuth?.value !== EMERGENCY_PASSWORD) {
+      redirect("/api/admin-login")
+    }
+  } else if (!BYPASS_AUTH_IN_DEV) {
+    // Normal Google OAuth flow
     const session = await auth()
 
     // If not signed in at all, redirect to sign in page
