@@ -29,8 +29,7 @@ export function CaseStudyProvider({ children }: { children: ReactNode }) {
   }, [pathname])
 
   const openCaseStudy = (project: Project, devicePosition?: DOMRect | null) => {
-    if (project.comingSoon || !project.caseStudySlug) return
-
+    // Allow all projects - CaseStudy component handles coming soon state
     setSelectedProject(project)
     setDeviceStartPosition(devicePosition || null)
     setIsModalOpen(true)
