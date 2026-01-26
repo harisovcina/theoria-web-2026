@@ -28,11 +28,16 @@ const CaseStudyKindbody = dynamic(() =>
   import('./CaseStudyKindbody').then(mod => ({ default: mod.CaseStudyKindbody }))
 )
 
+const CaseStudyBimify = dynamic(() =>
+  import('./CaseStudyBimify').then(mod => ({ default: mod.CaseStudyBimify }))
+)
+
 // Map of slug -> lazy-loaded component
 export const caseStudyComponents: Record<string, React.ComponentType<any>> = {
   "example": ExampleCaseStudy,
   "sematext": CaseStudySematext,
   "kindbody": CaseStudyKindbody,
+  "bimify": CaseStudyBimify,
   // Add your custom case studies here:
   // "acme-corp": dynamic(() => import('./CaseStudyAcmeCorp').then(m => ({ default: m.CaseStudyAcmeCorp }))),
   // "tech-startup": dynamic(() => import('./CaseStudyTechStartup').then(m => ({ default: m.CaseStudyTechStartup }))),

@@ -339,3 +339,32 @@
 .cs-kindbody .cs-quote-mark {
   @apply text-amber-300/10;
 }
+
+/* Bimify - Orange Accent */
+.cs-bimify .cs-badge-accent {
+  @apply text-orange-400/60 border-orange-400/20;
+}
+
+.cs-bimify .cs-eyebrow-accent {
+  @apply text-orange-400/50;
+}
+
+.cs-bimify .cs-section-number-accent {
+  @apply text-orange-400/50;
+}
+
+.cs-bimify .cs-stat-number-accent {
+  @apply text-orange-400/80;
+}
+
+.cs-bimify .cs-divider-accent {
+  @apply bg-orange-400/30;
+}
+
+.cs-bimify .cs-divider-vertical {
+  @apply bg-orange-400/20;
+}
+
+.cs-bimify .cs-quote-mark {
+  @apply text-orange-400/10;
+}

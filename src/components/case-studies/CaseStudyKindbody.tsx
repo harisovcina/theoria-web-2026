@@ -17,14 +17,8 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Kindbody Case Study
+ * Kindbody Case Study - Redesigned with narrative context
  * Warm, human-centered healthcare aesthetic with pale yellow accents
- * Emphasis on trust, precision, and compassion
- *
- * ✅ Refactored to use simplified animation pattern from Sematext
- * - Minimal parallax effects
- * - No overlapping scrub triggers
- * - Clean, smooth scrolling behavior
  */
 
 export function CaseStudyKindbody({ project }: CaseStudyProps) {
@@ -36,6 +30,21 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
     const ctx = gsap.context(() => {
       const scroller = containerRef.current?.closest('.overflow-y-auto') as HTMLElement
 
+      // Landscape section: fade in
+      gsap.fromTo('.landscape-section',
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.slow,
+          scrollTrigger: {
+            scroller,
+            trigger: '.landscape-section',
+            start: 'top 75%',
+          }
+        }
+      )
+
       // Hero: Word reveal on "compassion"
       gsap.fromTo('.hero-headline .cs-animate-word',
         { x: -120, opacity: 0 },
@@ -44,7 +53,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           opacity: 1,
           duration: ANIMATION.duration.slow,
           stagger: 0.075,
-          ease: 'back.inOut',
+          ease: 'back.out(1.7)',
           scrollTrigger: {
             scroller,
             trigger: '.hero-headline',
@@ -53,7 +62,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       )
 
-      // Hero: Background number parallax
+      // Hero: Background symbol parallax
       gsap.to('.hero-number', {
         y: 150,
         opacity: 0.03,
@@ -67,8 +76,8 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       })
 
-      // Company: Gentle fade in
-      gsap.fromTo('.company-section',
+      // Origin section: fade in
+      gsap.fromTo('.origin-section',
         { y: 30, opacity: 0 },
         {
           y: 0,
@@ -76,7 +85,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           duration: ANIMATION.duration.slow,
           scrollTrigger: {
             scroller,
-            trigger: '.company-section',
+            trigger: '.origin-section',
             start: ANIMATION.scroll.start75,
           }
         }
@@ -102,24 +111,20 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         })
       }
 
-      // Challenge: Word reveal
-      const challengeWords = containerRef.current?.querySelectorAll('.challenge-headline .cs-animate-word')
-      if (challengeWords?.length) {
-        gsap.fromTo(challengeWords,
-          { x: -10, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: ANIMATION.duration.fast,
-            stagger: 0.02,
-            scrollTrigger: {
-              scroller,
-              trigger: '.challenge-headline',
-              start: ANIMATION.scroll.start75,
-            }
+      // Day in the life: fade in
+      gsap.fromTo('.day-in-life',
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.slow,
+          scrollTrigger: {
+            scroller,
+            trigger: '.day-in-life',
+            start: 'top 75%',
           }
-        )
-      }
+        }
+      )
 
       // Challenge: Problem checklist
       gsap.fromTo('.problem-block .checklist-item',
@@ -173,7 +178,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       )
 
-      // Stats: Animated numbers (without percentage for Kindbody)
+      // Stats: Animated numbers
       const statsNumbers = containerRef.current?.querySelectorAll('.stats-grid .cs-stat-number')
       statsNumbers?.forEach((stat) => {
         const target = parseInt((stat as HTMLElement).getAttribute('data-target') || '0')
@@ -189,123 +194,30 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             start: 'top 75%',
           },
           onUpdate: () => {
-            // Format with commas for large numbers (1,800)
             const formatted = Math.round(obj.value).toLocaleString()
             stat.textContent = formatted
           }
         })
       })
 
-      // Process: Headline word reveal
-      const processWords = containerRef.current?.querySelectorAll('.process-headline .cs-animate-word')
-      if (processWords?.length) {
-        gsap.fromTo(processWords,
-          { x: -10, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: ANIMATION.duration.fast,
-            stagger: 0.02,
-            scrollTrigger: {
-              scroller,
-              trigger: '.process-headline',
-              start: ANIMATION.scroll.start75,
-            }
-          }
-        )
-      }
-
-      // Process Step 1: Image from left, text stagger
-      gsap.from('.process-step1-image', {
-        x: -60,
-        opacity: 0,
-        duration: ANIMATION.duration.slow,
-        ease: ANIMATION.ease.outMedium,
-        scrollTrigger: {
-          scroller,
-          trigger: '.process-step1-image',
-          start: 'top 75%',
-        }
-      })
-      gsap.from('.process-step1-text .cs-text-reveal', {
-        y: 30,
-        opacity: 0,
-        duration: ANIMATION.duration.medium,
-        stagger: ANIMATION.stagger.fast,
-        delay: ANIMATION.delay.short,
-        scrollTrigger: {
-          scroller,
-          trigger: '.process-step1-text',
-          start: 'top 75%',
-        }
-      })
-
-      // Process Step 2: Image from right, text stagger
-      gsap.from('.process-step2-image', {
-        x: 60,
-        opacity: 0,
-        duration: ANIMATION.duration.slow,
-        ease: ANIMATION.ease.outMedium,
-        scrollTrigger: {
-          scroller,
-          trigger: '.process-step2-image',
-          start: 'top 75%',
-        }
-      })
-      gsap.from('.process-step2-text .cs-text-reveal', {
-        y: 30,
-        opacity: 0,
-        duration: ANIMATION.duration.medium,
-        stagger: ANIMATION.stagger.fast,
-        delay: ANIMATION.delay.short,
-        scrollTrigger: {
-          scroller,
-          trigger: '.process-step2-text',
-          start: 'top 75%',
-        }
-      })
-
-      // Process Step 3: Image from left, text stagger
-      gsap.from('.process-step3-image', {
-        x: -60,
-        opacity: 0,
-        duration: ANIMATION.duration.slow,
-        ease: ANIMATION.ease.outMedium,
-        scrollTrigger: {
-          scroller,
-          trigger: '.process-step3-image',
-          start: 'top 75%',
-        }
-      })
-      gsap.from('.process-step3-text .cs-text-reveal', {
-        y: 30,
-        opacity: 0,
-        duration: ANIMATION.duration.medium,
-        stagger: ANIMATION.stagger.fast,
-        delay: ANIMATION.delay.short,
-        scrollTrigger: {
-          scroller,
-          trigger: '.process-step3-text',
-          start: 'top 75%',
-        }
-      })
-
-      // Testimonial: Gentle fade in
-      gsap.fromTo('.testimonial-section',
-        { y: 30, opacity: 0 },
+      // Process steps: stagger animation
+      gsap.fromTo('.process-step',
+        { y: 60, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: ANIMATION.duration.slow,
+          duration: 0.8,
+          stagger: 0.3,
+          ease: 'back.out(1.7)',
           scrollTrigger: {
             scroller,
-            trigger: '.testimonial-section',
-            start: ANIMATION.scroll.start75,
+            trigger: '.process-steps',
+            start: 'top 75%',
           }
         }
       )
 
-      // Impact Quote: Soft scale in
+      // Impact quote: scale in
       gsap.from('.impact-quote', {
         scale: 0.95,
         opacity: 0,
@@ -330,21 +242,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         }
       })
 
-      // Closing: Fade in
-      gsap.fromTo('.closing-section',
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: ANIMATION.duration.slow,
-          scrollTrigger: {
-            scroller,
-            trigger: '.closing-section',
-            start: ANIMATION.scroll.start75,
-          }
-        }
-      )
-
     }, containerRef)
 
     return () => ctx.revert()
@@ -355,7 +252,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
       {/* Hero Section */}
       <section className="min-h-screen flex items-center relative overflow-hidden px-6 md:px-12">
-        {/* Soft background number */}
         <div
           className="hero-number absolute top-0 right-0 text-[clamp(15rem,35vw,30rem)] font-extralight leading-none text-amber-300/[0.06] select-none pointer-events-none"
           style={{ letterSpacing: '-0.05em' }}
@@ -363,15 +259,12 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           ✦
         </div>
 
-        <div className="max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-8 md:gap-12 items-center">
+        <div className="max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-12 items-center">
           <div className="md:col-span-7 space-y-12">
             <div className="space-y-6">
               <div className="flex gap-3">
                 <span className="cs-badge cs-badge-accent">
-                  Healthcare
-                </span>
-                <span className="cs-badge cs-badge-accent">
-                  2023 — 2025
+                  Case Study
                 </span>
               </div>
 
@@ -418,28 +311,53 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* The Company */}
-      <section className="company-section cs-section">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16">
+      {/* Context */}
+      <section className="landscape-section cs-section">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
           <div className="md:col-span-2 space-y-6">
             <div className="cs-divider-accent"></div>
             <div className="cs-eyebrow">Context</div>
           </div>
-          <div className="md:col-span-7">
+          <div className="md:col-span-10">
             <p className="cs-intro-text">
-              Kindbody is a fertility care platform redefining how people build families — 20+ US clinics offering egg freezing, IVF, and genetic testing. At its peak, valued at $1.8 billion.
+              One in six couples face infertility. The journey to parenthood through IVF is clinical, expensive, and emotionally exhausting. The technology supporting this journey? Often stuck in the 1990s. <span className="text-amber-300">Kindbody set out to change that.</span>
             </p>
           </div>
-          <div className="md:col-span-3 text-sm font-light text-foreground/50 leading-relaxed">
-            <p>A platform where precision isn't just a feature — it's a responsibility.</p>
+        </div>
+      </section>
+
+      {/* Voice - Richard Forsythe Testimonial */}
+      <CaseStudyTestimonial
+        quote="The design work transformed how our engineering team thinks about building healthcare software. We didn't just get mockups—we got a partner who understood HIPAA constraints, EMR workflows, and the stakes of getting it right."
+        avatarUrl="/img/kindbody/richard-forsythe-avatar.png"
+        name="Richard Forsythe"
+        title="CTO"
+        company="Kindbody"
+        accentColor="yellow-300"
+      />
+
+      {/* The Beginning */}
+      <section className="origin-section cs-section">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-2 space-y-6">
+            <div className="cs-divider-accent"></div>
+            <div className="cs-eyebrow">The Beginning</div>
+          </div>
+          <div className="md:col-span-7 space-y-8">
+            <p className="cs-intro-text">
+              Spreadsheets for lab tracking. Disparate systems for patient data. <span className="text-amber-300">Paper logs for critical embryo information.</span>
+            </p>
+          </div>
+          <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
+            <p>The challenge wasn't just design—it was earning trust from medical professionals where mistakes have real consequences.</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">2023 — 2025</p>
           </div>
         </div>
       </section>
 
       {/* Section 1: Building Trust */}
       <section className="role-section cs-section relative h-screen">
-        <div className="h-full grid lg:grid-cols-2 gap-4">
-          {/* Left column - Text */}
+        <div className="max-w-7xl mx-auto h-full grid lg:grid-cols-2 gap-12">
           <div className="flex flex-col justify-center space-y-12">
             <div className="space-y-6">
               <div className="cs-section-number cs-section-number-accent">
@@ -451,15 +369,17 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
             <div className="cs-body-text space-y-4">
               <p>
-                Lead Product Designer (2023–2025). Owned internal clinical tools — provider calendar, EMR, lab workflows — and patient-facing experiences like medication tracking, cycle updates, and fertility calculators.
+                We didn't speak their language. Early mockups got polite nods and skeptical looks from embryologists who'd been doing this work for decades.
+              </p>
+              <p className="italic text-foreground/60">
+                "You don't understand what happens in the lab."
               </p>
               <p>
-                When you're building tools that help people create families, precision isn't optional. It's everything.
+                They were right. This wasn't about beautiful UI. It was about building tools that medical professionals could stake their reputation on—and that patients could trust with their future families.
               </p>
             </div>
           </div>
 
-          {/* Right column - Image */}
           <div className="h-100vh relative">
             <Image
               src="/img/kindbody/dashboard1.webp"
@@ -481,19 +401,38 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         accentColor="yellow-300"
       />
 
+      {/* The Reality */}
+      <section className="day-in-life cs-section">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-2 space-y-6">
+            <div className="cs-divider-accent"></div>
+            <div className="cs-eyebrow">The Reality</div>
+          </div>
+          <div className="md:col-span-7">
+            <p className="cs-intro-text">
+              Picture this: An embryologist managing <span className="text-amber-300">12 active IVF cycles</span> across 3 labs. Day 3: Check embryo development. Update patient records. Coordinate with providers across time zones. The tools? <span className="text-amber-300">Excel spreadsheets. Paper logs.</span> A patchwork of disconnected systems.
+            </p>
+          </div>
+          <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
+            <p>One misclick. One miscommunication. One embryo mislabeled.</p>
+            <p className="text-amber-300/80">That's someone's future child.</p>
+          </div>
+        </div>
+      </section>
+
       {/* The Challenge */}
       <section className="challenge-section cs-section">
-        <div className="max-w-5xl mx-auto space-y-24">
+        <div className="max-w-7xl mx-auto space-y-24">
           <div className="grid md:grid-cols-12 gap-12">
             <div className="md:col-span-2">
               <div className="cs-section-number cs-section-number-accent">
-                02 / Challenge
+                03 / Challenge
               </div>
             </div>
             <div className="md:col-span-10">
               <h2 className="challenge-headline cs-section-headline">
                 From fragmented<br />
-                to <span className="cs-animate-word inline-block">trusted</span>
+                to trusted
               </h2>
             </div>
           </div>
@@ -510,7 +449,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 High-stakes workflow, low-trust tools
               </p>
 
-              {/* Animated Checklist */}
               <div className="space-y-4">
                 <div className="checklist-item flex items-center gap-3">
                   <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
@@ -534,7 +472,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
           {/* Before/After Visual Comparison */}
           <div className="before-after-images grid md:grid-cols-2 gap-6 md:gap-8 my-16">
-            {/* Mobile app - Left */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
                 src="/img/kindbody/kb-app2.webp"
@@ -544,7 +481,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
               />
             </div>
 
-            {/* Mobile app detail - Right */}
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
                 src="/img/kindbody/truck.webp"
@@ -567,7 +503,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 A unified platform built for precision
               </p>
 
-              {/* Solution Checklist */}
               <div className="space-y-4">
                 <div className="solution-item flex items-center gap-3">
                   <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
@@ -616,135 +551,36 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* The Process */}
+      {/* Process */}
       <section className="cs-section">
-        <div className="max-w-7xl mx-auto space-y-24">
-          <div className="grid md:grid-cols-12 gap-12 items-end">
-            <div className="md:col-span-1">
-              <div className="cs-section-number-vertical cs-section-number-accent">
-                03 / Process
-              </div>
-            </div>
-            <div className="md:col-span-11">
-              <h2 className="process-headline cs-section-headline">
-                Earning <span className="cs-animate-word inline-block text-amber-300">trust</span>
-              </h2>
-            </div>
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-2 space-y-6">
+            <div className="cs-divider-accent"></div>
+            <div className="cs-eyebrow">Process</div>
           </div>
-
-          {/* Step 1 */}
-          <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div className="process-step1-text cs-step-text md:col-span-5 space-y-6">
-              <div className="cs-text-reveal cs-eyebrow">The Problem</div>
-              <p className="cs-text-reveal cs-subheadline">
-                Designing for healthcare means working with doctors and nurses who don't speak "product."
-              </p>
-              <p className="cs-text-reveal cs-body-text italic">
-                Early sketches got looks that said "you don't understand what happens in the lab." They were right.
-              </p>
-            </div>
-            <div className="process-step1-image cs-step-image md:col-span-7">
-              <Image
-                src="/img/kindbody/pills.webp"
-                alt="Kindbody medication and treatment planning"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div className="process-step2-image cs-step-image md:col-span-7 md:order-1">
-              <Image
-                src="/img/kindbody/dashboard1.webp"
-                alt="Kindbody provider dashboard and workflow"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="process-step2-text cs-step-text md:col-span-5 md:order-2 space-y-6">
-              <div className="cs-text-reveal cs-eyebrow cs-eyebrow-accent">The Shift</div>
-              <p className="cs-text-reveal cs-subheadline">
-                So we changed approach. We observed. We learned the difference between a Day 3 embryo and a blastocyst.
-              </p>
-              <p className="cs-text-reveal cs-body-text">
-                We understood why a single misclick is unacceptable when someone's future child is on the line.
-              </p>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div className="process-step3-text cs-step-text md:col-span-5 space-y-6">
-              <div className="cs-text-reveal cs-eyebrow">The Breakthrough</div>
-              <p className="cs-text-reveal cs-subheadline">
-                Once we found a shared language, everything clicked.
-              </p>
-              <p className="cs-text-reveal cs-body-text">
-                Doctors became collaborators. The skeptical head nurse became our biggest advocate.
-              </p>
-            </div>
-            <div className="process-step3-image cs-step-image md:col-span-7">
-              <Image
-                src="/img/kindbody/truck.webp"
-                alt="Kindbody delivery and logistics"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Impact Quote */}
-      <section className="impact-quote cs-section">
-        <div className="max-w-5xl mx-auto text-center space-y-16">
-          <div className="relative">
-            <div className="cs-quote-mark">"</div>
-            <p className="text-[clamp(2rem,6vw,4rem)] font-extralight leading-[1.2] text-foreground/90 relative z-10" style={{ letterSpacing: '-0.02em' }}>
-              We built tools that embryologists could trust with someone's future
+          <div className="md:col-span-7">
+            <p className="cs-intro-text">
+              <span className="text-amber-300">Week 1:</span> We didn't speak their language. Our mockups landed with a thud. <span className="text-amber-300">Month 2:</span> We shadowed embryologists, learned their workflows. <span className="text-amber-300">Month 4:</span> The skeptical head nurse became our biggest advocate. The work stopped being "designers vs. doctors" and became a team.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* Full-Width Clinic Image */}
-      <section className="relative h-[80vh] overflow-hidden px-6 md:px-12 mb-32">
-        <div className="max-w-7xl mx-auto h-full cs-image-container">
-          <Image
-            src="/img/kindbody/kindbodyclinic.webp"
-            alt="Kindbody clinic location"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center">
-            <div className="text-center space-y-6 px-8">
-              <div className="text-[clamp(4rem,12vw,10rem)] font-extralight text-amber-300 leading-none">
-                $1.8B
-              </div>
-              <p className="text-xl md:text-2xl font-light text-foreground max-w-2xl mx-auto">
-                Peak valuation. 20+ clinics. Thousands of patients. <br></br> One design system.
-              </p>
-            </div>
+          <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
+            <p>This wasn't about clever UI patterns.</p>
+            <p className="text-amber-300/80">It was about earning trust.</p>
           </div>
         </div>
       </section>
 
-      {/* The Takeaway */}
+      {/* Lesson */}
       <section className="takeaway-section cs-section">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
           <div className="md:col-span-2 space-y-6">
             <div className="cs-divider-accent"></div>
             <div className="cs-eyebrow">Lesson</div>
           </div>
-          <div className="md:col-span-10 space-y-12 pb-24">
-            <h2 className="cs-section-headline">
-              The<br/>Takeaway
-            </h2>
-            <blockquote className="cs-subheadline max-w-4xl">
-              This wasn't about clever UI patterns. It was about earning trust from people where mistakes have real consequences. The best design work happens when you shut up and learn someone else's language first.
-            </blockquote>
+          <div className="md:col-span-10">
+            <p className="cs-intro-text">
+              This wasn't about clever UI patterns. It was about earning trust from people where mistakes have real consequences. <span className="text-amber-300">The best design work happens when you shut up and learn someone else's language first.</span>
+            </p>
           </div>
         </div>
       </section>
