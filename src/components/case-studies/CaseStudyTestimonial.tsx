@@ -40,8 +40,8 @@ export function CaseStudyTestimonial({
   const bgColor = bgColorMap[accentColor] || 'bg-amber-400'
 
   return (
-    <section className={`testimonial-section ${bgColor} ${className}`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-28">
+    <section className={`testimonial-section ${bgColor} ${className} w-screen relative left-1/2 right-1/2 -mx-[50vw] py-16 md:py-28 px-6 md:px-12`}>
+      <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-12 gap-12 md:gap-16">
           {/* Left column - Label */}
           <div className="md:col-span-2 space-y-6">

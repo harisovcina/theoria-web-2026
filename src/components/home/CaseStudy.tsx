@@ -468,11 +468,9 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
           {/* Case Study Content */}
           <div
-            className="case-study-content relative bg-background py-1 px-8 md:px-16 lg:px-20 xl:px-24 min-h-screen z-40"
+            className="case-study-content relative bg-background py-1 min-h-screen z-40"
           >
-            <div className="max-w-9xl mx-auto">
-              {renderContent()}
-            </div>
+            {renderContent()}
 
             {/* Image Copyright Credit */}
             <div className="absolute bottom-8 right-8 md:right-16 lg:right-20 xl:right-24 z-50">
