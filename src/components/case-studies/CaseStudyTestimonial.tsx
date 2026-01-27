@@ -46,7 +46,7 @@ export function CaseStudyTestimonial({
           {/* Left column - Label */}
           <div className="md:col-span-2 space-y-6">
             <div className="h-px w-12 bg-black"></div>
-            <div className="text-xs uppercase tracking-widest text-black font-medium">
+            <div className="text-xs uppercase font-mono tracking-widest text-black font-medium">
               Voice
             </div>
           </div>

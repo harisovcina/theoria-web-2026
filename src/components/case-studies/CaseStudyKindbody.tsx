@@ -280,17 +280,17 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
             </div>
           </div>
 
-          <div className="md:col-span-5 space-y-6 text-foreground/60">
+          <div className="md:col-span-5 space-y-6 text-foreground">
             <div className="cs-meta-group">
-              <div className="cs-eyebrow">Company</div>
+              <div className="cs-eyebrow-accent">Company</div>
               <div className="cs-meta-value">Kindbody</div>
             </div>
             <div className="cs-meta-group">
-              <div className="cs-eyebrow">Role</div>
+              <div className="cs-eyebrow-accent">Role</div>
               <div className="cs-meta-value">Lead Product Designer</div>
             </div>
             <div className="cs-meta-group">
-              <div className="cs-eyebrow">Focus</div>
+              <div className="cs-eyebrow-accent">Focus</div>
               <div className="cs-meta-value">Clinical EMR<br/>Provider Tools<br/>Patient Portal</div>
             </div>
           </div>
@@ -328,12 +328,13 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
       {/* Voice - Richard Forsythe Testimonial */}
       <CaseStudyTestimonial
-        quote="The design work transformed how our engineering team thinks about building healthcare software. We didn't just get mockups—we got a partner who understood HIPAA constraints, EMR workflows, and the stakes of getting it right."
-        avatarUrl="/img/kindbody/richard-forsythe-avatar.png"
+        quote="The collaboration demonstrated a rare ability to translate complex clinical requirements into clean, functional design.
+The work on our EMR workflows brought much-needed clarity to processes where accuracy is non-negotiable."
+        avatarUrl="/img/kindbody/richard-avatar.avif"
         name="Richard Forsythe"
-        title="CTO"
+        title="Chief Product & Technology Officer"
         company="Kindbody"
-        accentColor="yellow-300"
+        accentColor="amber-300"
       />
 
       {/* The Beginning */}
@@ -350,7 +351,6 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
           <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
             <p>The challenge wasn't just design—it was earning trust from medical professionals where mistakes have real consequences.</p>
-            <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">2023 — 2025</p>
           </div>
         </div>
       </section>
@@ -364,15 +364,15 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
                 01 / Foundation
               </div>
               <h2 className="cs-section-headline">
-                Designing for <span className="role-scramble cs-animate-word inline-block">xj%4#8s9gg2&!ty/</span>
+                Designing for <span className="role-scramble cs-animate-word inline-block">xj%4#8s9gg2y/</span>
               </h2>
             </div>
             <div className="cs-body-text space-y-4">
               <p>
                 We didn't speak their language. Early mockups got polite nods and skeptical looks from embryologists who'd been doing this work for decades.
               </p>
-              <p className="italic text-foreground/60">
-                "You don't understand what happens in the lab."
+              <p className="font-serif font-thin italic text-amber-300 text-3xl">
+                "You don't understand what happens in the lab"
               </p>
               <p>
                 They were right. This wasn't about beautiful UI. It was about building tools that medical professionals could stake their reputation on—and that patients could trust with their future families.
@@ -398,7 +398,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
         name="Viet Tran"
         title="Product Manager"
         company="Kindbody"
-        accentColor="yellow-300"
+        accentColor="amber-300"
       />
 
       {/* The Reality */}
@@ -410,12 +410,12 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
           <div className="md:col-span-7">
             <p className="cs-intro-text">
-              Picture this: An embryologist managing <span className="text-amber-300">12 active IVF cycles</span> across 3 labs. Day 3: Check embryo development. Update patient records. Coordinate with providers across time zones. The tools? <span className="text-amber-300">Excel spreadsheets. Paper logs.</span> A patchwork of disconnected systems.
+              Picture this:<br></br> An embryologist managing <span className="text-amber-300">12 active IVF cycles</span> across 3 labs.<br></br><br></br> Day 3: Check embryo development. Update patient records. Coordinate with providers across time zones.<br></br><br></br>The tools? <span className="text-amber-300">Excel spreadsheets. Paper logs.</span> A patchwork of disconnected systems.
             </p>
           </div>
-          <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
+          <div className="md:col-span-3 text-sm font-light text-foreground leading-relaxed space-y-4">
             <p>One misclick. One miscommunication. One embryo mislabeled.</p>
-            <p className="text-amber-300/80">That's someone's future child.</p>
+            <p className="text-amber-300">That's someone's future child.</p>
           </div>
         </div>
       </section>
@@ -560,7 +560,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
           </div>
           <div className="md:col-span-7">
             <p className="cs-intro-text">
-              <span className="text-amber-300">Week 1:</span> We didn't speak their language. Our mockups landed with a thud. <span className="text-amber-300">Month 2:</span> We shadowed embryologists, learned their workflows. <span className="text-amber-300">Month 4:</span> The skeptical head nurse became our biggest advocate. The work stopped being "designers vs. doctors" and became a team.
+              <span className="text-amber-300">Week 1:</span><br></br> We didn't speak their language. Our mockups landed with a thud.<br></br><span className="text-amber-300"><br></br>Month 2:</span> We shadowed embryologists, learned their workflows. <br></br><br></br><span className="text-amber-300">Month 4:</span> The skeptical head nurse became our biggest advocate. The work stopped being "designers vs. doctors" and became a team.
             </p>
           </div>
           <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
