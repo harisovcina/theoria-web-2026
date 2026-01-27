@@ -243,9 +243,12 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
       } else if (screenWidth >= 768 && screenWidth < 1020) {
         // Medium (tablets)
         yShift = 160
-      } else {
+      } else if (screenWidth >= 1020 && screenWidth < 2000) {
         // Desktop
         yShift = 480
+      } else {
+        // Extra-wide screens (2000px+)
+        yShift = 640
       }
 
       // Animation timeline
