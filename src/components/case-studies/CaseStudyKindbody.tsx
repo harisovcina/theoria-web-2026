@@ -10,6 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { Check, X } from 'lucide-react'
 import { CaseStudyTestimonial } from './CaseStudyTestimonial'
+import { CaseStudyTestimonialCarousel } from './CaseStudyTestimonialCarousel'
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -328,8 +329,7 @@ export function CaseStudyKindbody({ project }: CaseStudyProps) {
 
       {/* Voice - Richard Forsythe Testimonial */}
       <CaseStudyTestimonial
-        quote="The collaboration demonstrated a rare ability to translate complex clinical requirements into clean, functional design.
-The work on our EMR workflows brought much-needed clarity to processes where accuracy is non-negotiable."
+        quote="Haris' demonstrated a rare ability to translate complex clinical requirements into clean, functional design. His work on our complex EMR workflows brought much-needed clarity to critical processes where accuracy is non-negotiable."
         avatarUrl="/img/kindbody/richard-avatar.avif"
         name="Richard Forsythe"
         title="Chief Product & Technology Officer"
@@ -391,13 +391,24 @@ The work on our EMR workflows brought much-needed clarity to processes where acc
         </div>
       </section>
 
-      {/* Testimonial */}
-      <CaseStudyTestimonial
-        quote="The collaboration was transformative. The team combined deep business understanding with thoughtful design execution. Their work helped modernize our patient portal while improving efficiency and supporting new EMR workflows."
-        avatarUrl="/img/kindbody/viet-tran-avatar.png"
-        name="Viet Tran"
-        title="Product Manager"
-        company="Kindbody"
+      {/* Testimonials Carousel */}
+      <CaseStudyTestimonialCarousel
+        testimonials={[
+          {
+            quote: "Working together was a pleasure. Haris combines a strong understanding of the business with thoughtful design execution. His work helped modernize our patient portal while improving efficiency and supporting new EMR workflows.",
+            avatarUrl: "/img/kindbody/viet-tran-avatar.png",
+            name: "Viet Tran",
+            title: "Product Manager",
+            company: "Kindbody"
+          },
+          {
+            quote: "Haris handled everything from patient portal improvements to complex EMR workflows without missing a beat. Thoughtful, reliable, innovative, and easy to work with, Haris is the kind of collaborator you want on a product team.",
+            avatarUrl: "/img/kindbody/elizabeth-avatar.jpeg",
+            name: "Elizabeth Garzon",
+            title: "Product Manager",
+            company: "Kindbody"
+          }
+        ]}
         accentColor="amber-300"
       />
 
@@ -474,8 +485,8 @@ The work on our EMR workflows brought much-needed clarity to processes where acc
           <div className="before-after-images grid md:grid-cols-2 gap-6 md:gap-8 my-16">
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/kindbody/kb-app2.webp"
-                alt="Kindbody mobile app - patient view"
+                src="/img/kindbody/kb-emr1.webp"
+                alt="Kindbody EMR - clinical interface"
                 fill
                 className="object-cover"
               />
@@ -483,8 +494,8 @@ The work on our EMR workflows brought much-needed clarity to processes where acc
 
             <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
               <Image
-                src="/img/kindbody/truck.webp"
-                alt="Kindbody mobile app - cycle tracking"
+                src="/img/kindbody/kb-emr2.webp"
+                alt="Kindbody EMR - patient data management"
                 fill
                 className="object-cover"
               />

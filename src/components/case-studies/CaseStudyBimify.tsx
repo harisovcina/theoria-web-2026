@@ -17,7 +17,7 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Bimify Case Study
+ * Bimify Case Study - Redesigned with narrative context
  * Construction tech aesthetic with orange accents
  */
 
@@ -46,7 +46,7 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
         }
       )
 
-      // Hero: Word reveal on "construction"
+      // Hero: Word reveal on "architects"
       gsap.fromTo('.hero-headline .cs-animate-word',
         { x: -120, opacity: 0 },
         {
@@ -77,8 +77,8 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
         }
       })
 
-      // Brief section: fade in
-      gsap.fromTo('.brief-section',
+      // How we worked section: fade in
+      gsap.fromTo('.workflow-section',
         { y: 30, opacity: 0 },
         {
           y: 0,
@@ -86,20 +86,20 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
           duration: ANIMATION.duration.slow,
           scrollTrigger: {
             scroller,
-            trigger: '.brief-section',
+            trigger: '.workflow-section',
             start: ANIMATION.scroll.start75,
           }
         }
       )
 
-      // Section 1: ScrambleText animation
+      // Section 1: ScrambleText animation on "coherent"
       const section1Scramble = containerRef.current?.querySelector('.section1-scramble')
       if (section1Scramble) {
         gsap.to(section1Scramble, {
           duration: 1.6,
           ease: "power2.inOut",
           scrambleText: {
-            text: "streamlined.",
+            text: "coherent.",
             chars: "lowerCase",
             revealDelay: 0.5,
             tweenLength: false,
@@ -112,68 +112,66 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
         })
       }
 
-      // Animated problem checklist
-      gsap.fromTo('.problem-block .checklist-item',
-        { y: 20, opacity: 0 },
+      // Section 1 Image: Parallax effect
+      gsap.to('.section1-image img', {
+        y: -60,
+        scale: 1.1,
+        ease: 'none',
+        scrollTrigger: {
+          scroller,
+          trigger: '.section1-image',
+          start: ANIMATION.scroll.startBottom,
+          end: ANIMATION.scroll.endTop,
+          scrub: true,
+        }
+      })
+
+      // Process steps: enhanced stagger with scale
+      gsap.fromTo('.process-step',
+        { y: 60, scale: 0.96, opacity: 0 },
         {
           y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.15,
-          ease: ANIMATION.ease.outMedium,
-          scrollTrigger: {
-            scroller,
-            trigger: '.problem-block',
-            start: 'top 75%',
-          }
-        }
-      )
-
-      // Animated solution checklist
-      gsap.fromTo('.solution-block .solution-item',
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.15,
-          ease: ANIMATION.ease.outMedium,
-          scrollTrigger: {
-            scroller,
-            trigger: '.solution-block',
-            start: 'top 75%',
-          }
-        }
-      )
-
-      // Before/After Images
-      gsap.fromTo('.before-after-images .ba-image',
-        { scale: 0.96, opacity: 0, y: 40 },
-        {
           scale: 1,
           opacity: 1,
-          y: 0,
+          duration: 1,
+          stagger: 0.25,
+          ease: 'back.out(1.4)',
+          scrollTrigger: {
+            scroller,
+            trigger: '.process-steps',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Process step numbers: slide in from left
+      gsap.fromTo('.process-step .cs-section-number',
+        { x: -40, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
           duration: 0.8,
-          stagger: 0.2,
-          ease: 'power2.out',
+          stagger: 0.25,
+          ease: ANIMATION.ease.outMedium,
           scrollTrigger: {
             scroller,
-            trigger: '.before-after-images',
+            trigger: '.process-steps',
             start: 'top 75%',
           }
         }
       )
 
-      // Gallery: Staggered image reveal
+      // Gallery: Staggered image reveal with rotation
       gsap.fromTo('.gallery-section .cs-gallery-item',
-        { scale: 0.98, y: 20, opacity: 0 },
+        { scale: 0.94, y: 40, opacity: 0, rotateZ: -2 },
         {
           scale: 1,
           y: 0,
           opacity: 1,
-          duration: ANIMATION.duration.medium,
-          stagger: ANIMATION.stagger.fast,
-          ease: ANIMATION.ease.outMedium,
+          rotateZ: 0,
+          duration: 0.9,
+          stagger: 0.15,
+          ease: 'back.out(1.2)',
           scrollTrigger: {
             scroller,
             trigger: '.gallery-section',
@@ -182,17 +180,68 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
         }
       )
 
-      // Closing: Gentle fade in
-      gsap.fromTo('.closing-section',
-        { y: 30, opacity: 0 },
+      // Closing headline: word reveal
+      gsap.fromTo('.closing-headline',
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: ANIMATION.duration.slow,
+          ease: ANIMATION.ease.sine,
           scrollTrigger: {
             scroller,
             trigger: '.closing-section',
-            start: ANIMATION.scroll.start75,
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Closing text: fade in with delay
+      gsap.fromTo('.closing-text',
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.medium,
+          delay: 0.3,
+          scrollTrigger: {
+            scroller,
+            trigger: '.closing-section',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // "Still shipping" emphasis
+      gsap.fromTo('.still-shipping',
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: ANIMATION.duration.medium,
+          delay: 0.5,
+          scrollTrigger: {
+            scroller,
+            trigger: '.closing-section',
+            start: 'top 75%',
+          }
+        }
+      )
+
+      // Final emphasis line: special reveal with scale
+      gsap.fromTo('.embedded-emphasis',
+        { scale: 0.92, opacity: 0, y: 30 },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          delay: 0.8,
+          ease: 'back.out(1.5)',
+          scrollTrigger: {
+            scroller,
+            trigger: '.closing-section',
+            start: 'top 75%',
           }
         }
       )
@@ -224,7 +273,7 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
               </div>
 
               <h1 className="hero-headline cs-hero-headline">
-                Making <span className="cs-animate-word inline-block text-orange-400">construction</span> software that doesn't get in the way.
+                Designed by architects. Built for <span className="cs-animate-word inline-block text-orange-400">architects.</span>
               </h1>
             </div>
 
@@ -241,12 +290,8 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
               <div className="cs-meta-value">Bimify</div>
             </div>
             <div className="cs-meta-group">
-              <div className="cs-eyebrow-accent">Timeline</div>
-              <div className="cs-meta-value">2022 — 2024</div>
-            </div>
-            <div className="cs-meta-group">
               <div className="cs-eyebrow-accent">Impact</div>
-              <div className="cs-meta-value">Complete redesign<br/>1 design system<br/>20+ features shipped</div>
+              <div className="cs-meta-value">1 design system from day one<br/>Full product design</div>
             </div>
           </div>
         </div>
@@ -261,7 +306,9 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
           </div>
           <div className="md:col-span-10">
             <p className="cs-intro-text">
-              Construction management software is notorious for being clunky, overcomplicated, and stuck in the past. Bimify is a BIM management platform used by construction teams across Europe to coordinate projects, manage documentation, and collaborate in real-time. <span className="text-orange-400">When your users are on job sites juggling multiple tools, every click matters.</span>
+              Bimify automates BIM processes — taking 2D drawings to full BIM models in minutes. The founding team is a mix of engineers, architects, and civil engineers who knew exactly what they wanted to build but needed someone to figure out how it should work and look.
+              <br/><br/>
+              That's where the architecture background became a cheat code. We didn't need a crash course in Revit, AutoCAD, or 3ds Max. We didn't need anyone to explain what a clash detection is or why LOD matters. <span className="text-orange-400">Architectural degrees on our side meant we spoke the same language from day one.</span>
             </p>
           </div>
         </div>
@@ -269,34 +316,33 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
 
       {/* Voice - Aleksandar Testimonial */}
       <CaseStudyTestimonial
-        quote="We needed a designer who could think like an engineer and design like an architect. The work transformed Bimify from a functional tool into something our users actually want to use every day."
-        avatarUrl="/img/bimify/aleksandar-avatar.png"
+        quote="Having architects on the design side changed everything — we skipped months of back and forth explaining how our industry works. The design system they put in place became the backbone of our entire development process."
+        avatarUrl="/img/bimify/aleksandar.webp"
         name="Aleksandar Balicevac"
         title="Founder"
         company="Bimify"
         accentColor="orange-400"
       />
 
-      {/* The Brief */}
-      <section className="brief-section cs-section">
+      {/* How we worked */}
+      <section className="workflow-section cs-section">
         <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-12">
           <div className="md:col-span-2 space-y-6">
             <div className="cs-divider-accent"></div>
-            <div className="cs-eyebrow">The Brief</div>
+            <div className="cs-eyebrow">How we worked</div>
           </div>
           <div className="md:col-span-7">
             <p className="cs-intro-text">
-              Redesign the platform to reduce friction for field teams while maintaining the <span className="text-orange-400">power features</span> that engineers depend on.
+              We came in early — early enough that the product was still being shaped — and that meant every screen, every flow, every interaction went through our hands first.
             </p>
           </div>
           <div className="md:col-span-3 text-sm font-light text-foreground/70 leading-relaxed space-y-4">
-            <p>The challenge: construction professionals don't have patience for learning curves.</p>
-            <p className="text-xs uppercase tracking-[0.2em] text-foreground/50">2022 — 2024</p>
+            <p>When you're embedded from day one, you don't just design the product. You shape it.</p>
           </div>
         </div>
       </section>
 
-      {/* Section 1: Foundation */}
+      {/* Section 1: Design System First */}
       <section className="cs-section relative h-screen">
         <div className="max-w-7xl mx-auto h-full grid lg:grid-cols-2 gap-12">
           <div className="flex flex-col justify-center space-y-12">
@@ -305,22 +351,22 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
                 01 / Foundation
               </div>
               <h2 className="section1-headline cs-section-headline">
-                From complex to <span className="section1-scramble cs-animate-word inline-block">xj%4#8s9gg2&!ty/</span>
+                One <span className="section1-scramble cs-animate-word inline-block">xj%4#8s9gg2&!ty/</span> product
               </h2>
             </div>
             <div className="cs-body-text space-y-4">
               <p>
-                The old Bimify interface tried to do everything at once. Navigation was nested three levels deep. Core features were buried behind obscure icons. Users needed training sessions just to upload a file.
+                <span className="text-orange-400 font-normal">Design system first, features second.</span> Before touching a single feature, we built the system. Components, patterns, spacing, typography — all locked in so the engineering team could move fast without waiting on us for every button and modal.
               </p>
               <p>
-                We stripped everything back. Built a design system that prioritized clarity over cleverness. Information architecture based on actual workflows, not feature lists.
+                When you're shipping features continuously, you can't afford to design each one from scratch.
               </p>
             </div>
           </div>
 
-          <div className="h-100vh relative">
+          <div className="section1-image h-100vh relative overflow-hidden">
             <Image
-              src={images[0] || "/img/bimify/foundation.png"}
+              src={images[0] || "/img/bimify/bimify-ortho.webp"}
               alt="Bimify design system"
               fill
               className="object-cover"
@@ -329,109 +375,32 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
         </div>
       </section>
 
-      {/* Section 2: Core Flow */}
+      {/* Process Steps */}
       <section className="cs-section">
-        <div className="max-w-7xl mx-auto space-y-24">
-          <div className="grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-2">
+        <div className="max-w-7xl mx-auto">
+          <div className="process-steps grid md:grid-cols-2 gap-8 md:gap-12">
+            <div className="process-step space-y-6">
               <div className="cs-section-number cs-section-number-accent">
-                02 / Core Flow
+                02 / Continuous refinement
               </div>
-            </div>
-            <div className="md:col-span-10">
-              <h2 className="section2-headline cs-section-headline">
-                Making file management<br />
-                actually manageable
-              </h2>
-            </div>
-          </div>
-
-          {/* Problem Section */}
-          <div className="grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-2">
-              <div className="cs-section-number cs-section-number text-pink-600">
-                × Problem
-              </div>
-            </div>
-            <div className="problem-block md:col-span-10 space-y-8">
-              <p className="cs-subheadline-lg">
-                Construction teams drowning in files
+              <h3 className="text-3xl md:text-4xl font-extralight leading-tight tracking-tight text-foreground/90">
+                No hero features
+              </h3>
+              <p className="cs-body-text">
+                There's no single feature we'd put on a pedestal. The work was cumulative — dozens of features, each one iterated on, each one informed by the last. The value wasn't in any one screen. It was in the fact that the whole thing held together as one coherent product.
               </p>
+            </div>
 
-              <div className="space-y-4">
-                <div className="checklist-item flex items-center gap-3">
-                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
-                  <p className="cs-subheadline">Uploading BIM files required 6 different steps</p>
-                </div>
-                <div className="checklist-item flex items-center gap-3">
-                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
-                  <p className="cs-subheadline">No way to preview files without downloading</p>
-                </div>
-                <div className="checklist-item flex items-center gap-3">
-                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
-                  <p className="cs-subheadline">Version control was manual and error-prone</p>
-                </div>
-                <div className="checklist-item flex items-center gap-3">
-                  <X className="checklist-icon w-5 h-5 text-red-500/60 flex-shrink-0" />
-                  <p className="cs-subheadline">Teams kept reverting to email attachments</p>
-                </div>
+            <div className="process-step space-y-6">
+              <div className="cs-section-number cs-section-number-accent">
+                03 / Speaking the language
               </div>
-            </div>
-          </div>
-
-          {/* Before/After Visual Comparison */}
-          <div className="before-after-images grid md:grid-cols-2 gap-6 md:gap-8 my-16">
-            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
-              <Image
-                src={images[1] || "/img/bimify/before.png"}
-                alt="Before - Complex interface"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-red-950/60 via-red-900/35 to-red-800/15 mix-blend-multiply"></div>
-              <div className="absolute inset-0 bg-red-500/10"></div>
-            </div>
-
-            <div className="ba-image relative aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900">
-              <Image
-                src={images[2] || "/img/bimify/after.png"}
-                alt="After - Streamlined interface"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Solution Section */}
-          <div className="grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-2">
-              <div className="cs-section-number cs-section-number text-emerald-700">
-                ✓ Solution
-              </div>
-            </div>
-            <div className="solution-block md:col-span-10 space-y-8">
-              <p className="cs-subheadline-lg">
-                Drag, drop, done
+              <h3 className="text-3xl md:text-4xl font-extralight leading-tight tracking-tight text-foreground/90">
+                Architects for architects
+              </h3>
+              <p className="cs-body-text">
+                When your designers have sat through the same university crits, used the same clunky software, felt the same pain points — the work just hits different. We didn't design <span className="italic">for</span> architects. We designed <span className="italic text-orange-400">as</span> architects.
               </p>
-
-              <div className="space-y-4">
-                <div className="solution-item flex items-center gap-3">
-                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
-                  <p className="cs-subheadline">One-click upload with automatic categorization</p>
-                </div>
-                <div className="solution-item flex items-center gap-3">
-                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
-                  <p className="cs-subheadline">Real-time 3D preview directly in browser</p>
-                </div>
-                <div className="solution-item flex items-center gap-3">
-                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
-                  <p className="cs-subheadline">Automatic version control with visual diff</p>
-                </div>
-                <div className="solution-item flex items-center gap-3">
-                  <Check className="solution-icon w-5 h-5 text-emerald-700 flex-shrink-0" />
-                  <p className="cs-subheadline">Collaborative annotations and markup tools</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -442,16 +411,16 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-12 gap-6 md:gap-8">
             <div className="cs-gallery-item md:col-span-7 aspect-[4/3] cs-image-container">
-              <Image src={images[3] || "/img/bimify/gallery1.png"} alt="Dashboard view" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[1] || "/img/bimify/bimify-front.webp"} alt="Bimify interface" width={800} height={450} className="w-full h-full object-cover" />
             </div>
             <div className="cs-gallery-item md:col-span-5 aspect-[4/3] cs-image-container">
-              <Image src={images[4] || "/img/bimify/gallery2.png"} alt="File management" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[2] || "/img/bimify/bimify-front-final.webp"} alt="Bimify final interface" width={800} height={450} className="w-full h-full object-cover" />
             </div>
             <div className="cs-gallery-item md:col-span-5 aspect-[4/3] cs-image-container">
-              <Image src={images[5] || "/img/bimify/gallery3.png"} alt="3D preview" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[3] || "/img/bimify/bim-device.webp"} alt="Bimify on device" width={800} height={450} className="w-full h-full object-cover" />
             </div>
             <div className="cs-gallery-item md:col-span-7 aspect-[4/3] cs-image-container">
-              <Image src={images[6] || "/img/bimify/gallery4.png"} alt="Design system" width={800} height={450} className="w-full h-full object-cover" />
+              <Image src={images[4] || "/img/bimify/bimify-ortho-final.webp"} alt="Bimify orthographic view" width={800} height={450} className="w-full h-full object-cover" />
             </div>
           </div>
         </div>
@@ -466,12 +435,20 @@ export function CaseStudyBimify({ project }: CaseStudyProps) {
               <div className="cs-eyebrow">Outro</div>
             </div>
             <div className="md:col-span-10 space-y-8">
-              <h2 className="text-[clamp(2.5rem,6vw,4rem)] font-extralight leading-[1.1] tracking-tight" style={{ letterSpacing: '-0.03em' }}>
-                From tool to teammate.
+              <h2 className="closing-headline text-[clamp(2.5rem,6vw,4rem)] max-w-4xl font-extralight leading-[1.1] tracking-tight" style={{ letterSpacing: '-0.03em' }}>
+                When the design team doesn't need a translator
               </h2>
-              <p className="text-lg md:text-xl font-light leading-relaxed text-foreground/70 max-w-3xl">
-                Bimify now powers construction projects across Europe. The redesign reduced onboarding time by 80%, cut support tickets in half, and turned skeptical contractors into advocates. Sometimes the best design is the one that gets out of your way.
+              <p className="closing-text text-lg md:text-xl font-light leading-relaxed text-foreground/70 max-w-3xl">
+                Bimify is what happens when the design team doesn't need a translator. When your designers have sat through the same university crits, used the same clunky software, felt the same pain points — the work just hits different.
               </p>
+              <div className="still-shipping pt-8 border-t border-white/5 max-w-3xl">
+                <p className="text-lg md:text-xl font-light leading-relaxed text-foreground/70">
+                  <span className="text-orange-400">Still shipping.</span> The collaboration didn't end with a handoff deck. One of our designers joined Bimify full-time, continuing the work—designing new features, supporting releases, iterating on the system.
+                </p>
+                <p className="embedded-emphasis text-2xl md:text-4xl font-light leading-tight text-orange-400 mt-8 tracking-tight">
+                  This is embedded design, not deliverables.
+                </p>
+              </div>
             </div>
           </div>
         </div>

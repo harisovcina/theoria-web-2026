@@ -400,7 +400,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
                 {project.website && (
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">See Live</span>
+                      <span className="text-xs uppercase tracking-wider text-foreground/40 font-mono">See Live</span>
                       <div ref={dotRef} className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     </div>
                     <a
@@ -416,7 +416,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
                 {/* Year */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Year</span>
+                  <span className="text-xs uppercase tracking-wider text-foreground/40 font-mono">Year</span>
                   <span className="font-light text-foreground tabular-nums">
                     {project.endYear ? `${project.startYear}–${project.endYear}` : project.startYear}
                   </span>
@@ -425,7 +425,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
                 {/* Industry */}
                 {industries.length > 0 && (
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Industry</span>
+                    <span className="text-xs uppercase tracking-wider text-foreground/40 font-mono">Industry</span>
                     <span className="font-light text-foreground/80">{industries.join(", ")}</span>
                   </div>
                 )}
@@ -433,7 +433,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
                 {/* Services */}
                 {services.length > 0 && (
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-foreground/40 font-mono">Services</span>
+                    <span className="text-xs uppercase tracking-wider text-foreground/40 font-mono">Services</span>
                     <span className="font-light text-foreground/80">{services.join(", ")}</span>
                   </div>
                 )}
@@ -474,7 +474,7 @@ export function CaseStudy({ project, deviceStartPosition, onClose }: CaseStudyPr
 
             {/* Image Copyright Credit */}
             <div className="absolute bottom-8 right-8 md:right-16 lg:right-20 xl:right-24 z-50">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-foreground/50">
+              <p className="font-mono text-xs uppercase tracking-wider text-foreground/50">
                 IMAGE © {project.client}
               </p>
             </div>

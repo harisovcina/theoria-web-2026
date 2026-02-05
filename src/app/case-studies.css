@@ -100,7 +100,7 @@
 
 /* Section Number - Numbered section label */
 .cs-section-number {
-  @apply text-[11px] uppercase tracking-[0.3em] font-mono;
+  @apply text-xs uppercase tracking-[0.3em] font-mono;
 }
 
 /* Section Number with accent */
@@ -110,7 +110,7 @@
 
 /* Section Number Vertical */
 .cs-section-number-vertical {
-  @apply text-[11px] uppercase tracking-[0.3em] font-mono [writing-mode:vertical-lr] rotate-180;
+  @apply text-xs uppercase tracking-[0.3em] font-mono [writing-mode:vertical-lr] rotate-180;
 }
 
 /* ====================================
@@ -158,7 +158,7 @@
 
 /* Stat Label - Description under stat */
 .cs-stat-label {
-  @apply text-[11px] uppercase tracking-[0.25em] text-foreground/80;
+  @apply text-xs uppercase tracking-[0.25em] text-foreground/80;
 }
 
 /* ====================================

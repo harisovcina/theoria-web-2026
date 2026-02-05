@@ -410,7 +410,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       {/* Testimonial - Costas */}
       <CaseStudyTestimonial
-        quote="Working with this team felt less like hiring an agency and more like gaining a product design partner. They challenged our assumptions, pushed us to think bigger, and delivered work that our engineering team could actually build with."
+        quote="Haris challenged our assumptions, pushed us to think bigger, and delivered work that engineering could actually build with. This was true product design partnership."
         avatarUrl="/img/sematext/costas-avatar.jpg"
         name="Costas Pipilas"
         title="Senior Product Manager"
@@ -756,7 +756,7 @@ export function CaseStudySematext({ project }: CaseStudyProps) {
 
       {/* Testimonial */}
       <CaseStudyTestimonial
-        quote="We've worked with many agencies over the years, but what sets this partnership apart is the depth of understanding. They didn't just redesign screens—they learned our users' workflows, understood the technical constraints of observability platforms, and delivered a design system that's been the foundation of our product evolution for five years. The onboarding redesign alone transformed our trial conversion rates. This is what embedded, long-term design partnership looks like."
+        quote="Haris didn't just redesign screens—he learned our users' workflows, understood the technical constraints of observability platforms, and delivered a design system that's been the foundation of our product evolution for five years. The onboarding redesign alone transformed our trial conversion rates. This is what embedded, long-term design partnership looks like."
         avatarUrl="/img/sematext/otis-avatar.jpeg"
         name="Otis Gospodnetić"
         title="Founder and CEO"
