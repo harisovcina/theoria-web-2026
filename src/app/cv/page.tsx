@@ -53,22 +53,22 @@ export default async function CVPage() {
             </h2>
 
             <div className="space-y-12">
-              {/* Kindbody */}
+              {/* ZIGChain */}
               <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
-                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
-                  <img src="/img/kb-logo-sq.svg" alt="Kindbody" className="w-full h-full object-cover" />
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center flex-shrink-0">
+                  <img src="/img/zigchain-logo.png" alt="ZIGChain" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-1">Lead UX/UI Designer</p>
-                  <p className="text-xs text-muted-foreground font-mono">Sept 2022 — April 2025</p>
+                  <p className="text-sm font-medium mb-1">Lead Product Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">July 2025 — Present</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-2">Kindbody · New York City, NY</p>
+                  <p className="text-sm font-medium mb-2">ZIGChain / Zignaly · Dubai, UAE / Singapore, SG</p>
                   <p className="text-sm text-muted-foreground font-light leading-relaxed">
-                    Led design across patient- and provider-facing tools at Kindbody, a healthcare startup that reached
-                    unicorn status with a $1.8B valuation. Collaborated with product owners, developers, marketing, and
-                    business teams to deliver cohesive experiences. Helped lay groundwork for scalable design by
-                    collaborating on design system and improving design-engineering workflows.
+                    Leading product design for ZIGChain and Zignaly, a Layer 1 blockchain protocol focused on on-chain
+                    finance and wealth-building infrastructure. Own end-to-end design across the protocol's consumer-facing
+                    surfaces, translating complex financial primitives into accessible experiences. Collaborate with product,
+                    engineering, and ecosystem teams across a globally distributed organization.
                   </p>
                 </div>
               </div>
@@ -79,14 +79,15 @@ export default async function CVPage() {
                   <img src="/img/sematext-logo-sq.svg" alt="Sematext" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-1">Lead Product Designer</p>
+                  <p className="text-sm font-medium mb-1">Fractional Design Lead</p>
                   <p className="text-xs text-muted-foreground font-mono">Nov 2020 — Present</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium mb-2">Sematext Group, Inc. · New York City, NY</p>
                   <p className="text-sm text-muted-foreground font-light leading-relaxed">
-                    Working as lead product designer as part of globally distributed team with multiple Fortune 100
-                    clients in developing and improving new or existing solutions.
+                    Lead product designer embedded in a globally distributed team serving multiple Fortune 100 clients.
+                    Develop and improve solutions across observability and infrastructure monitoring, working closely with
+                    engineering and product to ship at the pace of a fast-moving SaaS company.
                   </p>
                 </div>
               </div>
@@ -106,6 +107,26 @@ export default async function CVPage() {
                     A boutique design agency specializing in UX and product design. Led and delivered projects across
                     diverse industries. Oversaw design strategy, client communication, and hands-on execution—from early
                     discovery to polished delivery.
+                  </p>
+                </div>
+              </div>
+
+              {/* Kindbody */}
+              <div className="grid grid-cols-[auto_1fr_2fr] gap-6 items-start border-l border-border/30 pl-6">
+                <div className="w-8 h-8 mt-1 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                  <img src="/img/kb-logo-sq.svg" alt="Kindbody" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Lead UX/UI Designer</p>
+                  <p className="text-xs text-muted-foreground font-mono">Sept 2022 — April 2025</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Kindbody · New York City, NY</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                    Led design across patient- and provider-facing tools at Kindbody, a healthcare startup that reached
+                    unicorn status with a $1.8B valuation. Collaborated with product owners, developers, marketing, and
+                    business teams to deliver cohesive experiences. Helped lay groundwork for scalable design by
+                    collaborating on design system and improving design-engineering workflows.
                   </p>
                 </div>
               </div>
