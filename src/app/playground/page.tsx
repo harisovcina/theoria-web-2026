@@ -19,7 +19,7 @@ export default async function HarisPage() {
 
   const extras = extraExperiments
     .map((exp, i) => exp ? { ...exp, title: EXTRA_REPOS[i].title } : null)
-    .filter(Boolean)
+    .filter((exp): exp is NonNullable<typeof exp> => exp !== null)
   const experiments = [...extras, ...playgroundExperiments]
 
   const projects = await db.project.findMany({
