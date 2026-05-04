@@ -1,13 +1,22 @@
 import Link from "next/link"
 import { db } from "@/lib/db"
-import { fetchPlaygroundRepos } from "@/lib/github"
+import { fetchPlaygroundRepos, fetchPlaygroundRepo } from "@/lib/github"
 import { PlaygroundGrid } from "@/components/playground/PlaygroundGrid"
 import { PageMenuDock } from "@/components/shared/PageMenuDock"
 import { BreakAnimation } from "@/components/playground/BreakAnimation"
 
+// Additional repos that don't use the playground- prefix but belong here
+const EXTRA_REPOS = ["tastedna"]
+
 export default async function HarisPage() {
   // Fetch playground experiments from GitHub
-  const experiments = await fetchPlaygroundRepos("harisovcina")
+  const [playgroundExperiments, ...extraExperiments] = await Promise.all([
+    fetchPlaygroundRepos("harisovcina"),
+    ...EXTRA_REPOS.map((repo) => fetchPlaygroundRepo("harisovcina", repo)),
+  ])
+
+  const extras = extraExperiments.filter(Boolean)
+  const experiments = [...extras, ...playgroundExperiments]
 
   const projects = await db.project.findMany({
     orderBy: { order: "asc" },
