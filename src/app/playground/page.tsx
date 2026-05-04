@@ -6,16 +6,20 @@ import { PageMenuDock } from "@/components/shared/PageMenuDock"
 import { BreakAnimation } from "@/components/playground/BreakAnimation"
 
 // Additional repos that don't use the playground- prefix but belong here
-const EXTRA_REPOS = ["tastedna"]
+const EXTRA_REPOS = [
+  { name: "tastedna", title: "TasteDNA" },
+]
 
 export default async function HarisPage() {
   // Fetch playground experiments from GitHub
   const [playgroundExperiments, ...extraExperiments] = await Promise.all([
     fetchPlaygroundRepos("harisovcina"),
-    ...EXTRA_REPOS.map((repo) => fetchPlaygroundRepo("harisovcina", repo)),
+    ...EXTRA_REPOS.map((repo) => fetchPlaygroundRepo("harisovcina", repo.name)),
   ])
 
-  const extras = extraExperiments.filter(Boolean)
+  const extras = extraExperiments
+    .map((exp, i) => exp ? { ...exp, title: EXTRA_REPOS[i].title } : null)
+    .filter(Boolean)
   const experiments = [...extras, ...playgroundExperiments]
 
   const projects = await db.project.findMany({
