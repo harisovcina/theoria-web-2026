@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import { X, ExternalLink, Github, GitFork, Calendar } from "lucide-react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
@@ -250,10 +251,15 @@ export function PlaygroundModal({
               />
             ) : experiment.thumbnail && !previewFailed ? (
               // No live site to embed, so fall back to the repo's preview image
-              <img
+              <Image
                 src={experiment.thumbnail}
                 alt={`${experiment.title} preview`}
-                className="max-h-full max-w-full object-contain"
+                fill
+                // The modal only mounts on click and this image is its main
+                // content, so load it eagerly rather than waiting on lazy load
+                priority
+                sizes="(max-width: 768px) 100vw, 60vw"
+                className="object-contain p-6 md:p-10"
                 onError={() => setPreviewFailed(true)}
               />
             ) : (
@@ -357,16 +363,19 @@ export function PlaygroundModal({
               <span className="text-sm font-medium">Fork Repository</span>
             </button>
 
-            {/* Open Live Demo - falls back to the repo when there is no live site */}
-            <a
-              href={experiment.liveUrl ?? experiment.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-border/40 bg-background/60 hover:bg-foreground hover:text-background transition-all duration-200"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span className="text-sm font-medium">Open in New Tab</span>
-            </a>
+            {/* Open Live Demo - omitted without a live site, where it would only
+                repeat the "View on GitHub" link above */}
+            {experiment.liveUrl && (
+              <a
+                href={experiment.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-border/40 bg-background/60 hover:bg-foreground hover:text-background transition-all duration-200"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span className="text-sm font-medium">Open in New Tab</span>
+              </a>
+            )}
           </div>
         </div>
       </div>
