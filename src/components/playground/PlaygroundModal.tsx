@@ -15,6 +15,7 @@ interface PlaygroundModalProps {
     githubUrl: string
     liveUrl: string | null
     tags: string[]
+    thumbnail: string | null
     updatedAt: string
   } | null
 }
@@ -42,6 +43,12 @@ export function PlaygroundModal({
   ]
 
   const [activeSize, setActiveSize] = useState("Default")
+  const [previewFailed, setPreviewFailed] = useState(false)
+
+  // A newly opened experiment gets a fresh shot at loading its preview image
+  useEffect(() => {
+    setPreviewFailed(false)
+  }, [experiment?.id])
 
   // Entrance animation
   useGSAP(
@@ -241,6 +248,14 @@ export function PlaygroundModal({
                 title={experiment.title}
                 sandbox="allow-scripts allow-same-origin allow-forms"
               />
+            ) : experiment.thumbnail && !previewFailed ? (
+              // No live site to embed, so fall back to the repo's preview image
+              <img
+                src={experiment.thumbnail}
+                alt={`${experiment.title} preview`}
+                className="max-h-full max-w-full object-contain"
+                onError={() => setPreviewFailed(true)}
+              />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-foreground/40">
                 <div className="text-center">
@@ -342,18 +357,16 @@ export function PlaygroundModal({
               <span className="text-sm font-medium">Fork Repository</span>
             </button>
 
-            {/* Open Live Demo */}
-            {experiment.liveUrl && (
-              <a
-                href={experiment.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-border/40 bg-background/60 hover:bg-foreground hover:text-background transition-all duration-200"
-              >
-                <ExternalLink className="w-4 h-4" />
-                <span className="text-sm font-medium">Open in New Tab</span>
-              </a>
-            )}
+            {/* Open Live Demo - falls back to the repo when there is no live site */}
+            <a
+              href={experiment.liveUrl ?? experiment.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-border/40 bg-background/60 hover:bg-foreground hover:text-background transition-all duration-200"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span className="text-sm font-medium">Open in New Tab</span>
+            </a>
           </div>
         </div>
       </div>
