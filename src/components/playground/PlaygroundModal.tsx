@@ -267,7 +267,8 @@ export function PlaygroundModal({
             <span>Updated {formattedDate}</span>
           </div>
 
-          {/* Screen Size Pills */}
+          {/* Screen Size Pills - only meaningful when there's an iframe to resize */}
+          {experiment.liveUrl && (
           <div className="hidden md:block mb-6">
             <h3 className="text-sm font-medium text-foreground/60 mb-3">
               Screen Size
@@ -291,6 +292,7 @@ export function PlaygroundModal({
               ))}
             </div>
           </div>
+          )}
 
           {/* Description */}
           {experiment.description && (
