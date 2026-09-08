@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import { X, ExternalLink, Github, GitFork, Calendar } from "lucide-react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
@@ -15,6 +16,7 @@ interface PlaygroundModalProps {
     githubUrl: string
     liveUrl: string | null
     tags: string[]
+    thumbnail: string | null
     updatedAt: string
   } | null
 }
@@ -42,6 +44,12 @@ export function PlaygroundModal({
   ]
 
   const [activeSize, setActiveSize] = useState("Default")
+  const [previewFailed, setPreviewFailed] = useState(false)
+
+  // A newly opened experiment gets a fresh shot at loading its preview image
+  useEffect(() => {
+    setPreviewFailed(false)
+  }, [experiment?.id])
 
   // Entrance animation
   useGSAP(
@@ -241,6 +249,19 @@ export function PlaygroundModal({
                 title={experiment.title}
                 sandbox="allow-scripts allow-same-origin allow-forms"
               />
+            ) : experiment.thumbnail && !previewFailed ? (
+              // No live site to embed, so fall back to the repo's preview image
+              <Image
+                src={experiment.thumbnail}
+                alt={`${experiment.title} preview`}
+                fill
+                // The modal only mounts on click and this image is its main
+                // content, so load it eagerly rather than waiting on lazy load
+                priority
+                sizes="(max-width: 768px) 100vw, 60vw"
+                className="object-contain p-6 md:p-10"
+                onError={() => setPreviewFailed(true)}
+              />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-foreground/40">
                 <div className="text-center">
@@ -267,7 +288,8 @@ export function PlaygroundModal({
             <span>Updated {formattedDate}</span>
           </div>
 
-          {/* Screen Size Pills */}
+          {/* Screen Size Pills - only meaningful when there's an iframe to resize */}
+          {experiment.liveUrl && (
           <div className="hidden md:block mb-6">
             <h3 className="text-sm font-medium text-foreground/60 mb-3">
               Screen Size
@@ -291,6 +313,7 @@ export function PlaygroundModal({
               ))}
             </div>
           </div>
+          )}
 
           {/* Description */}
           {experiment.description && (
@@ -340,7 +363,8 @@ export function PlaygroundModal({
               <span className="text-sm font-medium">Fork Repository</span>
             </button>
 
-            {/* Open Live Demo */}
+            {/* Open Live Demo - omitted without a live site, where it would only
+                repeat the "View on GitHub" link above */}
             {experiment.liveUrl && (
               <a
                 href={experiment.liveUrl}

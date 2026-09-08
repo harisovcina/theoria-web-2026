@@ -26,28 +26,59 @@ export interface PlaygroundExperiment {
   updatedAt: string
 }
 
+/**
+ * Outcome of a playground fetch.
+ *
+ * Failure is modelled explicitly so the page can tell "Haris has no
+ * experiments" apart from "GitHub refused the request". Collapsing both into an
+ * empty array is what previously made rate limiting look like an empty
+ * playground.
+ */
+export type PlaygroundResult =
+  | { ok: true; experiments: PlaygroundExperiment[] }
+  | { ok: false; error: string }
+
 const GITHUB_API_BASE = "https://api.github.com"
 const PLAYGROUND_PREFIX = "playground-"
 
 /**
- * Fetch all playground repositories from GitHub
- * @param username - GitHub username (e.g., "haris")
- * @returns Array of playground experiments
+ * Repos that belong on the playground page despite not carrying the
+ * `playground-` prefix, keyed by repo name. Each value overrides the metadata
+ * GitHub reports for that repo.
+ */
+const EXTRA_REPOS: Record<
+  string,
+  Partial<Pick<PlaygroundExperiment, "title" | "liveUrl">>
+> = {
+  // The taste-dna.com domain has been retired, so drop the dead live URL and
+  // let the card fall back to the GitHub repo.
+  tastedna: { title: "TasteDNA", liveUrl: null },
+}
+
+/**
+ * Fetch every repository that belongs on the playground page.
+ *
+ * Deliberately a single API call: the playground repos and the EXTRA_REPOS both
+ * come out of the user's repo listing, so querying extras individually only
+ * burned extra rate limit.
+ *
+ * @param username - GitHub username (e.g., "harisovcina")
  */
 export async function fetchPlaygroundRepos(
-  username: string = "haris"
-): Promise<PlaygroundExperiment[]> {
+  username: string
+): Promise<PlaygroundResult> {
   try {
     const headers: HeadersInit = {
       Accept: "application/vnd.github.v3+json",
     }
 
-    // Add token if available (for higher rate limits)
+    // Without a token GitHub allows 60 requests/hour per IP. Serverless egress
+    // IPs are shared, so that budget is usually already spent by someone else.
+    // A token raises the limit to 5000/hour and scopes it to us.
     if (process.env.GITHUB_TOKEN) {
       headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
     }
 
-    // Fetch all repositories for the user
     const response = await fetch(
       `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=updated`,
       {
@@ -57,80 +88,46 @@ export async function fetchPlaygroundRepos(
     )
 
     if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.statusText}`)
+      const reason =
+        response.status === 403 || response.status === 429
+          ? `rate limited (${response.status}) - set GITHUB_TOKEN to raise the limit`
+          : `${response.status} ${response.statusText}`
+
+      console.error(`GitHub API error fetching repos for ${username}: ${reason}`)
+      return { ok: false, error: reason }
     }
 
     const repos: GitHubRepo[] = await response.json()
 
-    // Filter repos that start with "playground-"
-    const playgroundRepos = repos.filter((repo) =>
+    // Extras lead, then the playground- repos in most-recently-updated order.
+    const extras = repos.filter((repo) => repo.name in EXTRA_REPOS)
+    const playground = repos.filter((repo) =>
       repo.name.startsWith(PLAYGROUND_PREFIX)
     )
 
-    // Transform to PlaygroundExperiment format
-    const experiments: PlaygroundExperiment[] = playgroundRepos.map((repo) => ({
-      id: repo.id,
-      title: cleanPlaygroundTitle(repo.name),
-      description: repo.description,
-      githubUrl: repo.html_url,
-      liveUrl: repo.homepage,
-      tags: repo.topics || [],
-      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch, repo.pushed_at),
-      updatedAt: repo.updated_at,
-    }))
-
-    return experiments
+    return { ok: true, experiments: [...extras, ...playground].map(toExperiment) }
   } catch (error) {
-    console.error("Error fetching playground repos:", error)
-    return []
+    const reason = error instanceof Error ? error.message : "unknown error"
+
+    console.error(`Error fetching playground repos for ${username}: ${reason}`)
+    return { ok: false, error: reason }
   }
 }
 
 /**
- * Fetch a single playground repository by name
- * @param username - GitHub username
- * @param repoName - Repository name
+ * Map a GitHub repo onto a playground card, applying any EXTRA_REPOS overrides.
  */
-export async function fetchPlaygroundRepo(
-  username: string,
-  repoName: string
-): Promise<PlaygroundExperiment | null> {
-  try {
-    const headers: HeadersInit = {
-      Accept: "application/vnd.github.v3+json",
-    }
-
-    if (process.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
-    }
-
-    const response = await fetch(
-      `${GITHUB_API_BASE}/repos/${username}/${repoName}`,
-      {
-        headers,
-        next: { revalidate: 3600 },
-      }
-    )
-
-    if (!response.ok) {
-      return null
-    }
-
-    const repo: GitHubRepo = await response.json()
-
-    return {
-      id: repo.id,
-      title: cleanPlaygroundTitle(repo.name),
-      description: repo.description,
-      githubUrl: repo.html_url,
-      liveUrl: repo.homepage,
-      tags: repo.topics || [],
-      thumbnail: getThumbnailUrl(username, repo.name, repo.default_branch, repo.pushed_at),
-      updatedAt: repo.updated_at,
-    }
-  } catch (error) {
-    console.error("Error fetching playground repo:", error)
-    return null
+function toExperiment(repo: GitHubRepo): PlaygroundExperiment {
+  return {
+    id: repo.id,
+    title: cleanPlaygroundTitle(repo.name),
+    description: repo.description,
+    githubUrl: repo.html_url,
+    liveUrl: repo.homepage,
+    tags: repo.topics || [],
+    thumbnail: getThumbnailUrl(repo),
+    updatedAt: repo.updated_at,
+    ...EXTRA_REPOS[repo.name],
   }
 }
 
@@ -148,22 +145,11 @@ function cleanPlaygroundTitle(repoName: string): string {
 }
 
 /**
- * Get the thumbnail URL from the repo with cache-busting
- * @param username - GitHub username
- * @param repoName - Repository name
- * @param branch - Branch name (e.g., "main" or "master")
- * @param pushedAt - Timestamp of last push (used for cache-busting)
- * @returns URL to preview.png in the repo with cache-busting parameter
+ * Get the URL of the repo's preview.png, cache-busted on the repo's last push
+ * so refreshed previews appear at the next revalidation.
  */
-function getThumbnailUrl(username: string, repoName: string, branch: string = "main", pushedAt?: string): string {
-  const baseUrl = `https://raw.githubusercontent.com/${username}/${repoName}/${branch}/preview.png`
+function getThumbnailUrl(repo: GitHubRepo): string {
+  const timestamp = new Date(repo.pushed_at).getTime()
 
-  // Add cache-busting query parameter using pushed_at timestamp
-  // This ensures images update when the repo is updated
-  if (pushedAt) {
-    const timestamp = new Date(pushedAt).getTime()
-    return `${baseUrl}?t=${timestamp}`
-  }
-
-  return baseUrl
+  return `https://raw.githubusercontent.com/${repo.full_name}/${repo.default_branch}/preview.png?t=${timestamp}`
 }
