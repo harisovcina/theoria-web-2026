@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
 import { PageMenuDock } from "@/components/shared/PageMenuDock"
+import { ToptalBadge } from "@/components/cv/ToptalBadge"
 
 export default async function CVPage() {
   const projects = await db.project.findMany({
@@ -38,12 +39,17 @@ export default async function CVPage() {
 
           {/* Summary */}
           <div className="mb-20 opacity-0 animate-fade-in animation-delay-200">
-            <p className="text-base text-muted-foreground font-light leading-relaxed">
-              UX/UI and Product Designer with a background in architectural design. Innovative and efficient
-              problem solver with 10+ years creating intuitive interfaces for complex systems. Founded theoria,
-              a boutique design agency specializing in UX and product design, working with clients ranging from
-              small startups to Fortune 500 companies.
-            </p>
+            <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-12">
+              <p className="text-base text-muted-foreground font-light leading-relaxed">
+                UX/UI and Product Designer with a background in architectural design. Innovative and efficient
+                problem solver with 10+ years creating intuitive interfaces for complex systems. Founded theoria,
+                a boutique design agency specializing in UX and product design, working with clients ranging from
+                small startups to Fortune 500 companies.
+              </p>
+              <div className="self-center md:self-start md:flex-shrink-0">
+                <ToptalBadge />
+              </div>
+            </div>
           </div>
 
           {/* Experience */}
