@@ -17,21 +17,28 @@ export default async function CVPage() {
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="mb-16 opacity-0 animate-fade-in-up">
-            <div className="flex items-center gap-6 mb-4">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-foreground/5 flex-shrink-0">
-                <img
-                  src="/img/haris1.webp"
-                  alt="Haris Ovčina"
-                  className="w-full h-full object-cover"
-                />
+            <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between md:gap-6">
+              <div>
+                <div className="flex items-center gap-6 mb-4">
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-foreground/5 flex-shrink-0">
+                    <img
+                      src="/img/haris1.webp"
+                      alt="Haris Ovčina"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h1 className="text-4xl md:text-6xl font-extralight tracking-tight">
+                    Haris Ovčina
+                  </h1>
+                </div>
+                <p className="text-sm font-mono uppercase text-muted-foreground">
+                  Product Designer · Founder @ theoria
+                </p>
               </div>
-              <h1 className="text-5xl md:text-7xl font-extralight tracking-tight">
-                Haris Ovčina
-              </h1>
+              <div className="self-center md:self-auto md:flex-shrink-0">
+                <ToptalBadge size={13} />
+              </div>
             </div>
-            <p className="text-sm font-mono uppercase text-muted-foreground">
-              Product Designer · Founder @ theoria
-            </p>
           </div>
 
           {/* Separator */}
@@ -39,17 +46,12 @@ export default async function CVPage() {
 
           {/* Summary */}
           <div className="mb-20 opacity-0 animate-fade-in animation-delay-200">
-            <div className="flex flex-col gap-10 md:flex-row md:items-start md:gap-12">
-              <p className="text-base text-muted-foreground font-light leading-relaxed">
-                UX/UI and Product Designer with a background in architectural design. Innovative and efficient
-                problem solver with 10+ years creating intuitive interfaces for complex systems. Founded theoria,
-                a boutique design agency specializing in UX and product design, working with clients ranging from
-                small startups to Fortune 500 companies.
-              </p>
-              <div className="self-center md:self-start md:flex-shrink-0">
-                <ToptalBadge />
-              </div>
-            </div>
+            <p className="text-base text-muted-foreground font-light leading-relaxed">
+              UX/UI and Product Designer with a background in architectural design. Innovative and efficient
+              problem solver with 10+ years creating intuitive interfaces for complex systems. Founded theoria,
+              a boutique design agency specializing in UX and product design, working with clients ranging from
+              small startups to Fortune 500 companies.
+            </p>
           </div>
 
           {/* Experience */}

@@ -6,11 +6,6 @@ const TOPTAL_PROFILE_URL =
 /** The badge outline, used for both the blue border and the gradient face. */
 const HEXAGON = "polygon(50% 0, 100% 24%, 100% 76%, 50% 100%, 0 76%, 0 24%)"
 
-const borderStyle: CSSProperties = {
-  clipPath: HEXAGON,
-  backgroundColor: "#25a9ef",
-}
-
 const faceStyle: CSSProperties = {
   clipPath: HEXAGON,
   backgroundImage:
@@ -21,15 +16,31 @@ const faceStyle: CSSProperties = {
   fontFamily: "proxima-nova, Switzer, Arial, sans-serif",
 }
 
+interface ToptalBadgeProps {
+  /**
+   * Base font size in px. Every dimension is expressed in `em`, so this single
+   * number scales the whole badge - 16 renders it at Toptal's native 200px wide.
+   * Scaling this way keeps the type crisp, unlike a CSS transform.
+   */
+  size?: number
+}
+
 /**
  * Toptal "Top 3% Talent" verification badge.
  *
  * Deliberately keeps Toptal's own colours rather than the site palette - it is a
  * third-party credential, so it should look like one in light and dark alike.
  */
-export function ToptalBadge() {
+export function ToptalBadge({ size = 16 }: ToptalBadgeProps) {
   return (
-    <div className="inline-block p-1.5" style={borderStyle}>
+    <div
+      className="inline-block p-[0.375em]"
+      style={{
+        clipPath: HEXAGON,
+        backgroundColor: "#25a9ef",
+        fontSize: `${size}px`,
+      }}
+    >
       {/* React hoists and de-dupes this into <head> */}
       <link
         rel="stylesheet"
@@ -38,13 +49,13 @@ export function ToptalBadge() {
       />
 
       <div
-        className="flex w-[200px] flex-col items-center gap-2 pb-10 pt-6 text-center text-white"
+        className="flex w-[12.5em] flex-col items-center gap-[0.5em] pb-[2.5em] pt-[1.5em] text-center text-white"
         style={faceStyle}
       >
         {/* Five stars */}
         <svg
-          width="64"
           viewBox="0 0 60 17"
+          className="w-[4em]"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
@@ -54,18 +65,18 @@ export function ToptalBadge() {
           />
         </svg>
 
-        <h3 className="m-0 text-[19px] font-bold leading-none">
+        <h3 className="m-0 text-[1.1875em] font-bold leading-none">
           TOP 3% TALENT
         </h3>
 
-        <div className="h-px w-[120px] bg-[#25a9ef]" />
+        <div className="h-px w-[7.5em] bg-[#25a9ef]" />
 
-        <span className="-mb-1.5 text-base opacity-80">Vetted by</span>
+        <span className="-mb-[0.375em] text-[1em] opacity-80">Vetted by</span>
 
         {/* Toptal wordmark */}
         <svg
           viewBox="0 0 108 30"
-          width="100"
+          className="w-[6.25em]"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
           aria-label="Toptal"
@@ -80,7 +91,7 @@ export function ToptalBadge() {
           href={TOPTAL_PROFILE_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-md bg-[#296bff] px-5 py-1 text-base font-medium text-white underline decoration-[0.5px] underline-offset-2 transition-colors hover:bg-[#1a5bef]"
+          className="inline-flex items-center justify-center rounded-md bg-[#296bff] px-[1.25em] py-[0.25em] text-[1em] font-medium text-white underline decoration-[0.5px] underline-offset-2 transition-colors hover:bg-[#1a5bef]"
         >
           Hire me
         </a>
